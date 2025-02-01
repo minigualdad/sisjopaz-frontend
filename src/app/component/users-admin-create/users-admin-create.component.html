@@ -1,0 +1,213 @@
+<h2 mat-dialog-title>Creación de Usuarios</h2>
+<form [formGroup]="form" class="bg-white p-6 rounded-lg" (ngSubmit)="createUser()">
+
+  <mat-dialog-content class="mat-typography">
+    <div>
+      <div class="md:grid md:grid-cols-3 md:gap-6">
+        <div class="md:col-span-1">
+          <div class="px-4 sm:px-0">
+            <h3 class="text-lg font-medium leading-6 text-gray-900">Perfil</h3>
+            <p class="mt-1 text-sm text-gray-600">Esta será información con la que se crearán los usuarios.</p>
+          </div>
+        </div>
+        <div class="mt-5 md:col-span-2 md:mt-0">
+          <div class="mb-4">
+            <mat-label for="name" class="text-lg font-bold">
+              Nombre Completo <b class="text-pink-600">*</b>
+            </mat-label>
+            <div
+              class="w-full h-auto rounded-lg shadow-xl bg-slate-200 flex items-center justify-center my-3"
+              [ngClass]="{'border-2 border-red-500': form.get('name')?.invalid && form.get('name')?.touched}"
+            >
+              <input
+                class="px-4 w-full mx-5 bg-transparent border-none outline-none my-2"
+                type="text"
+                placeholder="Digite su nombre"
+                id="name"
+                formControlName="name"
+              />
+            </div>
+            <div *ngIf="form.get('name')?.hasError('noNumbers') && form.get('name')?.touched" class="text-red-500">
+              El nombre no debe contener números.
+            </div>
+            <div *ngIf="form.get('name')?.hasError('required') && form.get('name')?.touched" class="text-red-500">
+              Este campo es obligatorio.
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <mat-label class="text-lg font-bold">
+              Tipo de Documento <b class="text-pink-600">*</b>
+            </mat-label>
+            <mat-select
+              class="w-full h-auto py-2 rounded-lg shadow-xl px-10 bg-slate-200 flex items-center justify-center my-3"
+              formControlName="identificationType"
+              [ngClass]="{'border-2 border-red-500': form.get('identificationType')?.invalid && form.get('identificationType')?.touched}"
+              placeholder="Seleccione una opción"
+            >
+              <mat-option class="bg-white" value="Cédula de Ciudadanía">Cédula de Ciudadanía</mat-option>
+              <mat-option class="bg-white" value="Cédula de Extranjería">Cédula de Extranjería</mat-option>
+              <mat-option class="bg-white" value="Pasaporte">Pasaporte</mat-option>
+            </mat-select>
+          
+            <div *ngIf="form.get('identificationType')?.hasError('required') && form.get('identificationType')?.touched" class="text-red-500">
+              Debe seleccionar un tipo de documento.
+            </div>
+          </div>
+          
+          <!-- Número de Identificación -->
+        <div class="mb-4">
+          <mat-label class="text-lg font-bold">Número de identificación <b class="text-pink-600">*</b></mat-label>
+          <div class="w-full h-auto rounded-lg shadow-xl bg-slate-200 flex items-center justify-center my-3"
+              [ngClass]="{'border-2 border-red-500': form.get('identification')?.invalid && form.get('identification')?.touched}">
+            <input class="px-4 w-full mx-5 bg-transparent border-none outline-none my-2"
+                  type="number"
+                  placeholder="123456789"
+                  formControlName="identification">
+          </div>
+          <div *ngIf="form.get('identification')?.hasError('required') && form.get('identification')?.touched" class="text-red-500">
+            Este campo es obligatorio.
+          </div>
+          <div *ngIf="form.get('identification')?.hasError('pattern') && form.get('identification')?.touched" class="text-red-500">
+            Solo se permiten números.
+          </div>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="mb-4">
+          <mat-label class="text-lg font-bold">Teléfono</mat-label>
+          <div class="w-full h-auto rounded-lg shadow-xl bg-slate-200 flex items-center justify-center my-3"
+              [ngClass]="{'border-2 border-red-500': form.get('contactPhone')?.invalid && form.get('contactPhone')?.touched}">
+            <input class="px-4 w-full mx-5 bg-transparent border-none outline-none my-2"
+                  type="tel"
+                  placeholder="3112345678"
+                  formControlName="contactPhone">
+          </div>
+          <div *ngIf="form.get('contactPhone')?.hasError('pattern') && form.get('contactPhone')?.touched" class="text-red-500">
+            Debe ser un número de 10 dígitos.
+          </div>
+          
+        </div>
+
+        <!-- Email -->
+        <div class="mb-4">
+          <mat-label class="text-lg font-bold">Email <b class="text-pink-600">*</b></mat-label>
+          <div class="w-full h-auto rounded-lg shadow-xl bg-slate-200 flex items-center justify-center my-3"
+              [ngClass]="{'border-2 border-red-500': form.get('email')?.invalid && form.get('email')?.touched}">
+            <input class="px-4 w-full mx-5 bg-transparent border-none outline-none my-2"
+                  type="email"
+                  placeholder="example@gmail.com"
+                  formControlName="email">
+          </div>
+          <div *ngIf="form.get('email')?.hasError('required') && form.get('email')?.touched" class="text-red-500">
+            Este campo es obligatorio.
+          </div>
+          <div *ngIf="form.get('email')?.hasError('email') && form.get('email')?.touched" class="text-red-500">
+            El formato del correo no es válido.
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-4">
+          <label for="password" class="text-lg font-bold">Contraseña <b class="text-pink-600">*</b></label>
+          <div class="w-full h-auto rounded-lg shadow-xl bg-slate-200 flex items-center justify-center my-3"
+              [ngClass]="{'border-2 border-red-500': form.get('password')?.invalid && form.get('password')?.touched}">
+            <input class="px-4 w-full mx-5 bg-transparent border-none outline-none my-2"
+                  [type]="isView ? 'password' : 'text'"
+                  placeholder="Contraseña"
+                  id="password"
+                  formControlName="password">
+            <img [src]="isView ? 'svg/eye.svg' : 'svg/notView.svg'"
+                alt=""
+                class="mr-10 cursor-pointer"
+                (click)="toggleView()">
+          </div>
+          <div *ngIf="form.get('password')?.hasError('required') && form.get('password')?.touched" class="text-red-500">
+            Este campo es obligatorio.
+          </div>
+          <div *ngIf="form.get('password')?.hasError('minlength') && form.get('password')?.touched" class="text-red-500">
+            La contraseña debe tener al menos 6 caracteres.
+          </div>
+        </div>
+        <div class="mb-4">
+          <mat-label class="text-lg font-bold">
+            Tipo de Vinculación <b class="text-pink-600">*</b>
+          </mat-label>
+          <mat-select
+            class="w-full h-auto py-2 rounded-lg shadow-xl px-10 bg-slate-200 flex items-center justify-center my-3"
+            formControlName="linkageType"
+            [ngClass]="{'border-2 border-red-500': form.get('linkageType')?.invalid && form.get('linkageType')?.touched}"
+            placeholder="Seleccione una opción"
+          >
+            <mat-option class="bg-white" value="UT">UT</mat-option>
+            <mat-option class="bg-white" value="Min-Igualdad">Min-Igualdad</mat-option>
+          </mat-select>
+        
+          <div *ngIf="form.get('linkageType')?.hasError('required') && form.get('linkageType')?.touched" class="text-red-500">
+            Debe seleccionar un tipo de vinculación.
+          </div>
+        </div>
+        
+        <!-- Roles -->
+        <div class="mb-4">
+          <mat-label class="text-lg font-bold">Roles <b class="text-pink-600">*</b></mat-label>
+          <mat-select
+            formControlName="role"
+            class="w-full h-auto py-2 rounded-lg shadow-xl px-10 bg-slate-200 flex items-center justify-center my-3"
+            placeholder="Seleccione una opción"
+            [ngClass]="{'border-2 border-red-500': form.get('role')?.invalid && form.get('role')?.touched}"
+          >
+            <mat-option class="bg-white" *ngFor="let role of filteredRoles" [value]="role[0]">{{ role[1] }}</mat-option>
+          </mat-select>
+        
+          <div *ngIf="form.get('role')?.hasError('required') && form.get('role')?.touched" class="text-red-500">
+            Este campo es obligatorio.
+          </div>
+        </div>
+        
+        <!-- Municipio de Enlace -->
+        <div class="mb-4">
+          <mat-label class="text-lg font-bold">Municipio de enlace</mat-label>
+          <mat-select formControlName="municipalityId" class="w-full h-auto py-2 rounded-lg shadow-xl px-10 bg-slate-200 flex items-center justify-center my-3"
+                      placeholder="Seleccione una opción"            
+                      [ngClass]="{'border-2 border-red-500': form.get('municipalityId')?.invalid && form.get('municipalityId')?.touched}">
+            <mat-option class="bg-white" *ngFor="let divi of divipol" [value]="divi.id">{{ divi.name }}</mat-option>
+          </mat-select>
+          <div *ngIf="form.get('municipalityId')?.hasError('required') && form.get('municipalityId')?.touched" class="text-red-500">
+            Este campo es obligatorio.
+          </div>
+        </div>
+
+
+
+        <!-- Estado de Usuario -->
+        <div class="mb-4">
+          <mat-label class="text-lg font-bold">Estado de usuario <b class="text-pink-600">*</b></mat-label>
+          <mat-select formControlName="state" class="w-full h-auto py-2 rounded-lg shadow-xl px-10 bg-slate-200 flex items-center justify-center my-3"
+                      placeholder="Seleccione una opción"
+                      [ngClass]="{'border-2 border-red-500': form.get('state')?.invalid && form.get('state')?.touched}">
+                      
+            <mat-option class="bg-white" value="ENABLED">Activo</mat-option>
+            <mat-option class="bg-white" value="DISABLED">Inactivo</mat-option>
+          </mat-select>
+          <div *ngIf="form.get('state')?.hasError('required') && form.get('state')?.touched" class="text-red-500">
+            Este campo es obligatorio.
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      class="bg-indigo-500 text-white p-2 rounded-lg hover:bg-indigo-600"
+      mat-flat-button
+      primary
+      [disabled]="!isFormValid()"
+      [type]="isFormValid() ? 'submit' : 'button'">
+      Crear Usuario
+    </button>
+  </mat-dialog-actions>  
+</form>
+<app-loading *ngIf="loading"></app-loading>

@@ -1,0 +1,10 @@
+<form [formGroup]="form" >
+    <div class="mb-4">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Enlaces Regionales</mat-label>
+            <mat-select formControlName="regionalLinkId" required (selectionChange)="selectRegionalLinkId($event)">
+                <mat-option *ngFor="let regionalLink of regionalLinks" [value]="regionalLink.id">{{ regionalLink.name | uppercase }} - {{ regionalLink.email }} {{regionalLink.Region?.ListDepartment?.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

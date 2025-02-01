@@ -1,0 +1,19 @@
+<form [formGroup]="form" >
+    <div class="mb-4">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Municipio</mat-label>
+            <mat-select formControlName="divipolId" required (selectionChange)="selectDivipolId($event)">
+                <mat-option>
+                    <input 
+                        matInput 
+                        placeholder="Buscar región"
+                        [(ngModel)]="searchText"
+                        (keyup)="filterOptions()"
+                        autocomplete="off"
+                    />
+                </mat-option>
+                <mat-option *ngFor="let divipol of divipols" [value]="divipol.id">{{ divipol.name }} - {{ divipol.ListDepartment.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

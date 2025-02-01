@@ -1,0 +1,46 @@
+<form [formGroup]="form" class="bg-white p-6 rounded-lg" (ngSubmit)="create()">
+
+    <mat-dialog-content class="mat-typography">
+        <div>
+            <div class="md:grid md:grid-cols-3 md:gap-6">
+                <div class="md:col-span-1">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">Joven</h3>
+                        <p class="mt-1 text-sm text-gray-600">Esta será información con la que se creará el joven.
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-5 md:col-span-2 md:mt-0">
+
+                    <app-survey-finder (surveyListen)="onSelectSurvey($event)"></app-survey-finder>
+
+                    <app-professional-team-select (professionalTeamIdListen)="onProfessionalTeamSelect($event)"></app-professional-team-select>
+                
+                    <app-group-selector (groupIdListen)="onGroupIdSelect($event)"></app-group-selector>
+
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Fecha:</mat-label>
+                            <input type="date" matInput formControlName="agreementSignatureDate">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="mb-4 bg-white">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                          <mat-label>Estado</mat-label>
+                          <mat-select class="bg-white" formControlName="state">
+                            <mat-option class="bg-white" *ngFor="let state of states" [value]="state[0]">{{ state[1] }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                </div>
+            </div>
+
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button class="bg-primary text-white p-2 rounded-lg hover:bg-primary-200" mat-flat-button primary
+            [disabled]="form.invalid" [type]="form.invalid ? 'button' : 'submit'">Crear joven</button>
+    </mat-dialog-actions>
+</form>
+<!-- <app-loading *ngIf="loading"></app-loading> -->

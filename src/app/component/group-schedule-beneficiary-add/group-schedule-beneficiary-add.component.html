@@ -1,0 +1,55 @@
+<form [formGroup]="form" class="bg-white p-6 rounded-lg" (ngSubmit)="create()">
+
+    <mat-dialog-content class="mat-typography">
+        <div>
+            <div class="md:grid md:grid-cols-3 md:gap-6">
+                <div class="md:col-span-1">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">Asistencia del Joven</h3>
+                        <p class="mt-1 text-sm text-gray-600">Esta será información con la que se creará la asistencia del joven.
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-5 md:col-span-2 md:mt-0">
+                    <app-survey-finder (surveyListen)="onSelectSurvey($event)"></app-survey-finder>
+
+                    <div class="w-full mt-8">
+                        <img *ngIf="pictureLoaded" class="w-40 h-40 rounded-full mb-6" [src]="pictureUrl"
+                            [alt]="pictureFile" />
+                        <div class="sm:col-span-4">
+                            <button class="w-32 h-10 bg-primary rounded-md hover:bg-pink-600 text-white" type="button" (click)="openInput()">Cargar Imagen</button>
+                            <input #fileInput hidden type="file" (change)="pictureChange($event)" name="file"
+                                accept="image/*" />
+                        </div>
+                    </div>
+
+                    <div class="mb-4 mt-8">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Fecha:</mat-label>
+                            <input type="date" matInput formControlName="date">
+                        </mat-form-field>
+                    </div>
+                    <div class="mb-4">
+                        <app-time-selector class="bg-white" (timeListen)="onSelectTime($event)"></app-time-selector>
+                    </div>
+                    <div class="mb-4">
+                        <mat-checkbox class="ml-2" [formControlName]="'isAssistance'" required>
+                            Assistencia
+                        </mat-checkbox>
+                    </div>
+                    <app-user-selector (userIdListen)="onUserSelect($event)"></app-user-selector>
+
+                    <app-drawer (signatureListen)="onSelectSignature($event)"></app-drawer>
+
+
+                </div>
+            </div>
+
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button class="bg-primary text-white p-2 rounded-lg hover:bg-pink-200" mat-flat-button primary
+            [disabled]="form.invalid" [type]="form.invalid ? 'button' : 'submit'">Crear Asistencia</button>
+    </mat-dialog-actions>
+</form>
+<!-- <app-loading *ngIf="loading"></app-loading> -->

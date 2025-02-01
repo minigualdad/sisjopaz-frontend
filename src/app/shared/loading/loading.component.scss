@@ -1,0 +1,55 @@
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(206, 206, 206, 0.5);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    color: #ffffff;
+    color: #f72585;
+  }
+
+  .image-wrapper {
+    position: relative;
+    width: 12rem;
+    height: 12rem;
+    overflow: hidden;
+    border-radius: 0.75rem;
+  }
+  
+  .image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    animation: lightGrowEffect 2s infinite;
+  }
+
+  .loading-text {
+    margin-top: 1rem;
+    font-size: 1.5rem; 
+    font-weight: 600;
+  }
+  
+  @keyframes lightGrowEffect {
+    0% {
+      transform: scale(1);
+      filter: brightness(100%);
+    }
+    50% {
+      transform: scale(1.1);
+      filter: brightness(150%);
+    }
+    100% {
+      transform: scale(1);
+      filter: brightness(100%);
+    }
+  }
+  

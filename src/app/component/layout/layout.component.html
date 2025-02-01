@@ -1,0 +1,223 @@
+<div class="flex flex-col h-screen bg-gray-100">
+  <!-- ========== MOBILE ==========  -->
+  <div class="md:hidden bg-blueCustom w-full sticky top-0 z-50 flex flex-col">
+    <div class="flex items-center justify-between px-4 py-2 h-18">
+      <div class="rounded-full bg-white w-16 h-16 flex justify-center items-center mt-1">
+        <img src="img/logoMin.png" class="mb-4" />
+      </div>
+      <span class="text-2xl font-bold text-white">SISJOPAZ<sup>©</sup></span>
+      <span *ngIf="userRole" class="text-xs text-white">ROL: {{userRole}}</span>
+      <span class="text-xs text-white">DEMO</span>
+
+      <button
+        (click)="toggleMobileMenu()"
+        class="text-white focus:outline-none transform transition-transform duration-300"
+      >
+        <svg
+          class="w-6 h-6" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6h16M4 12h16m-7 6h7"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div
+    id="mobile-menu"
+    class="md:hidden absolute left-0 right-0 z-50 bg-blueCustom text-white shadow-lg rounded-b-md transition-all duration-500 ease-in-out overflow-hidden max-h-0 top-20"
+    [ngClass]="{ 'max-h-[calc(100vh-5rem)]': isMobileMenuOpen }"
+  >
+    <div class="p-2 overflow-auto h-full">
+      <ng-container *ngFor="let item of navItems">
+        <div
+          *ngIf="!item.children"
+          (click)="redirectTo(item.route, item.name, true); closeMobileMenu()"
+          [ngClass]="{'bg-pink-600': activeSection === item.name}"
+          class="flex items-center py-3 px-4  hover:bg-pink-600 hover:text-white transition-transform transform hover:scale-105 cursor-pointer w-full">
+          <img [src]="item.icon" alt="{{ item.name }}" class="w-6 h-6 mr-3" />
+          <span class="font-bold">{{ item.name }}</span>
+        </div>
+
+        <div *ngIf="item.children">
+          <div
+            (click)="toggleSubMenuMobile(item)"
+            [ngClass]="{'bg-pink-600': activeSection === item.name}"
+            class="flex items-center py-3 px-4  hover:bg-pink-600 hover:text-white transition-transform transform hover:scale-105 cursor-pointer w-full"
+          >
+            <img [src]="item.icon" alt="{{ item.name }}" class="w-6 h-6 mr-3" />
+            <span class="font-bold flex-1">{{ item.name }}</span>
+            <svg
+              class="w-5 h-5 transform transition-transform duration-500 ease-in-out"
+              [ngClass]="{ 'rotate-180': item.isOpenMobile }"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 15l7-7 7 7"
+              />
+            </svg>
+          </div>
+
+          <div
+            class="transition-all duration-500 ease-in-out
+                   overflow-hidden bg-blueCustom/80 ml-4 rounded
+                   max-h-0"
+            [ngClass]="{
+              'max-h-0': !item.isOpenMobile,
+              'max-h-64': item.isOpenMobile 
+            }"
+          >
+            <div class="overflow-y-auto max-h-64">
+              <div
+                class="flex flex-col space-y-1 py-2 pr-2"
+              >
+                <div
+                  *ngFor="let subItem of item.children"
+                  (click)="redirectTo(subItem.route, subItem.name, false); closeMobileMenu()"
+                  [ngClass]="{'bg-pink-600': activeSection === subItem.name}"
+                  class="flex items-center py-2 px-4  hover:bg-pink-600 hover:text-white transition-transform transform hover:scale-105 cursor-pointer"
+                >
+                  <img
+                    [src]="subItem.icon"
+                    alt="{{ subItem.name }}"
+                    class="w-5 h-5 mr-3"
+                  />
+                  <span class="font-bold">{{ subItem.name }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <div
+        (click)="logout(); closeMobileMenu()"
+        class="py-2 px-4 hover:bg-pink-700
+               cursor-pointer flex items-center w-full mt-2"
+      >
+        <img src="svg/logout.svg" alt="Logout" class="w-6 h-6 mr-3" />
+        <span class="font-bold">Cerrar Sesión</span>
+      </div>
+    </div>
+  </div>
+  <!-- FIN MOBILE -->
+
+  <!-- ========== ESCRITORIO ========== -->
+  <div class="flex flex-1 overflow-hidden">
+    <div
+      class="hidden md:flex flex-col w-80 bg-blueCustom text-white h-full
+             overflow-hidden relative"
+      id="sidebar"
+    >
+      <div class="flex-shrink-0 flex flex-col items-center pt-6 pb-4">
+        <div class="rounded-full bg-white w-60 h-60 flex justify-center items-center">
+          <img src="img/logoMin.png" class="mb-4" />
+        </div>
+        <div class="p-4 text-2xl font-bold">SISJOPAZ<sup>©</sup></div>
+          <span *ngIf="userRole" class="text-xs text-white">ROL: {{userRole}}</span>
+          <span class="text-xs text-white">DEMO</span>
+        <hr class="w-4/5 mt-4" />
+      </div>
+
+      <div
+        class="flex-1 overflow-auto transition-all duration-300 ease-in-out"
+        [ngClass]="{
+          'opacity-100 translate-x-0': !subMenuOpen,
+          'opacity-0 -translate-x-full pointer-events-none': subMenuOpen
+        }"
+      >
+        <nav class="w-full flex flex-col p-4 space-y-2">
+          <ng-container *ngFor="let item of navItems">
+            <div
+              *ngIf="!item.children"
+              (click)="redirectTo(item.route, item.name, true)"
+              [ngClass]="{ 'bg-pink-600': activeSection === item.name }"
+              class="w-full flex items-center py-2 px-2 rounded transition hover:bg-pink-600 hover:text-white cursor-pointer"
+            >
+              <img [src]="item.icon" class="w-6 h-6 mr-3" />
+              <span class="font-bold">{{ item.name }}</span>
+            </div>
+
+            <div *ngIf="item.children">
+              <div
+                (click)="openSubMenu(item)"
+                [ngClass]="{ 'bg-pink-600': activeSection === item.name }"
+                class="w-full flex items-center py-2 px-2 rounded transition hover:bg-pink-600 hover:text-white cursor-pointer"
+              >
+                <img [src]="item.icon" class="w-6 h-6 mr-3" />
+                <span class="font-bold flex-1">{{ item.name }}</span>
+                <svg
+                  class="w-5 h-5 transform transition-transform duration-300"
+                  [ngClass]="{ 'rotate-180': item.isOpen }"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" d="M5 15l7-7 7 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </ng-container>
+
+          <div
+            (click)="logout()"
+            class="w-full flex items-center py-2 px-2 mt-4 rounded hover:bg-pink-600 hover:text-white cursor-pointer"
+          >
+            <img src="svg/logout.svg" class="w-6 h-6 mr-2" />
+            <span class="font-bold">Cerrar Sesión</span>
+          </div>
+        </nav>
+      </div>
+
+      <div
+        class="absolute top-0 left-0 w-full h-full bg-blueCustom overflow-auto p-4 transition-all duration-300 ease-in-out"
+        [ngClass]="{
+          'opacity-0 translate-x-full pointer-events-none': !subMenuOpen,
+          'opacity-100 translate-x-0': subMenuOpen
+        }"
+      >
+        <div
+          class="flex items-center mb-4 cursor-pointer hover:text-pink-200"
+          (click)="closeSubMenu()"
+        >
+          <svg
+            class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2" d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          <span class="font-bold">Volver</span>
+        </div>
+
+        <div *ngIf="currentSubMenu">
+          <h2 class="text-xl font-bold mb-3">{{ currentSubMenuParent }}</h2>
+          <div class="space-y-2">
+            <div
+              *ngFor="let subItem of currentSubMenu"
+              (click)="redirectTo(subItem.route, subItem.name, false)"
+              [ngClass]="{ 'bg-pink-600': activeSection === subItem.name }"
+              class="flex items-center py-2 px-2 rounded transition hover:bg-pink-600 hover:text-white cursor-pointer"
+            >
+              <img [src]="subItem.icon" class="w-6 h-6 mr-3" />
+              <span class="font-bold">{{ subItem.name }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FIN ESCRITORIO -->
+
+    <div class="flex-1 p-3 overflow-auto">
+      <div class="bg-white shadow-md rounded-lg p-2 overflow-auto max-h-[calc(100vh-50px)]">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

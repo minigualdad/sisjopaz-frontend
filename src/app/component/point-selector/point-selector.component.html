@@ -1,0 +1,10 @@
+<form [formGroup]="form" >
+    <div class="mb-4">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Puntos</mat-label>
+            <mat-select formControlName="pointId" required (selectionChange)="selectPointId($event)">
+                <mat-option *ngFor="let point of points" [value]="point.id">{{ point.name | uppercase }} - {{ point.divipola }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

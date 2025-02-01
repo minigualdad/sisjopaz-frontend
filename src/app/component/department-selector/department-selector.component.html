@@ -1,0 +1,10 @@
+<form [formGroup]="form" >
+    <div class="mb-4">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Departamentos</mat-label>
+            <mat-select formControlName="departmentId" required (selectionChange)="selectDepartmentId($event)">
+                <mat-option *ngFor="let department of departments" [value]="department.id">{{ department.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

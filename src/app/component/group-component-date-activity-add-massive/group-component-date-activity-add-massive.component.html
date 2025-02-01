@@ -1,0 +1,42 @@
+<div>
+    <h2 class="text-3xl">Asignación masiva de horarios de actividades</h2>
+    <form [formGroup]="form" class="bg-white p-6 rounded-lg" (ngSubmit)="create()">
+
+        <mat-dialog-content class="mat-typography">
+            <div>
+                <div class="md:grid md:grid-cols-3 md:gap-6">
+                    <div class="md:col-span-1">
+                        <div class="px-4 sm:px-0">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Se crearán las fechas masivas para el siguiente periodo</h3>
+                            <p class="mt-1 text-sm text-gray-600">Se realizará la creación de fechas masivas de las actividades del Componente, esto no afectará aún a los jóvenes, solamente se realizará la programación de las fechas de las actividades para el Componente.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-5 md:col-span-2 md:mt-0">
+
+                        <div class="mb-4">
+                            Nombre del Grupo: {{ group?.name }}
+                        </div>
+                        <div class="mb-4">
+                            Componente: {{ component?.name }}
+                        </div>
+                        <div class="mb-4">
+                            Fecha Inicio Grupo: {{ group?.initDate }}
+                        </div>
+                        <div class="mb-4">
+                            <app-period-selector (periodIdListener)="setPeriodId($event)"></app-period-selector>
+                        </div>
+                        <div class="mb-4">
+                            <app-date-group-selector (dateGroupIdListen)="setDays($event)"></app-date-group-selector>
+                        </div>
+                        
+                    </div>
+                </div>    
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <button class="bg-primary text-white p-2 rounded-lg hover:bg-primary-200" mat-flat-button primary
+                [disabled]="form.invalid" [type]="form.invalid ? 'button' : 'submit'">Crear Fechas Masivas Periodo</button>
+        </mat-dialog-actions>
+    </form>
+</div>

@@ -1,0 +1,99 @@
+<form [formGroup]="form" class="bg-white p-6 rounded-lg" (ngSubmit)="create()">
+
+    <mat-dialog-content class="mat-typography">
+        <div>
+            <div class="md:grid md:grid-cols-3 md:gap-6">
+                <div class="md:col-span-1">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">Pregunta</h3>
+                        <p class="mt-1 text-sm text-gray-600">Esta será información con la que se creará la pregunta
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-5 md:col-span-2 md:mt-0">
+                    
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Sub-Grupo:</mat-label>
+                            <input type="text" matInput formControlName="subGroup">
+                        </mat-form-field>
+                    </div>
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Descripción del Sub-Grupo:</mat-label>
+                            <input type="text" matInput formControlName="subGroupDesciption">
+                        </mat-form-field>
+                    </div>
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Pregunta:</mat-label>
+                            <input type="text" matInput formControlName="question">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="mb-4">
+                        <span class="text-blue-600 text-lg font-semibold">*</span>
+                        <label for="options" class="text-sm font-semibold text-gray-700 mb-4">¿Es Obligatorio?</label>
+                        <br>
+                        <div class="mb-4">
+
+                        <ng-container>
+                            <label class="flex items-center space-x-3 hover:bg-blue-100 p-1">
+                                <input type="radio" formControlName="isMandatory" name="isMandatory" value='si'
+                                    class="m-0 form-radio w-5 h-5 border-2 border-blue-400 ml-2  checked:bg-blue-400 ">
+                                <span class="text-gray-700 text-sm">Sí</span>
+                                <input type="radio" formControlName="isMandatory" name="isMandatory" value='no'
+                                    class="m-0 form-radio w-5 h-5 border-2 border-blue-400 ml-2  checked:bg-blue-400 ">
+                                <span class="text-gray-700 text-sm">No</span>
+                            </label>
+                        </ng-container>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Observaciones de la Pregunta:</mat-label>
+                            <input type="text" matInput formControlName="questionObservations">
+                        </mat-form-field>
+                    </div>
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Tipo de Dato:</mat-label>
+                            <input type="text" matInput formControlName="dataType">
+                        </mat-form-field>
+                    </div>
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Tipo de Respuesta:</mat-label>
+                            <input type="text" matInput formControlName="typeAnswer">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Orden de la Pregunta:</mat-label>
+                            <input type="text" matInput formControlName="orderQuestion">
+                        </mat-form-field>
+                    </div>
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Tipo de Pregunta:</mat-label>
+                            <input type="text" matInput formControlName="typeQuestion">
+                        </mat-form-field>
+                    </div>
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Estado:</mat-label>
+                            <input type="text" matInput formControlName="state">
+                        </mat-form-field>
+                    </div>                    
+                </div>
+            </div>
+
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button class="bg-primary text-white p-2 rounded-lg hover:bg-primary-200" mat-flat-button primary
+            [disabled]="form.invalid" [type]="form.invalid ? 'button' : 'submit'">Crear Pregunta</button>
+    </mat-dialog-actions>
+</form>
+<!-- <app-loading *ngIf="loading"></app-loading> -->

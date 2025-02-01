@@ -1,0 +1,13 @@
+<div class="flex flex-col items-center space-y-4">
+    <label class="font-semibold text-gray-700">* Firma digital</label>
+    
+    <!-- Canvas para la firma -->
+    <canvas #signaturePad class="border border-gray-300 rounded w-full md:w-96 h-48 bg-white"></canvas>
+    
+    <!-- Botones para limpiar y descargar la firma -->
+    <div class="flex space-x-4">
+      <button type="button" (click)="clearSignature()" class="bg-red-500 text-white px-4 py-2 rounded">Limpiar</button>
+      <button type="button" (click)="downloadSignature()" class="bg-blue-500 text-white px-4 py-2 rounded">Cargar</button>
+    </div>
+  </div>
+  

@@ -1,0 +1,54 @@
+
+<h1 class="text-3xl">Encuesta de Caracterización</h1>
+<button
+(click)="syncWithServer()" type="button" *ngIf="qty > 0"
+class="bg-blue-500 border-solid border-2 border-gray-500 text-white text-sm rounded w-60 px-2 py-1 mb-4
+       disabled:bg-gray-400 disabled:border-gray-300 disabled:text-gray-700"
+>
+Sincronización manual <br>{{ qty }} registro(s)
+</button>
+
+<span class="text-sm text-pink mb-4">{{ syncStatus }}</span>
+<div class="border my-4 p-4 rounded-lg" *ngFor="let subgroup of subgroups">
+    <h2 class="text-2xl mt-8">{{ subgroup.name }}</h2>
+    <div *ngFor="let question of questions">
+        <div *ngIf="question.questionSubgroupId == subgroup.id">
+            <!-- {{ question.question }}  -->
+            <!-- {{question.orderQuestion}} {{ question.typeAnswer}} {{ question.id}}  {{ question.typeAnswer == 'select_multiple' }} -->
+            <app-unique-option class="w-full" *ngIf="question.typeAnswer == 'select_one'"
+                        (submit)="addUserResponse($event, question.id)"
+                        [title]="question.question" 
+                        [required]="question.isMandatory == 'si'"
+                        [options]="question.answerObj">
+            </app-unique-option>
+            <app-multiple-option class="w-full" *ngIf="question.typeAnswer == 'select_multiple'"
+                (submit)="addUserResponse($event, question.id)"
+                [required]="question.isMandatory == 'si'"
+                [title]="question.question"
+                [options]="question.answerObj">
+            </app-multiple-option>
+            <app-input class="w-full" [title]="question.question" *ngIf="question.typeAnswer == 'text'"
+                (submit)="addUserResponse($event, question.id)"
+                [required]="question.isMandatory == 'si'"
+                [subtitle]="question.questionObservations"
+                placeholder=""></app-input>
+            <app-input class="w-full" [title]="question.question" 
+                (submit)="addUserResponse($event, question.id)"
+                *ngIf="question.typeAnswer == 'integer'"
+                type="number" 
+                [required]="question.isMandatory == 'si'"
+                [subtitle]="question.questionObservations" placeholder=""></app-input>
+
+        </div>
+    </div>
+</div>
+
+<div class="flex w-2/3 h-auto justify-between items-center m-10">
+    <button class="bg-white border-solid border-2 border-gray-200 text-lg rounded w-60 p-4 mr-4">
+        Guardar borrador
+    </button>
+    <button type="submit" (click)="sendForm()" [disabled]="!completedAllQuestions" class="bg-blue-500 border-solid border-2 border-gray-500 text-white text-lg rounded w-60 p-4
+            disabled:bg-gray-400 disabled:border-gray-300 disabled:text-gray-700">
+        Enviar
+    </button>
+</div>

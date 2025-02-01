@@ -1,0 +1,21 @@
+.popover-menu {
+    position: absolute;
+    z-index: 9999;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .popover-menu button {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .popover-menu button:hover {
+    background: #f2f2f2;
+  }
+  

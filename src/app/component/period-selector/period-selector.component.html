@@ -1,0 +1,10 @@
+<form [formGroup]="form" >
+    <div class="mb-4">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Selector de Periodos</mat-label>
+            <mat-select formControlName="periodId" required (selectionChange)="selectPeriodId($event)">
+                <mat-option *ngFor="let period of periods" [value]="period.id">{{ period.year }} - {{ period.month }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

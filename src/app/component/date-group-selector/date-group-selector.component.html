@@ -1,0 +1,10 @@
+<form [formGroup]="form" >
+    <div class="mb-4">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Programación de Componentes</mat-label>
+            <mat-select formControlName="dateGroupId" required (selectionChange)="selectDateGroupId($event)">
+                <mat-option *ngFor="let dateGroup of dateGroups" [value]="dateGroup.id"> {{ dateGroup.name }} </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

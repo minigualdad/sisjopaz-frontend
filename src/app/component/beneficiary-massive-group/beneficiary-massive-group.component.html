@@ -1,0 +1,52 @@
+<form [formGroup]="form" class="bg-white p-6 rounded-lg" (ngSubmit)="create()">
+    <mat-dialog-content class="mat-typography">
+        <div>
+            <div class="md:grid md:grid-cols-3 md:gap-6">
+                <div class="md:col-span-1">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">
+                            Asignación Masiva de Beneficiarios a Grupos
+                        </h3>
+                        <p class="mt-1 text-sm text-gray-600">
+                            Los resultados queradán disponibles
+                            inmediatamente sea terminada la subida correcta del
+                            excel. Grupo (ingrese el id del grupo desde el diccionario, si no lo tiene <strong (click)="getGroupInfo()">Descárguelo haciendo click aquí</strong>),
+                            este campo viene vacio en el descargable encontrado en la pantalla anterior. si no lo tiene por favor dé click en el botón.
+                       </p>
+                       <button type="button" mat-raised-button (click)="download()">Descargar Plantilla</button>
+                    </div>
+                </div>
+                <div class="mt-5 md:col-span-2 md:mt-0">
+                    <div class="mb-4">
+                            <button type="button" mat-raised-button (click)="openInput()">
+                                Seleccionar archivo masivo de excel
+                            </button>
+                            <div *ngIf="file">
+                                Archivo seleccionado: {{ file.name }}, Peso: {{ file.size / 1024 | number: '1.0-2' }} KB
+                            </div>
+                            <input
+                                #fileInput
+                                hidden
+                                type="file"
+                                (change)="fileChange($event)"
+                                name="file"
+                                accept=".xls,.xlsx,application/vnd.oasis.opendocument.spreadsheet"
+                            />
+                    </div>                    
+                </div>
+                <button
+                class="bg-indigo-500 text-white p-2 rounded-lg hover:bg-indigo-600 mt-10
+                "
+                mat-flat-button
+                primary
+                [disabled]="form.invalid || loading"
+                [type]="form.invalid ? 'button' : 'submit'"
+            >
+                <mat-icon *ngIf="loading" class="icon-size-5" style="animation: spin 2s linear infinite;"></mat-icon>
+                Cargar archivo
+            </button>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+</form>

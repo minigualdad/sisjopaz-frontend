@@ -1,0 +1,16 @@
+<form [formGroup]="form" >
+        <div class="bg-white" class="mb-4">
+            <mat-form-field class="bg-white" appearance="fill">
+                <mat-label>Hora:</mat-label>
+                <mat-select class="bg-white" (selectionChange)="saveDateTime()"  formControlName="hour">
+                  <mat-option class="bg-white" *ngFor="let hour of hours" [value]="hour">{{ hour }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="bg-white" appearance="fill">
+                <mat-label>Minutos:</mat-label>
+                <mat-select class="bg-white" (selectionChange)="saveDateTime()" formControlName="minute">
+                  <mat-option class="bg-white"  *ngFor="let minute of minutes" [value]="minute">{{ minute }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+        </div>
+</form>

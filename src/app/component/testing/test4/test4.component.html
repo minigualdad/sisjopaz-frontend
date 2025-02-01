@@ -1,0 +1,14 @@
+<div>
+    <pre>{{ syncStatus }}</pre>
+    <h1>Llamado a Lista</h1>
+    <button class="btn bg-blue-500 p-1 mr-2 rounded-md text-white" (click)="loadStudents()">Cargar Estudiantes</button>
+    <div *ngFor="let student of students">
+      <p>
+        <strong>{{ student.name }}</strong>
+        <button class="btn bg-blue-500 p-1 mr-2 rounded-md text-white" (click)="markPresent(student)">Presente</button>
+        <button class="btn bg-blue-500 p-1 mr-2 rounded-md text-white" (click)="markAbsent(student)">Ausente</button>
+        <button class="btn bg-blue-500 p-1 mr-2 rounded-md text-white" (click)="capturePhoto(student)">Capturar Foto</button>
+      </p>
+      <img *ngIf="student.photo" [src]="student.photo" alt="Foto" width="100" />
+    </div>
+  </div>

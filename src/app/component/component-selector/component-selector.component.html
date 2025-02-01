@@ -1,0 +1,10 @@
+<form [formGroup]="form" >
+    <div class="mb-4">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Seleccionar Componente</mat-label>
+            <mat-select formControlName="componentId" required (selectionChange)="selectComponentId($event)">
+                <mat-option *ngFor="let component of components" [value]="component.id">{{ component.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

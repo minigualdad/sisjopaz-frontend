@@ -1,0 +1,15 @@
+<form [formGroup]="form">
+    <div class="mb-4">
+        <app-selected class="w-full " [title]="'Tipo de documento de identificación'" (submit)="setIdentificationType($event)" [array]="document">
+        </app-selected>
+        <mat-form-field class="w-full" subscriptSizing="dynamic">
+            <br><mat-label>Número de Identificación:</mat-label>
+            <input type="number" matInput formControlName="identification" (keydown.enter)="checkSurveyByIdentification()">
+        </mat-form-field>
+    </div>
+    <button mat-flat-button type="button" [disabled]="form.invalid" class="bg-primary text-white p-2 rounded-lg hover:bg-pink-600" (click)="checkSurveyByIdentification()">Buscar</button>
+    <mat-label class="ml-4" *ngIf="surveyData">Joven Encontrado: <strong>{{surveyData.firstName | titlecase}} {{surveyData.secondName | titlecase}} {{surveyData.firstLastName | titlecase}} {{surveyData.secondLastName | titlecase}}</strong></mat-label>
+</form>
+<app-loading *ngIf="loading"></app-loading>
+
+  

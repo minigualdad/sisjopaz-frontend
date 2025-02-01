@@ -1,0 +1,69 @@
+<div class="relative bg-white p-6 rounded-lg w-full overflow-visible">
+    <button
+      class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+      mat-icon-button
+      (click)="closeDialog()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  
+    <h2 class="text-xl font-semibold text-center mb-4">Validar Documento de <strong *ngIf="survey">{{survey.name | titlecase}}</strong></h2>
+    <h3 class="text-md font-semibold text-center mb-4" *ngIf="survey">Tipo de Documento: <strong *ngIf="survey">{{survey.identificationType}}</strong></h3>
+    <h3 class="text-md font-semibold text-center mb-4" *ngIf="survey">Número de Documento: <strong *ngIf="survey">{{survey.identification | number}}</strong></h3>
+
+    <div class="flex flex-col md:flex-row md:justify-between gap-4 mb-6">
+      <div class="flex-1 flex flex-col items-center">
+        <h3 class="text-lg font-medium mb-2">Documento Frontal</h3>
+        <div class="w-full h-52 border border-gray-300 flex items-center justify-center overflow-hidden">
+          <img [src]="frontImage" alt="Documento Frontal" class="object-cover h-full" />
+        </div>
+        <button
+          mat-flat-button
+          class="mt-2 text-blue-600 hover:text-blue-800 font-medium"
+          (click)="frontInput.click()"
+        >
+          Actualizar imagen
+        </button>
+        <input
+          #frontInput
+          type="file"
+          (change)="onFileSelected($event, 'front')"
+          capture="environment"
+          accept="image/*"
+          class="text-gray-600 mt-2 hidden"
+        />
+      </div>
+  
+      <div class="flex-1 flex flex-col items-center">
+        <h3 class="text-lg font-medium mb-2">Documento Posterior</h3>
+        <div class="w-full h-52 border border-gray-300 flex items-center justify-center overflow-hidden">
+          <img [src]="backImage" alt="Documento Posterior" class="object-cover h-full" />
+        </div>
+        <button
+          mat-flat-button
+          class="mt-2 text-blue-600 hover:text-blue-800 font-medium"
+          (click)="backInput.click()"
+        >
+          Actualizar imagen
+        </button>
+        <input
+          #backInput
+          type="file"
+          (change)="onFileSelected($event, 'back')"
+          capture="environment"
+          accept="image/*"
+          class="text-gray-600 mt-2 hidden"
+        />
+      </div>
+    </div>
+  
+    <button
+        mat-raised-button
+        color="accent"
+        class="text-white"
+        (click)="confirmValidate()"
+      >
+        Actualizar
+      </button>
+  
+</div>

@@ -1,0 +1,32 @@
+<form [formGroup]="form" class="bg-white p-6 rounded-lg" (ngSubmit)="edit()">
+
+    <mat-dialog-content class="mat-typography">
+        <div>
+            <div class="md:grid md:grid-cols-3 md:gap-6">
+                <div class="md:col-span-1">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">Región</h3>
+                        <p class="mt-1 text-sm text-gray-600">Esta será información con la que se modificará la región.
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-5 md:col-span-2 md:mt-0">
+                    
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Nombre del Enlace Regional:</mat-label>
+                            <input type="text" matInput formControlName="name">
+                        </mat-form-field>
+                    </div>
+
+                    <app-user-selector [user]="regionalLink.userId" (userIdListen)="onUserSelect($event)"></app-user-selector>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button class="bg-primary text-white p-2 rounded-lg hover:bg-primary-200" mat-flat-button primary
+            [disabled]="form.invalid" [type]="form.invalid ? 'button' : 'submit'">Editar Enlace Regional</button>
+    </mat-dialog-actions>
+</form>
+<!-- <app-loading *ngIf="loading"></app-loading> -->

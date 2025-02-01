@@ -1,0 +1,18 @@
+<form [formGroup]="form" class=" p-4 bg-white rounded-md my-2" [ngClass]="{'border-red-500 border rounded-md': form.invalid && timeout}">
+    <p class="text-sm font-semibold text-gray-700">
+      <span class="text-blue-600 text-lg font-semibold" *ngIf="required">*</span>
+      {{ title }}
+      <label *ngIf="ageBoolen" class="text-sm text-gray-700 font-bold">{{ age }}</label>
+    </p>
+    <p class="text-xs italic font-semibold text-gray-400 mb-2">{{ subtitle }}</p>
+    <div class="w-full h-auto rounded-lg flex items-center justify-center my-2">
+      <input (blur)="onSubmit($event)"
+        formControlName="inputValue"
+        class="p-2 w-full bg-transparent border-solid border-gray-200 border-2 rounded"
+        [type]="type"
+        [placeholder]="placeholder"
+      >
+    </div>
+    <span *ngIf="form.invalid && timeout" class="text-red-500 text-xs">* Campo con error</span>
+  </form>
+  

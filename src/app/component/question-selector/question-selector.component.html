@@ -1,0 +1,10 @@
+<form [formGroup]="form" >
+    <div class="mb-4">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Preguntas</mat-label>
+            <mat-select formControlName="questionId" required (selectionChange)="selectQuestionId($event)">
+                <mat-option *ngFor="let question of questions" [value]="question.id">{{ question.question }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

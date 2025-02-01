@@ -1,0 +1,26 @@
+<div
+  class="w-screen flex items-center justify-center min-h-screen bg-gray-100 relative"
+>
+  <div class="text-center flex flex-col justify-center items-center">
+    <img src="img/logoMin.png" alt="" />
+
+    <h1 class="mt-6 text-2xl font-semibold text-gray-700">
+      No se ha encontrado la ruta
+    </h1>
+    <p class="mt-2 text-gray-500 mb-10">
+      La página que estás buscando no existe o ha sido movida. Por favor,
+      verifica la URL o regresa a la página de inicio.
+    </p>
+    <button
+    (click)="redirectTo()"
+      class="relative cursor-pointer opacity-90 hover:opacity-100 transition-opacity p-[2px] bg-black rounded-[16px] bg-gradient-to-t from-[#FFFFFF] to-[#FFFFFF] active:scale-95"
+    >
+      <span
+        class="w-full h-full flex items-center gap-2 px-8 py-3 bg-[#c6878f] text-white rounded-[14px] bg-gradient-to-t from-pink-400 to-pink-600"
+      >
+        <img src="svg/home.svg" alt="" />
+        Volver al inicio</span
+      >
+    </button>
+  </div>
+</div>

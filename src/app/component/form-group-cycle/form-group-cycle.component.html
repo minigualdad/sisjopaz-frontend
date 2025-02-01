@@ -1,0 +1,36 @@
+<div 
+  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+  <div 
+    class="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
+    <h2 class="text-xl font-semibold mb-4">Formulario de Ciclo de Grupo</h2>
+    <form 
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+      class="space-y-4">
+      <div>
+        <label 
+          for="input1" 
+          class="block text-sm font-medium text-gray-700 mb-1">
+          Id Grupo
+        </label>
+        <input 
+          type="number" 
+          id="input1" 
+          formControlName="groupId"
+          class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300">
+      </div>
+      
+      <button 
+        type="submit"
+        class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition">
+        Enviar
+      </button>
+    </form>
+
+    <div 
+      *ngIf="errorMessage" 
+      class="mt-4 text-sm text-red-500">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>

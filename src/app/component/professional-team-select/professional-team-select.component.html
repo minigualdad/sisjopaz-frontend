@@ -1,0 +1,10 @@
+<form [formGroup]="form" >
+    <div class="mb-4">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Equipo Profesional</mat-label>
+            <mat-select formControlName="professionalTeamId" required (selectionChange)="selectProfessionalTeamId($event)">
+                <mat-option *ngFor="let professionalTeam of professionalTeams" [value]="professionalTeam.id">{{ professionalTeam.name }} - {{professionalTeam.UserAdmin?.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

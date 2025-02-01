@@ -1,0 +1,477 @@
+<div class="w-full h-full flex flex-col justify-center items-center overflow-x-hidden p-6">
+    <h2 class="font-bold text-2xl text-[#3e75a6]">ACUERDO DE PARTICIPACIÓN Y CORRESPONSABILIDAD - PROGRAMA NACIONAL
+        JÓVENES EN PAZ</h2>
+
+        <button
+        (click)="syncWithServer()" type="button" *ngIf="qty > 0"
+        class="bg-blue-500 border-solid border-2 border-gray-500 text-white text-sm rounded w-60 px-2 py-1 mb-4
+               disabled:bg-gray-400 disabled:border-gray-300 disabled:text-gray-700"
+      >
+        Sincronización manual <br>{{ qty }} registro(s)
+      </button>
+    
+      <span class="text-sm text-pink mb-4">{{ syncStatus }}</span>
+    <div class="w-full flex pl-4">
+        <span class="w-full">Yo,</span>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-full flex flex-col justify-center items-center">
+        <div class="flex flex-col  w-full h-full items-center justify-center">
+            <!-- Columna para la carga del frente del documento -->
+            <div class="w-full p-4 bg-white rounded-md  ">
+                <span class="text-blue-600 text-blue text-lg">*</span>
+                <label class="text-sm font-medium text-gray-700 font-semibold">
+                    Por favor tome una foto de la parte frontal del documento de identidad
+                </label>
+                <input type="file" (change)="onFileSelected($event, 'front')" accept="image/*"
+                    capture="environment" class="text-gray-600">
+                <img *ngIf="frontImageUrl" [src]="frontImageUrl" alt="Frontal del documento"
+                    class="mt-2 max-w-full h-auto p-2">
+            </div>
+
+            <!-- Columna para la carga de la parte posterior del documento -->
+            <div class="w-full p-4 bg-white rounded-md  m-2">
+                <span class="text-blue-600 text-blue text-lg">*</span>
+                <label class="text-sm font-medium text-gray-700 font-semibold">
+                    Por favor tome una foto de la parte posterior del documento de identidad
+                </label>
+                <input type="file" (change)="onFileSelected($event, 'back')" capture="environment"
+                    accept="image/*" class="text-gray-600">
+                <img *ngIf="backImageUrl" [src]="backImageUrl" alt="Posterior del documento"
+                    class="mt-2 max-w-full h-auto border p-2">
+            </div>
+        </div>
+        <div class="w-full flex flex-col">
+            <label for="options" class="text-sm font-semibold text-gray-700">Tipo de documento de
+                identificación</label>
+            <br>
+            <label class="custom-label" for="Número de Documento">
+                {{ replaceHyphensWithSpaces(survey!.identificationType ) | titlecase }}
+            </label>
+        </div>
+
+        <div class="p-4">
+            <p class="text-sm font-semibold text-gray-700">
+                Número de Documento
+            </p>
+
+            <p class="text-xs italic text-gray-500 text-justify pb-4">
+                El estándar de longitud de caracteres del número de identificación acorde al tipo de identificación, se
+                define en el "Diccionario de elemento de datos el estándar" lenguaje común de intercambio de información
+                (MinTIC), de la siguiente manera: RC: entre 8 ó 10 ú 11 dígitos TI: 10 y 11 dígitos CC: entre 8 y 17
+                dígitos CE: menor a 11 dígitos PA: menor a 19 dígitos MS: para este último ingrese el documento de la
+                madre con el consecutivo respectivo al número de nacimiento. AS: para mayores de 18 años utilice el
+                código del Departamento + código de Municipio y el consecutivo definido por el Entidad Territorial o
+                UPGD. Tenga en cuenta que en el módulo de captura en línea el sistema asignará un número cuando
+                seleccione este tipo de documento. PE: menor a 18 dígitos CN: menor de 20 dígitos CD: 14 digitos SC: 12
+                digitos DE: 19 digitos PT: 10 digitos En adopción de la Circular Externa 000029 del 16 de agosto de 2017
+                expedida por el Ministerio de Salud y Protección Social, se incluye validación para la identificación de
+                extranjeros de acuerdo al estándar internacional ISO 3166-1 para los siguientes tipo de documento: en CE
+                , PA, AS, MS, CD, SC, DE y PT de esta manera se aumenta la longitud de captura en 3 dígitos más para
+                cada uno.
+            </p>
+            <label class="custom-label" for="Número de Documento">
+                {{ survey!.identification }}
+            </label>
+        </div>
+        <p class="w-full text-sm font-semibold text-gray-700">
+            <label class="text-sm text-gray-700 font-bold">Primer Nombre</label>
+        </p>
+        <label class="custom-label" for="Número de Documento">
+            {{ survey!.firstName }}
+        </label>
+        <p class="w-full text-sm font-semibold text-gray-700">
+            <label class="text-sm text-gray-700 font-bold">Segundo Nombre</label>
+        </p>
+        <label class="custom-label" for="Número de Documento">
+            {{ survey!.secondName }}
+        </label>
+
+        <p class="w-full text-sm font-semibold text-gray-700">
+            <label class="text-sm text-gray-700 font-bold">Primer Apellido</label>
+        </p>
+        <label class="custom-label" for="Número de Documento">
+            {{ survey!.firstLastName }}
+        </label>
+
+        <p class="w-full text-sm font-semibold text-gray-700">
+            <label class="text-sm text-gray-700 font-bold">Segundo Apellido</label>
+        </p>
+        <label class="custom-label" for="Número de Documento">
+            {{ survey!.secondLastName }}
+        </label>
+
+        <div class="w-full flex px-4">
+            identificado (a) como aparece al pie de mi firma, manifiesto por medio del presente documento que he sido
+            informado/a que el Programa Nacional Jóvenes en Paz ofrece una ruta de atención integral para jóvenes
+            entre los 14 y los 28 años, cuyo propósito es contribuir en la eliminación de las desigualdades, disminuir
+            la violencia y lograr la construcción de paz en los territorios.
+        </div>
+        <div class="space-y-4 w-full my-4 p-2">
+            <!-- Pregunta -->
+            <label class="font-semibold text-gray-700 flex items-center space-x-1">
+                <span class="text-blue-600 text-blue text-lg">*</span>
+                <span>En este sentido, garantizo que en la fecha en la que me pre inscribí al Programa Nacional Jóvenes
+                    en Paz me encontraba en el rango de edad entre 14 y 28 años.</span>
+            </label>
+            <!-- Opciones de radio -->
+            <div class="space-y-2 pl-2">
+                <ng-container>
+                    <label class="flex items-center space-x-3 hover:bg-blue-100 p-1">
+                        <input type="radio" formControlName="vinculate" name="vinculate" value='OK'
+                            class="m-0 form-radio w-5 h-5 border-2 border-blue-400 ml-2  checked:bg-blue-400 ">
+                        <span class="text-gray-700 text-sm">OK</span>
+                    </label>
+                </ng-container>
+            </div>
+        </div>
+        <div class="text-left">
+            <h2 class="font-bold text-2xl text-blue mb-8 ">Así mismo, manifiesto que he comprendido todos los aspectos
+                relacionados con mi
+                ingreso al Programa y de igual forma acepto los compromisos que se describen a continuación:</h2>
+
+            <p>1. Que debo cumplir con los horarios y actividades que sean establecidos para el desarrollo del Programa.
+            </p>
+            <p>2. Que debo vincularme y participar de las ofertas del componente educativo, el cual iniciará por una
+                fase introductoria, en la cual se determinará la ruta de educación a seguir de acuerdo con mi situación
+                particular e intereses, que podrá corresponder con las siguientes rutas de educación: básica y media,
+                para el Trabajo y el Desarrollo Humano, superior o complementaria.</p>
+            <p>3. Que debo vincularme y participar de las ofertas del componente de corresponsabilidad o trabajo
+                comunitario que estén disponibles o pueda realizar en el municipio en el que me inscribí al Programa,
+                por medio de las cuales realizaré aportes en beneficio de la comunidad, de la construcción de paz y el
+                fortalecimiento de las juventudes como agentes transformadores en el territorio.</p>
+            <p>
+                3.1. Que, en mi participación en el Programa, solo podré cambiar en una (1) ocasión de programa, plan o
+                proyecto del componente de corresponsabilidad al que me vinculé inicialmente, salvo caso fortuito o
+                fuerza mayor o que el cambio obedezca a la culminación del periodo establecido para la oferta en la que
+                me encuentre participando.
+            </p>
+            <p>
+                4. Que podré recibir transferencias monetarias condicionadas al cumplimiento de las actividades
+                establecidas en los componentes de educación y corresponsabilidad. Estas transferencias se liquidarán
+                mensualmente y su monto será de hasta un millón de pesos m/cte ($1.000.000), con un máximo de doce (12)
+                transferencias por beneficiario(a), de acuerdo al cumplimiento de las siguientes reglas:
+            </p>
+            <p>
+                - Con el 100% de asistencias mensuales a los componentes de educación y corresponsabilidad se entregará
+                la totalidad de la transferencia monetaria estipulada ($1.000.000).
+            </p>
+            <p>
+                - Entre el 90% y menos del 100% de asistencias mensuales promedio a los componentes de educación y
+                corresponsabilidad se entregará el 90% de la transferencia monetaria condicionada ($900.000).
+            </p>
+            <p>
+                - Entre el 80% y menos del 90% de asistencias mensuales promedio a los componentes de educación y
+                corresponsabilidad se entregará el 80% de la transferencia monetaria condicionada ($800.000).
+            </p>
+            <p>
+                - Entre el 70% y menos del 80 % de asistencias mensuales promedio a los componentes de educación y
+                corresponsabilidad recibirán el 50% de la transferencia monetaria condicionada ($500.000), por una sola
+                vez.
+            </p>
+            <p>
+                - Si la participación mensual promedio a los componentes de educación y corresponsabilidad es inferior
+                al 70%, las y los participantes NO tendrán derecho a recibir la transferencia monetaria condicionada.
+            </p>
+            <p>
+                - La transferencia monetaria condicionada será calculada proporcionalmente a los días del mes en los que
+                efectivamente me encuentre vinculado al Programa.
+            </p>
+            <p>
+                5. Que para efectos de recibir la transferencia monetaria condicionada debo contar con un producto
+                financiero o una billetera digital activa a mi nombre e identificación. También debo suministrar el
+                certificado de titularidad bancaria o en caso de billeteras digitales la certificación de cuenta, las
+                cuales no deben ser mayores a 30 días a partir de la fecha de emisión.
+            </p>
+            <p>
+                6. Que, si cambio de producto bancario o financiero, debo notificar el cambio con 30 días de
+                anticipación a la entrega de la transferencia monetaria condicionada.
+            </p>
+            <p>
+                7. Que he sido informado/a de que en el marco de la ruta de atención integral podré recibir asistencia
+                técnica en temas de empleabilidad, emprendimiento y/o asociatividad.
+            </p>
+            <p>
+                8. Que participaré activamente de los espacios dispuestos y convocados a través del componente de
+                atención integral en salud con énfasis en salud mental, para la promoción, prevención y resolución de mi
+                estado de salud física, mental y emocional, y de acompañamiento psicosocial; atendiendo las
+                orientaciones de las/los profesionales durante toda la intervención, incluso cuando exista la necesidad
+                de activar alguna ruta institucional para garantizar mi bienestar y calidad de vida.
+            </p>
+            <p>
+                9. Que podré recibir orientación socio jurídica en caso de tener alguna situación de carácter legal que
+                requiera resolver para continuar con mi participación en el Programa, salvo se emita una orden de
+                captura en mi contra, de forma posterior a mi vinculación al Programa, con lo cual quedaré desvinculado
+                (a) de este.
+            </p>
+            <p>
+                9.1. Que comprendo que si cuento con cualquiera de las siguientes circunstancias no podré hacer parte o
+                continuar participando de la Ruta de Atención Integral del Programa Nacional Jóvenes en Paz:
+            </p>
+            <p>
+                - Ser beneficiario de otras transferencias monetarias del orden nacional atribuidos a título individual
+                (por ejemplo, ser beneficiario de Renta Joven), ni tampoco recibir otros beneficios económicos otorgados
+                en el marco de los procesos implementados por la Agencia para la Reincorporación y la Normalización
+                (ARN).
+            </p>
+            <p>
+                - Tener una sanción o medida penal privativa de la libertad vigente (como prisión domiciliaria), salvo
+                autorización judicial.
+            </p>
+            <p>
+                - No tener documento de identidad expedido por autoridad colombiana.
+            </p>
+            <p>
+                9.2. Que si llego a contar con alguna de las circunstancias descritas anteriormente lo informaré a la
+                coordinación municipal o a alguno de los profesionales del Programa.
+            </p>
+            <p>
+                10. Que en la ejecución de las actividades del Programa me comprometo a:
+            </p>
+            <p>
+                - NO realizar acciones irrespetuosas, violentas, discriminatorias, intolerantes o cualquiera que afecte
+                la integridad física o moral de alguna persona.
+            </p>
+            <p>
+                - NO portar armas de ningún tipo.
+            </p>
+            <p>
+                - NO usar prendas, distintivos y/o cualquier otro atuendo que incite o propicie una situación de
+                conflicto con mis compañero/as o comunidad.
+            </p>
+            <p>
+                - NO consumir sustancias psicoactivas.
+            </p>
+            <p>
+                - NO asistir bajo el efecto de sustancias psicoactivas.
+            </p>
+            <p>
+                11. Que en caso de que una autoridad judicial emita una orden de captura o aprehensión en mi contra
+                deberé ponerlo en conocimiento de la Coordinación del Programa y deberé atender mi situación judicial.
+            </p>
+            <p>
+                12. Que mi participación en el Programa Nacional Jóvenes en Paz es libre y voluntaria y con ella estoy
+                dispuesto(a) trabajar como un agente de paz en beneficio de mi plan de vida y de mi comunidad. Esto
+                implica un compromiso de no participar en actos violentos o delictivos, ni vincularme con grupos que se
+                encuentren en acciones de criminalidad y/o conflicto armado.
+            </p>
+            <p>
+                13. Que comprendo y reconozco que el incumplimiento de cualquiera de los puntos del presente acuerdo de
+                participación y corresponsabilidad puede llevar a que se termine mi participación en el Programa.
+            </p>
+            <p>
+                14. Me comprometo a conocer el Pacto de Convivencia del Programa Nacional Jóvenes en Paz y participar de
+                todas las actividades que se desarrollan para su socialización.
+            </p>
+            <p class="mt-4">
+                El presente acuerdo de participación y corresponsabilidad se firma en:
+            </p>
+
+        </div>
+
+        <app-selected [reset]="reset" (submit)="setDepartment($event)" class="w-full " [title]="'Departamento'"
+            [array]="departments">
+        </app-selected>
+
+
+        <app-selected [reset]="reset" (submit)="setMunicipality($event)" class="w-full " [title]="'Municipio'"
+            [array]="municipalities">
+        </app-selected>
+
+        <div class="w-full flex ">
+            <app-input class="w-full" (submit)="setDate($event)" [type]="'date'" [title]="'En la fecha:'"
+                [subtitle]="''" [placeholder]="'dd/mm/aaaa'"></app-input>
+        </div>
+
+
+        <app-drawer (signatureListen)="onSignatureListen($event)" class="w-full"></app-drawer>
+
+        <div *ngIf="survey.isMinor === 'si'" class="space-y-4 w-full my-4 p-2">
+            <!-- Pregunta -->
+            <label class="font-semibold text-gray-700 flex items-center space-x-1">
+                <span>Beneficiario Menor de Edad</span>
+            </label>
+            <!-- Opciones de radio -->
+        </div>
+        <div *ngIf="survey.isMinor === 'no'" class="space-y-4 w-full my-4 p-2">
+            <!-- Pregunta -->
+            <label class="font-semibold text-gray-700 flex items-center space-x-1">
+                <span>Beneficiario Mayor de Edad</span>
+            </label>
+            <!-- Opciones de radio -->
+        </div>
+
+        <h2 *ngIf="survey.isMinor === 'si'" class="font-bold text-2xl text-blue mb-8 p-4 ">Como mayor de edad y
+            representante legal (o acudiente que tiene
+            la custodia) del/la adolescente que firma el presente acuerdo de participación y corresponsabilidad del
+            Programa Nacional Jóvenes en Paz, manifiesto que he comprendido y estoy de acuerdo con su vinculación al
+            Programa y los aspectos que se derivan de esta.</h2>
+
+        <div *ngIf="survey.isMinor === 'si'" class="flex flex-col  w-full h-full items-center justify-center">
+            <!-- Columna para la carga del frente del documento -->
+            <div class="w-full p-4 bg-white rounded-md  ">
+                <span class="text-blue-600 text-blue text-lg">*</span>
+                <label class="text-sm font-medium text-gray-700 font-semibold">
+                    Por favor tome una foto del documento que soporta la custodia
+                </label>
+                <input type="file" (change)="onFileSelected($event, 'custodyFile')" accept="image/*" class="text-gray-600">
+                <img *ngIf="custodyFile" [src]="custodyFile" alt="Documento de Custodia"
+                    class="mt-2 max-w-full h-auto p-2">
+            </div>
+        </div>
+        <div *ngIf="survey.isMinor === 'si'" class="w-full">
+            <p class="w-full text-sm font-semibold text-gray-700">
+                <span class="text-blue-600 text-lg font-semibold">*</span>
+                <label class="text-sm text-gray-700 font-bold">Primer Nombre</label>
+            </p>
+            <p class="w-full text-xs italic font-semibold text-gray-400 mb-2">Escribir en Mayúscula, sin tildes</p>
+            <div class="w-full h-auto rounded-lg flex my-2">
+                <input (input)="onInputChange($event)" formControlName="legalRepresentativeFirstName"
+                    class="p-2 w-full bg-transparent border-solid border-gray-200 border-2 rounded" type="text"
+                    placeholder="Primer Nombre">
+            </div>
+        </div>
+        <div *ngIf="survey.isMinor === 'si'" class="w-full">
+            <p class="w-full text-sm font-semibold text-gray-700">
+                <label class="text-sm text-gray-700 font-bold">Segundo Nombre</label>
+            </p>
+            <p class="w-full text-xs italic font-semibold text-gray-400 mb-2">Escribir en Mayúscula, sin tildes</p>
+            <div class="w-full h-auto rounded-lg flex my-2">
+                <input (input)="onInputChange($event)" formControlName="legalRepresentativeSecondName"
+                    class="p-2 w-full bg-transparent border-solid border-gray-200 border-2 rounded" type="text"
+                    placeholder="Segundo Nombre">
+            </div>
+        </div>
+        <div *ngIf="survey.isMinor === 'si'" class="w-full">
+            <p class="w-full text-sm font-semibold text-gray-700">
+                <span class="text-blue-600 text-lg font-semibold">*</span>
+                <label class="text-sm text-gray-700 font-bold">Primer Apellido</label>
+            </p>
+            <p class="w-full text-xs italic font-semibold text-gray-400 mb-2">Escribir en Mayúscula, sin tildes</p>
+            <div class="w-full h-auto rounded-lg flex my-2">
+                <input (input)="onInputChange($event)" formControlName="legalRepresentativeFirstLastName"
+                    class="p-2 w-full bg-transparent border-solid border-gray-200 border-2 rounded" type="text"
+                    placeholder="Primer Apellido">
+            </div>
+        </div>
+        <div *ngIf="survey.isMinor === 'si'" class="w-full">
+            <p class="w-full text-sm font-semibold text-gray-700">
+                <label class="text-sm text-gray-700 font-bold">Segundo Apellido</label>
+            </p>
+            <p class="w-full text-xs italic font-semibold text-gray-400 mb-2">Escribir en Mayúscula, sin tildes</p>
+            <div class="w-full h-auto rounded-lg flex my-2">
+                <input (input)="onInputChange($event)" formControlName="legalRepresentativeSecondLastName"
+                    class="p-2 w-full bg-transparent border-solid border-gray-200 border-2 rounded" type="text"
+                    placeholder="Segundo Apellido">
+            </div>
+        </div>
+
+        <div *ngIf="survey.isMinor === 'si'" class="w-full">
+            <span class="text-blue-600 text-lg font-semibold">*</span>
+            <label for="options" class="text-sm font-semibold text-gray-700 mb-4">Tipo de documento de
+                identificación</label>
+            <br>
+            <select formControlName="legalRepresentativeIdentificationType" class="w-full h-10 p-2">
+                <option class="w-40 h-10" value="registro-civil">Registro Civil</option>
+                <option class="w-40 h-10" value="tarjeta-de-identidad">Tarjeta de Identidad</option>
+                <option class="w-40 h-10" value="cedula-de-ciudadania">Cedula de Ciudadania</option>
+                <option class="w-40 h-10" value="cedula-extranjeria">Cedula Extranjeria</option>
+                <option class="w-40 h-10" value="pasaporte">Pasaporte</option>
+                <option class="w-40 h-10" value="menor-sin-id">Menor sin Id</option>
+                <option class="w-40 h-10" value="adulto-sin-id">Adulto sin Id</option>
+                <option class="w-40 h-10" value="permiso-especial-de-permanencia">Permiso Especial de Permanencia
+                </option>
+                <option class="w-40 h-10" value="certificado-de-nacido-vivo">Certificado de Nacido Vivo</option>
+                <option class="w-40 h-10" value="carne-diplomatico">Carné Diplomatico</option>
+                <option class="w-40 h-10" value="salvoconducto">Salvoconducto</option>
+                <option class="w-40 h-10" value="documento-extranjero">Documento Extranjero</option>
+                <option class="w-40 h-10" value="permiso-por-proteccion-temporal">Permiso por proteccion temporal
+                </option>
+                <option class="w-40 h-10" value="no-especificado">No Especificado</option>
+            </select>
+        </div>
+
+        <div *ngIf="survey.isMinor === 'si'" class="w-full">
+            <p class="text-sm font-semibold text-gray-700">
+                <span class="text-blue-600  text-lg">*</span>
+                Número de Documento
+            </p>
+
+            <p class="text-xs italic text-gray-500 text-justify">
+                El estándar de longitud de caracteres del número de identificación acorde al tipo de identificación, se
+                define en el "Diccionario de elemento de datos el estándar" lenguaje común de intercambio de información
+                (MinTIC), de la siguiente manera: RC: entre 8 ó 10 ú 11 dígitos TI: 10 y 11 dígitos CC: entre 8 y 17
+                dígitos CE: menor a 11 dígitos PA: menor a 19 dígitos MS: para este último ingrese el documento de la
+                madre con el consecutivo respectivo al número de nacimiento. AS: para mayores de 18 años utilice el
+                código del Departamento + código de Municipio y el consecutivo definido por el Entidad Territorial o
+                UPGD. Tenga en cuenta que en el módulo de captura en línea el sistema asignará un número cuando
+                seleccione este tipo de documento. PE: menor a 18 dígitos CN: menor de 20 dígitos CD: 14 digitos SC: 12
+                digitos DE: 19 digitos PT: 10 digitos En adopción de la Circular Externa 000029 del 16 de agosto de 2017
+                expedida por el Ministerio de Salud y Protección Social, se incluye validación para la identificación de
+                extranjeros de acuerdo al estándar internacional ISO 3166-1 para los siguientes tipo de documento: en CE
+                , PA, AS, MS, CD, SC, DE y PT de esta manera se aumenta la longitud de captura en 3 dígitos más para
+                cada uno.
+            </p>
+            <input class="p-2 w-full bg-transparent border-solid border-gray-200 border-2 rounded"
+                formControlName="legalRepresentativeIdentification" type="number" placeholder="">
+        </div>
+        <div *ngIf="survey.isMinor === 'si'" class="w-full">
+            <p class="w-full text-sm font-semibold text-gray-700">
+                <span class="text-blue-600 text-lg font-semibold">*</span>
+                <label class="text-sm text-gray-700 font-bold">Número de celular de(l) / la acudiente:</label>
+            </p>
+            <p class="w-full text-xs italic font-semibold text-gray-400 mb-2">Escribir en Mayúscula, sin tildes</p>
+            <div class="w-full h-auto rounded-lg flex my-2">
+                <input formControlName="legalRepresentativePhone"
+                    class="p-2 w-full bg-transparent border-solid border-gray-200 border-2 rounded" type="text"
+                    placeholder="Número de celular de(l) / la acudiente:">
+            </div>
+        </div>
+
+        <app-drawer *ngIf="survey.isMinor === 'si'" (signatureListen)="onSignatureRepresentant($event)" class="w-full"></app-drawer>
+
+        <div class="space-y-4 w-full my-4 p-2">
+            <!-- Pregunta -->
+            <label class="font-semibold text-gray-700 flex items-center space-x-1">
+                <span class="text-blue-600 text-blue text-lg">*</span>
+                <span>¿Tiene cuenta bancaria o alguna billetera digital?</span>
+            </label>
+            <p class="text-xs italic font-semibold text-gray-400 mb-4">
+                Algunos ejemplos de billeteras digitales son Daviplata, Nequi, Movi, Coink, puede mencionar
+                otros de uso común en el territorio
+            </p>
+            <!-- Opciones de radio -->
+            <div class="space-y-2 pl-2">
+                <ng-container>
+                    <label class="flex items-center space-x-3 hover:bg-blue-100 p-1">
+                        <input type="radio" formControlName="hasBankAccount" name="hasBankAccount" value='si'
+                            class="m-0 form-radio w-5 h-5 border-2 border-blue-400 ml-2  checked:bg-blue-400 ">
+                        <span class="text-gray-700 text-sm">Sí</span>
+                        <input type="radio" formControlName="hasBankAccount" name="hasBankAccount" value='no'
+                            class="m-0 form-radio w-5 h-5 border-2 border-blue-400 ml-2  checked:bg-blue-400 ">
+                        <span class="text-gray-700 text-sm">No</span>
+                    </label>
+                </ng-container>
+            </div>
+        </div>
+
+        <!-- <div class="w-full p-4 bg-white rounded-md ">
+            <span class="text-blue-600 text-blue text-lg">*</span>
+            <label class="text-sm font-medium text-gray-700 font-semibold">
+                Por favor tome una foto de la certificación de la cuenta si cuenta con ella
+            </label>
+            <input type="file" (change)="onFileSelected($event, 'accountCertification')" accept="image/*"
+                capture="environment" class="text-gray-600">
+            <img *ngIf="accountFile" [src]="accountFile" alt="Certificación Bancaria"
+                class="mt-2 max-w-full h-auto p-2">
+        </div> -->
+
+
+        <button type="submit" [disabled]="!form.invalid" class="bg-blue-500 border-solid border-2 border-gray-500 text-white text-lg rounded w-60 p-4
+        disabled:bg-gray-400 disabled:border-gray-300 disabled:text-gray-700">
+            Enviar
+        </button>
+
+
+    </form>
+</div>

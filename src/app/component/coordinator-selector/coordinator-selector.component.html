@@ -1,0 +1,10 @@
+<form [formGroup]="form" >
+    <div class="mb-4">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Coordinadores</mat-label>
+            <mat-select formControlName="coordinatorId" required (selectionChange)="selectCoordinatorId($event)">
+                <mat-option *ngFor="let coordinator of coordinators" [value]="coordinator.id">{{ coordinator.name }} - {{coordinator.divipol}} </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>
