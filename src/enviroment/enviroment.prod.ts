@@ -1,6 +1,6 @@
 // src/environments/environment.ts
 export const environment = {
     production: true,
-    apiUrl: 'https://sisjopaz.bsccolombia.com/v1'
+    apiUrl: 'https://demoministerio.bsccolombia.com/v1'
   };
   
