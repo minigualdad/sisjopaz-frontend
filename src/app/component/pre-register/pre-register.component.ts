@@ -66,6 +66,27 @@ export class PreRegisterComponent implements OnChanges {
   role: any;
   departmentName: any;
 
+  documentRestrictions:any = {
+    "registro-civil": { min: 8, max: 11, exact: null },
+    "tarjeta-de-identidad": { min: 10, max: 11, exact: null },
+    "cedula-de-ciudadania": { min: 8, max: 10, exact: null },
+    "cedula-extranjeria": { min: null, max: 14, exact: null },
+    "pasaporte": { min: null, max: 22, exact: null },
+    "menor-sin-id": { min: null, max: null, exact: null }, // Validación especial
+    "adulto-sin-id": { min: null, max: null, exact: null }, // Validación especial
+    "permiso-especial-de-permanencia": { min: null, max: 21, exact: null },
+    "certificado-de-nacido-vivo": { min: null, max: 20, exact: null },
+    "carne-diplomatico": { min: 14, max: 14, exact: 14 },
+    "salvoconducto": { min: 12, max: 12, exact: 12 },
+    "documento-extranjero": { min: null, max: 22, exact: null },
+    "permiso-por-proteccion-temporal": { min: 10, max: 10, exact: 10 },
+    "no-especificado": { min: null, max: null, exact: null }
+  };
+  
+  selectedDocumentType: string = '';
+  identificationNumber: string = '';
+  errorMessage: string = '';
+
   constructor(
     private indexedDbService: IndexedDbService,
     private formService: FormService,
@@ -167,6 +188,39 @@ export class PreRegisterComponent implements OnChanges {
     window.addEventListener('offline', () => {
       this.syncStatus = 'Modo offline. ';
     });
+  }
+
+  onDocumentTypeChange(documentType: string) {
+    this.selectedDocumentType = documentType;
+    this.form.controls['identificationType'].setValue(this.selectedDocumentType);
+    this.validateIdentificationNumber();
+  }
+  
+  validateIdentificationNumber() {
+    const restrictions = this.documentRestrictions[this.selectedDocumentType];
+    if (!restrictions) return;
+    const length = this.identificationNumber.length;
+    if (restrictions.exact !== null && length !== restrictions.exact) {
+      this.showError(`El número de documento debe tener exactamente ${restrictions.exact} dígitos.`);
+      return;
+    }
+    if (restrictions.min !== null && length < restrictions.min) {
+      this.showError(`El número de documento debe tener al menos ${restrictions.min} dígitos.`);
+      return;
+    }
+    if (restrictions.max !== null && length > restrictions.max) {
+      this.showError(`El número de documento no puede tener más de ${restrictions.max} dígitos.`);
+      return;
+    }
+    this.clearError();
+  }
+  
+  showError(message: string) {
+    this.errorMessage = message;
+  }
+  
+  clearError() {
+    this.errorMessage = '';
   }
 
   isRequiredCompletes(): boolean {
@@ -305,6 +359,8 @@ export class PreRegisterComponent implements OnChanges {
   setIdentification(event: any) {
     const value = event;
     this.form.get('identification')?.setValue(value);
+    this.identificationNumber = event;
+    this.validateIdentificationNumber();
   }
 
   setIsMinor(event: boolean) {

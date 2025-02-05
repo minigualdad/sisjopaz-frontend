@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../enviroment/enviroment';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,21 @@ export class AssistanceScannerService {
     const selectedFile = file;
     const fd = new FormData();
     fd.append('file', selectedFile, selectedFile.name);
-    return this._httpClient.post(environment.apiUrl + '/app/assistanceScanner/uploadFile', fd);
+    return this._httpClient.post(environment.apiUrl + '/app/assistanceScanner/uploadFile', fd)
+    .pipe(
+          map((response: any) => {
+            response.response.assistanceScannerBeneficiaries = response.response.assistanceScannerBeneficiaries.map((assistanceScannerBeneficiary: any) => {
+              assistanceScannerBeneficiary.firstName = assistanceScannerBeneficiary.Survey?.firstName
+              assistanceScannerBeneficiary.secondName = assistanceScannerBeneficiary.Survey?.secondName
+              assistanceScannerBeneficiary.firstLastName = assistanceScannerBeneficiary.Survey?.firstLastName
+              assistanceScannerBeneficiary.secondLastName = assistanceScannerBeneficiary.Survey?.secondLastName
+              assistanceScannerBeneficiary.identificationType = assistanceScannerBeneficiary.Survey?.identificationType
+              assistanceScannerBeneficiary.identification = assistanceScannerBeneficiary.Survey?.identification
+              return assistanceScannerBeneficiary;
+            })
+            return response
+          })
+        )
   }
 
 }

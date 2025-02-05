@@ -63,29 +63,35 @@
                     mayor
                     que no permitan cargar la foto al momento del registro</p>
 
-                <app-selected *ngIf="conditionsAccepted" [reset]="reset" (submit)="setIdentificationType($event)" class="w-full "
-                    [title]="'Tipo de documento de identificación'" [array]="document">
-                </app-selected>
-
-                <div *ngIf="conditionsAccepted" class="w-full flex">
-                    <app-input [reset]="reset" (submit)="setIdentification($event)" class="w-full" type="number"
-                        [title]="'Número de Documento'"
-                        subtitle='El estándar de longitud de caracteres del número de identificación acorde al tipo de identificación, se
-                            define en el "Diccionario de elemento de datos el estándar" lenguaje común de intercambio de información
-                            (MinTIC), de la siguiente manera: RC: entre 8 ó 10 ú 11 dígitos TI: 10 y 11 dígitos CC: entre 8 y 17
-                            dígitos CE: menor a 11 dígitos PA: menor a 19 dígitos MS: para este último ingrese el documento de la
-                            madre con el consecutivo respectivo al número de nacimiento. AS: para mayores de 18 años utilice el
-                            código del Departamento + código de Municipio y el consecutivo definido por el Entidad Territorial o
-                            UPGD. Tenga en cuenta que en el módulo de captura en línea el sistema asignará un número cuando
-                            seleccione este tipo de documento. PE: menor a 18 dígitos CN: menor de 20 dígitos CD: 14 digitos SC: 12
-                            digitos DE: 19 digitos PT: 10 digitos En adopción de la Circular Externa 000029 del 16 de agosto de 2017
-                            expedida por el Ministerio de Salud y Protección Social, se incluye validación para la identificación de
-                            extranjeros de acuerdo al estándar internacional ISO 3166-1 para los siguientes tipo de documento: en CE
-                            , PA, AS, MS, CD, SC, DE y PT de esta manera se aumenta la longitud de captura en 3 dígitos más para cada uno.'
-                        placeholder=""></app-input>
-
-
-                </div>
+                    <div class="w-full space-y-4">
+                        <!-- Selector de tipo de documento -->
+                        <app-selected
+                          *ngIf="conditionsAccepted"
+                          [reset]="reset"
+                          (submit)="onDocumentTypeChange($event)"
+                          class="w-full"
+                          [title]="'Tipo de documento de identificación'"
+                          [array]="document"
+                        ></app-selected>
+                      
+                        <!-- Campo de número de documento -->
+                        <div *ngIf="conditionsAccepted" class="w-full flex flex-col space-y-2">
+                          <app-input
+                            [reset]="reset"
+                            (submit)="setIdentification($event)"
+                            class="w-full"
+                            type="number"
+                            [title]="'Número de Documento'"
+                            subtitle="El estándar de longitud de caracteres del número de identificación acorde al tipo de identificación, se define en el 'Diccionario de elemento de datos el estándar' lenguaje común de intercambio de información (MinTIC), de la siguiente manera: RC: entre 8 ó 10 ú 11 dígitos TI: 10 y 11 dígitos CC: entre 8 y 17 dígitos CE: menor a 11 dígitos PA: menor a 19 dígitos MS: para este último ingrese el documento de la madre con el consecutivo respectivo al número de nacimiento. AS: para mayores de 18 años utilice el código del Departamento + código de Municipio y el consecutivo definido por el Entidad Territorial o UPGD. Tenga en cuenta que en el módulo de captura en línea el sistema asignará un número cuando seleccione este tipo de documento. PE: menor a 18 dígitos CN: menor de 20 dígitos CD: 14 digitos SC: 12 digitos DE: 19 digitos PT: 10 digitos En adopción de la Circular Externa 000029 del 16 de agosto de 2017 expedida por el Ministerio de Salud y Protección Social, se incluye validación para la identificación de extranjeros de acuerdo al estándar internacional ISO 3166-1 para los siguientes tipo de documento: en CE, PA, AS, MS, CD, SC, DE y PT de esta manera se aumenta la longitud de captura en 3 dígitos más para cada uno."
+                            placeholder="Ingrese el número de documento"
+                          ></app-input>
+                      
+                          <!-- Mensaje de error -->
+                          <div *ngIf="errorMessage" class="text-red-500 text-sm mt-1">
+                            {{ errorMessage }}
+                          </div>
+                        </div>
+                      </div>
                 <div *ngIf="conditionsAccepted" class="w-full flex">
                     <app-input [reset]="reset" (submit)="setIdentificationExpedition($event)" class="w-full"
                         [type]="'date'" [title]="'¿Cuál es la fecha de expedición de su documento de identificación?'"

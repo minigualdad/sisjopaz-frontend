@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AssistanceScannerService } from '../../service/assitance-scanner.service';
 import { environment } from '../../../enviroment/enviroment';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
 import imageCompression from 'browser-image-compression';
+import { Router } from '@angular/router';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-assistance-upload',
@@ -11,7 +16,10 @@ import imageCompression from 'browser-image-compression';
   templateUrl: './assistance-upload.component.html',
   styleUrl: './assistance-upload.component.scss'
 })
-export class AssistanceUploadComponent {
+export class AssistanceUploadComponent implements OnInit{
+    @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
+    new MatSort();
+  @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
 
   imagePreview: any | null = null;
   imagePreviewResult: SafeResourceUrl | null = null; 
@@ -20,11 +28,48 @@ export class AssistanceUploadComponent {
   rotationAngle = 0;
   alert = '';
   loading = false;
+  showTableData = false;
+  imageLoaded: boolean = false;
+
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  columns: any = {
+    identificationType: 'Tipo de documento',
+    identification: 'Numero de Documento',
+    assistanceSignDate: 'Fechas de Asistencias',
+    firstName: 'Primer Nombre',
+    secondName: 'Segundo Nombre',
+    firstLastName: 'Primer Apellido',
+    secondLastName: 'Segundo Apellido',
+  };
+  recordsTableColumns: string[] = [];
+  user: any;
+
+  imageUrl: string = '';
 
   constructor(private assistanceScannerService: AssistanceScannerService,
               private sanitizer: DomSanitizer,
+              private route: Router,
+              public dialog: MatDialog,
   ) {
+    this.recordsTableColumns = Object.keys(this.columns);
 
+  }
+  ngOnInit(): void {
+    
+  }
+
+  ngAfterViewInit(): void {
+    // Make the data source sortable
+    this.dataSource.sort = this.recordsTableMatSort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  trackByFn(index: number, item: any): any {
+    return item.id || index;
+  }
+  
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   // Manejar la selección de un archivo
@@ -118,6 +163,10 @@ export class AssistanceUploadComponent {
         }, this.file.type);
       };
     }
+
+  newAssistance(){
+    window.location.reload();
+  }
   
 
   // Simular la subida de la imagen
@@ -130,19 +179,27 @@ export class AssistanceUploadComponent {
     this.assistanceScannerService.uploadFile(file)
     .subscribe({
       next: (response: any) => {
+        this.showTableData = true;
+        this.dataSource.data = response.response.assistanceScannerBeneficiaries;
         const imageResult = `${environment.apiUrl}/${response?.response?.imageResult}`;
+        this.imageUrl = imageResult
         this.imagePreviewResult = this.sanitizer.bypassSecurityTrustResourceUrl(imageResult);
         this.loading = false;
+        this.imageLoaded = true;
         // this.imagePreview = null;
         Swal.fire('Correcto', 'Las planillas de Asistencia han sido cargadas correctamente', 'success');
       },
       error: (error: any) => {
+
         this.loading = false;
-        console.error(error.error);
         Swal.fire('Advertencia', `Algo ha fallado, por favor revise la consistencia de la planilla. ${ error?.error?.message }`, 'warning');
       }
     });
 
+  }
+
+  redirectTo(url:string){
+    this.route.navigateByUrl(url)
   }
 
 }

@@ -1,0 +1,20 @@
+<div class="flex flex-col items-center p-6 h-full w-full bg-gray-100" *ngIf="imageUrl">
+    <!-- Imagen o mensaje de error -->
+    <div class="flex justify-center items-center flex-grow w-full border rounded-lg bg-white shadow-lg overflow-hidden">
+      <ng-container *ngIf="isValidImage; else errorTemplate">
+        <img
+          [src]="imageUrl"
+          (error)="onImageError()"
+          alt="Preview"
+          class="w-full h-full "
+        />
+      </ng-container>
+  
+      <!-- Mensaje de error -->
+      <ng-template #errorTemplate>
+        <div class="text-red-600 text-xl font-medium text-center p-4">
+            No se pudo cargar la imagen. Por favor verifique la URL.
+        </div>
+      </ng-template>
+    </div>
+  </div>

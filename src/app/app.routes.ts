@@ -170,6 +170,7 @@ import { DocumentValidateByRolComponent } from './component/document-validate-by
 import { BankDataAddComponent } from './component/bank-data-add/bank-data-add.component';
 import { BankSelectorComponent } from './component/bank-selector/bank-selector.component';
 import { AgreementSignaureComponent } from './component/agreement-signaure/agreement-signaure.component';
+import { ImageViewerComponent } from './component/image-viewer/image-viewer.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -698,7 +699,6 @@ export const routes: Routes = [
                     Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOJURIDICO, Roles.APOYO_A_LA_COORDINACION, 
                     Roles.GESTORES_SOCIALES] }
             },
-
             
         ]
     },
@@ -848,6 +848,7 @@ export const routes: Routes = [
         BankDataAddComponent,
         BankSelectorComponent,
         AgreementSignaureComponent,
+        ImageViewerComponent,
     ],
     imports: [
     RouterModule.forRoot(routes),
