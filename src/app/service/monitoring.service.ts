@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../enviroment/enviroment';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -46,4 +46,10 @@ export class MonitoringService {
   // No se usa
   delete(id: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/monitoring/${id}/delete`, {});
-  }}
+  }
+
+  getMonitoringPdf(surveyId:number): Observable<any>{
+    return this._httpClient.get(`${environment.apiUrl}/app/monitoring/${surveyId}/getPdf`);
+  }
+
+}

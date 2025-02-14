@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,6 +9,9 @@ import { SurveyService } from '../../service/survey.service';
 import { BeneficiaryService } from '../../service/beneficiary.service';
 import { environment } from '../../../enviroment/enviroment';
 import Swal from 'sweetalert2';
+import { CharacterizationService } from '../../service/characterization.service';
+import { MonitoringService } from '../../service/monitoring.service';
+import { PaginatorService } from '../../service/paginator.service';
 
 @Component({
   selector: 'app-professional-team-beneficiary',
@@ -16,10 +19,11 @@ import Swal from 'sweetalert2';
   templateUrl: './professional-team-beneficiary.component.html',
   styleUrl: './professional-team-beneficiary.component.scss'
 })
-export class ProfessionalTeamBeneficiaryComponent {
+export class ProfessionalTeamBeneficiaryComponent implements OnInit, AfterViewInit {
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
     new MatSort();
   @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
+  @ViewChild(MatSort) sort!: MatSort;
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   columns: any = {
@@ -46,6 +50,16 @@ export class ProfessionalTeamBeneficiaryComponent {
   };
   recordsTableColumns: string[] = [];
   serverUrl = environment.apiUrl;
+  isData: boolean = false;
+
+  totalItems = 0;
+  pageSize = 10;
+  pageIndex = 0;
+
+  loading = false;
+  totalSize = 0;
+  searchValue: string = ''; 
+
 
 
   constructor(
@@ -53,7 +67,11 @@ export class ProfessionalTeamBeneficiaryComponent {
     private _beneficiaryService: BeneficiaryService,
     private titleService: Title,
     public dialog: MatDialog,
+    private _characterizationService: CharacterizationService,
+    private _monitoringService: MonitoringService,
     public activatedRoute: ActivatedRoute,
+    private paginatorService: PaginatorService,
+
   ) {
     this.recordsTableColumns = Object.keys(this.columns);
     this.titleService.setTitle('Jóvenes');
@@ -63,7 +81,7 @@ export class ProfessionalTeamBeneficiaryComponent {
   * On init
   */
   ngOnInit(): void {
-        this.getAll();
+    this.getAll();
   }
 
   /**
@@ -72,19 +90,48 @@ export class ProfessionalTeamBeneficiaryComponent {
   ngAfterViewInit(): void {
     // Make the data source sortable
     this.dataSource.sort = this.recordsTableMatSort;
-    this.dataSource.paginator = this.paginator;
+    this.loading = true;
+    this.paginatorService.onPageChange(this.paginator, (pageIndex, pageSize) => {
+      this.surveyService.getAllByProfessionalTeam(pageIndex, pageSize).subscribe({
+        next: async (response: any) => {
+          this.loading = false;
+          this.loadData(response);
+        },
+        error: (err) => {
+          this.loading = false;
+          console.error("Error en la solicitud: ", err);
+        }
+      });
+    });
   }
 
   ngOnDestroy(): void { }
 
   async getAll() {
-    await this.surveyService.getAllByProfessionalTeam().subscribe({
-        next: (response: any) => {
-            this.dataSource.data = response.surveys;
-        },
+    await this.surveyService.getAllByProfessionalTeam(0,10).subscribe({
+      next: (response: any) => {
+        this.dataSource.data = response.surveys;
+        this.loadData(response)
+        this.loading = false;
+        if (this.dataSource.data.length > 0) {
+          this.isData = true;
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error("Error en la solicitud: ", err);
+      }
     });
   }
 
+  searchByFilter() {
+    this.surveyService.filterByWord(this.searchValue).subscribe({
+      next: (response: any) => {
+        this.dataSource.data = response.surveys;
+        this.loadData(response);
+        },
+    })
+  }
 
   /**
     * Track by function for ngFor loops
@@ -96,7 +143,7 @@ export class ProfessionalTeamBeneficiaryComponent {
     return item.id || index;
   }
 
-  downloadPDF(id:number) {
+  downloadPDF(id: number) {
     this._beneficiaryService.getPDF(id).subscribe((response: any) => {
       const file = `${this.serverUrl}/${response.pdfFile}`;
       const url = file;
@@ -108,10 +155,10 @@ export class ProfessionalTeamBeneficiaryComponent {
       window.URL.revokeObjectURL(url);
       Swal.fire('Se ha generado el PDF', 'Se ha generado el PDF exitosamente', 'success');
     },
-    (error:any) =>{
-      Swal.fire('Error generando PDF', 'Ha ocurrido un eror durante la creación del PDF', 'error');
-    }
-  );
+      (error: any) => {
+        Swal.fire('Error generando PDF', 'Ha ocurrido un eror durante la creación del PDF', 'error');
+      }
+    );
   }
 
   downloadPDFPreRegister(id: number) {
@@ -131,7 +178,46 @@ export class ProfessionalTeamBeneficiaryComponent {
       }
     );
   }
-  
+
+  downloadPDFCaracterization(characterizationId: number) {
+    this._characterizationService.getCharacterizationPdf(characterizationId).subscribe({
+      next: (response: any) => {
+
+        window.open(`${environment.apiUrl}/${response.path}`, '_blank');
+      },
+      error: (err: any) => {
+        console.error('Error al descargar el PDF:', err);
+        alert('Hubo un error al descargar el PDF.');
+      },
+    });
+  }
+
+  downloadPDFMonitoring(monitoringId: number) {
+    this._monitoringService.getMonitoringPdf(monitoringId).subscribe({
+      next: (response: any) => {
+
+        window.open(`${environment.apiUrl}/${response.path}`, '_blank');
+      },
+      error: (err: any) => {
+        console.error('Error al descargar el PDF:', err);
+        alert('Hubo un error al descargar el PDF.');
+      },
+    });
+  }
+
+  async loadData(response: any) {
+    this.dataSource.data = response.surveys;
+    this.totalSize = response?.total;
+    await this.timer(100);
+    this.dataSource.sort = this.recordsTableMatSort;
+    this.paginator.length = this.totalSize;
+    this.loading = false;
+  }
+
+  timer(ms: number) {
+    return new Promise(res => setTimeout(res, ms));
+  }
+
 
   applyFilter(event: any) {
     this.dataSource.filter = event.target.value.trim().toLowerCase();

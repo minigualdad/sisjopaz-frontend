@@ -171,6 +171,7 @@ import { BankDataAddComponent } from './component/bank-data-add/bank-data-add.co
 import { BankSelectorComponent } from './component/bank-selector/bank-selector.component';
 import { AgreementSignaureComponent } from './component/agreement-signaure/agreement-signaure.component';
 import { ImageViewerComponent } from './component/image-viewer/image-viewer.component';
+import { GroupChangeComponent } from './component/group-change/group-change.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -699,6 +700,10 @@ export const routes: Routes = [
                     Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOJURIDICO, Roles.APOYO_A_LA_COORDINACION, 
                     Roles.GESTORES_SOCIALES] }
             },
+            {
+                path: 'group-change/:id', component: GroupChangeComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
+            },
             
         ]
     },
@@ -849,6 +854,7 @@ export const routes: Routes = [
         BankSelectorComponent,
         AgreementSignaureComponent,
         ImageViewerComponent,
+        GroupChangeComponent,
     ],
     imports: [
     RouterModule.forRoot(routes),

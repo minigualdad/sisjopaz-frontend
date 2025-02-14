@@ -53,7 +53,7 @@ export class GroupComponentDateActivityBenefiaryService {
     return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/findByComponentAndUser`, {groupComponentDateActivityBeneficiary})
     .pipe(
       map( (response: any) => {
-        response.groupComponentDateActivityBeneficiaries = response.groupComponentDateActivityBeneficiaries.map( (groupComponentDateActivityBeneficiary: any) => {
+        response.groupComponentDateActivityBeneficiaries = response.groupComponentDateActivityBeneficiaries.groupComponentDateActivityBeneficiaries.map( (groupComponentDateActivityBeneficiary: any) => {
           groupComponentDateActivityBeneficiary.groupComponent = groupComponentDateActivityBeneficiary.GroupComponent?.Component?.name;
           groupComponentDateActivityBeneficiary.groupCycle = groupComponentDateActivityBeneficiary.GroupCycle?.cycle;
           groupComponentDateActivityBeneficiary.user = groupComponentDateActivityBeneficiary.UserId?.firstName;

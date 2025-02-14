@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../enviroment/enviroment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,10 @@ export class CharacterizationService {
   // No se usa
   delete(id: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/characterization/${id}/delete`, {});
+  }
+
+  getCharacterizationPdf(surveyId:number): Observable<any>{
+    return this._httpClient.get(`${environment.apiUrl}/app/characterization/${surveyId}/getPdf`);
   }
   
 }

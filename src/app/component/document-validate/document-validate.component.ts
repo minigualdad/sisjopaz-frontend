@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SurveyService } from '../../service/survey.service';
 import { DocumentValidateVerifyComponent } from '../document-validate-verify/document-validate-verify.component';
 import { DocumentValidateUpdateComponent } from '../document-validate-update/document-validate-update.component';
+import { PaginatorService } from '../../service/paginator.service';
+
 
 @Component({
   selector: 'app-document-validate',
@@ -15,10 +17,12 @@ import { DocumentValidateUpdateComponent } from '../document-validate-update/doc
   templateUrl: './document-validate.component.html',
   styleUrl: './document-validate.component.scss'
 })
-export class DocumentValidateComponent {
+export class DocumentValidateComponent implements OnInit, AfterViewInit  {
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
     new MatSort();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   columns: any = {
@@ -36,13 +40,21 @@ export class DocumentValidateComponent {
 
   };
   recordsTableColumns: string[] = [];
+  isData: boolean = false;
 
+  totalItems = 0;  
+  pageSize = 10;   
+  pageIndex = 0;   
+  loading = false;
+  totalSize = 0;
+  searchValue: string = '';
 
   constructor(
     private surveyService: SurveyService,
     private titleService: Title,
     private router: Router,
     public dialog: MatDialog,
+    private paginatorService: PaginatorService,
   ) {
     this.recordsTableColumns = Object.keys(this.columns);
     this.titleService.setTitle('Documentos no Validados');
@@ -62,18 +74,40 @@ export class DocumentValidateComponent {
   ngAfterViewInit(): void {
     // Make the data source sortable
     this.dataSource.sort = this.recordsTableMatSort;
-    this.dataSource.paginator = this.paginator;
+    this.loading = true;
+    this.paginatorService.onPageChange(this.paginator, (pageIndex, pageSize) => {
+      this.surveyService.getAllByAccountCert(pageIndex, pageSize).subscribe({
+        next: async (response: any) => {
+          this.loading = false;
+          this.loadData(response);
+        },
+        error: (err) => {
+          this.loading = false;
+          console.error("Error en la solicitud: ", err);
+        }
+      });
+    });  
   }
 
   ngOnDestroy(): void { }
 
   async getAll() {
-    await this.surveyService.getAllNoValidatesDocuments().subscribe({
-      next: (response: any) => {
-        this.dataSource.data = response.surveys;
-      },
-    });
-  }
+    this.loading = true;
+    await this.surveyService.getAllByAccountCert(0,10).subscribe({
+        next: (response: any) => {
+            this.dataSource.data = response.surveys;
+            this.loadData(response)
+            this.loading = false;
+            if(this.dataSource.data.length > 0) {
+              this.isData = true;
+            }
+        },
+        error: (err) => {
+          this.loading = false;
+          console.error("Error en la solicitud: ", err);
+        }
+  })
+}
 
   massiveValidate() {
     this.router.navigateByUrl(`/app/beneficiary-massive-validate`);
@@ -107,6 +141,28 @@ export class DocumentValidateComponent {
     dialogRef.afterClosed().subscribe(result => {
       this.getAll();
     });
+  }
+
+  searchByFilter() {
+    this.surveyService.filterByWord(this.searchValue).subscribe({
+      next: (response: any) => {
+        this.dataSource.data = response.surveys;
+        this.loadData(response);
+      },
+    })
+  }
+
+  async loadData(response: any) {
+    this.dataSource.data = response.surveys;
+    this.totalSize = response?.total;
+    await this.timer(100);
+    this.dataSource.sort = this.recordsTableMatSort;
+    this.paginator.length = this.totalSize;
+    this.loading = false;
+  }
+  
+  timer(ms: number) {
+    return new Promise(res => setTimeout(res, ms));
   }
 
   /**

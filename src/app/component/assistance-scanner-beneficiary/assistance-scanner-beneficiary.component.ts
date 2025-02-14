@@ -71,23 +71,31 @@ async getAll() {
 }
 
 checkImage(id: any){
-  let newId = id-1;
-  const url = this.server + this.dataSource.data[newId].urlFileImageProcessed;
-  if (url) {
-    window.open(url, '_blank'); // Abre el documento en una nueva pestaña
-  } else {
-    console.error('No se encontró una URL válida para el documento.');
-  }
+  let url = '';
+  this.assistanceScannerBeneficiaryService.show(id)
+  .subscribe((response: any) => {
+    url = this.server + response.beneficiaryAssistance.AssistanceScanner?.urlFileImageProcessed;
+    if (url) {
+      window.open(url, '_blank'); // Abre el documento en una nueva pestaña
+    } else {
+      console.error('No se encontró una URL válida para el documento.');
+    }
+  })
+
 }
 
 checkOriginalImage(id: any){
-  let newId = id-1;
-  const url = this.server + this.dataSource.data[newId].urlFileImageOriginal;
-  if (url) {
-    window.open(url, '_blank'); // Abre el documento en una nueva pestaña
-  } else {
-    console.error('No se encontró una URL válida para el documento.');
-  }
+  let url = '';
+  this.assistanceScannerBeneficiaryService.show(id)
+  .subscribe((response: any) => {
+    url = this.server + response.beneficiaryAssistance.AssistanceScanner?.urlFileImageOriginal;
+    if (url) {
+      window.open(url, '_blank'); // Abre el documento en una nueva pestaña
+    } else {
+      console.error('No se encontró una URL válida para el documento.');
+    }
+  })
+
 }
 
 async onSelectSurvey(event: any){

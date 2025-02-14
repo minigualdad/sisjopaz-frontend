@@ -21,11 +21,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
-  getAll() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAll`)
+  getAll(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAll`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.dateSlplitted = survey.date?.split('T')[0];
             survey.name = survey.firstName;
             if (survey.secondName) {
@@ -101,12 +101,92 @@ export class SurveyService {
       )
   }
 
+  filterByWord(value:string){
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByValue`, {value})
+    .pipe(
+      map((response: any) => {
+        response.surveys = response.surveys.map((survey: any) => {
+          survey.dateSlplitted = survey.date?.split('T')[0];
+          survey.name = survey.firstName;
+          if (survey.secondName) {
+            survey.name += ' ';
+            survey.name += survey.secondName;
+          }
+          survey.name += ' ';
+          survey.name += survey.firstLastName;
+          if (survey.secondLastName) {
+            survey.name += ' ';
+            survey.name += survey.secondLastName;
+          }
+          survey.nameOriginal = survey.firstNameOriginal;
+          if (survey.secondNameOriginal) {
+            survey.nameOriginal += ' ';
+            survey.nameOriginal += survey.secondNameOriginal;
+          } else {
+            survey.secondNameOriginal = '';
+          }
+          survey.nameOriginal += ' ';
+          survey.nameOriginal += survey.firstLastNameOriginal;
+          if (survey.secondLastNameOriginal) {
+            survey.nameOriginal += ' ';
+            survey.nameOriginal += survey.secondLastNameOriginal;
+          } else {
+            survey.secondLastNameOriginal = '';
+          }
+          survey.startProgramDate = survey.createdAt.split('T')[0];
+          survey.group = survey.Group?.name;
+          if (survey.DNPCheckDate) {
+            survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
+          } else {
+            survey.DNPCheckDate = 'Sin Revisar'
+          }
+          if (survey.ARNCheckDate) {
+            survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
+          } else {
+            survey.ARNCheckDate = 'Sin Revisar'
+          }
+          if (survey.DPSCheckDate) {
+            survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
+          } else {
+            survey.DPSCheckDate = 'Sin Revisar'
+          }
+          if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
+            survey.DNPCheck = 'No Validado'
+          }
+          if (survey.DNPCheck === 'si' && survey.DNPCheckDate) {
+            survey.DNPCheck = 'Validado'
+          } else {
+            survey.DNPCheck = 'Sin Revisar'
+          }
+          if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
+            survey.ARNCheck = 'No Validado'
+          }
+          if (survey.ARNCheck === 'si' && survey.ARNCheckDate) {
+            survey.ARNCheck = 'Validado'
+          } else {
+            survey.ARNCheck = 'Sin Revisar'
+          }
+          if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
+            survey.ARNCheck = 'No Validado'
+          }
+          if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
+            survey.DPSCheck = 'Validado'
+          } else {
+            survey.DPSCheck = 'Sin Revisar'
+          }
+          return survey;
+        })
+        return response;
+      })
+    )
+  }
+
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.COORDINACION, Roles.ENLACE_REGIONAL])
-  getAllWithoutGroup() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllWithoutGroup`)
+  getAllWithoutGroup(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllWithoutGroup`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.dateSlplitted = survey.date?.split('T')[0];
             survey.divipola = survey.Divipola?.name;
             survey.name = survey.firstName;
@@ -184,11 +264,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
-  getAllByGroup(id: number) {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/${id}/getAllByGroup`)
+  getAllByGroup(id: number, currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/getAllByGroup`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.dateSlplitted = survey.date?.split('T')[0];
             survey.name = survey.firstName;
             if (survey.secondName) {
@@ -324,11 +404,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
-  getAllByProfessionalTeam() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllByProfessionalTeam`)
+  getAllByProfessionalTeam(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByProfessionalTeam`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.dateSlplitted = survey.date?.split('T')[0];
             survey.name = survey.firstName;
             if (survey.secondName) {
@@ -410,11 +490,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
-  getAllByAccountCert() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllByHasBankAccount`)
+  getAllByAccountCert(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByHasBankAccount`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.dateSlplitted = survey.date?.split('T')[0];
             survey.name = survey.firstName;
             if (survey.secondName) {
@@ -476,11 +556,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
-  getAllNoValidates() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getNoRegistraduryValidate`)
+  getAllNoValidates(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getNoRegistraduryValidate`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.dateSlplitted = survey.date?.split('T')[0];
             survey.name = survey.firstName;
             if (survey.secondName) {
@@ -563,11 +643,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_PSICOJURIDICO])
-  getAllNoValidatesByProfessional() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getNoRegistraduryValidateByProfessional`)
+  getAllNoValidatesByProfessional(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getNoRegistraduryValidateByProfessional`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.dateSlplitted = survey.date?.split('T')[0];
             survey.name = survey.firstName;
             if (survey.secondName) {
@@ -828,11 +908,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
-  getAllNoValidatesBankCertification() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllByNoValidatesBankCetification`)
+  getAllNoValidatesBankCertification(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByNoValidatesBankCetification`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             if (!survey.accountCertificationDate) {
               survey.accountCertificationDate = 'Sin Verificar'
             }
@@ -1022,6 +1102,10 @@ export class SurveyService {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/groupAssignation`, { survey });
   }
 
+  groupUpdate(survey: any) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/groupUpdate`, { survey });
+  }
+
   // No existe en Back
   delete(id: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/delete`, {});
@@ -1180,6 +1264,32 @@ export class SurveyService {
       );
     }
   }
+//RUTA NUEVA
+  getAllByAcceptedPaginated(currentPage: number, pageSize: number) {
+    this.connectionStatusCheck();
+    if(this.connectionStatus){
+      return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByAcceptedPaginated`, {currentPage, pageSize})
+        .pipe(
+          map((response: any) => {
+            response.surveys = response.surveys.surveys.map((survey: any) => this.transformSurvey(survey));
+            return response;
+          })
+        );
+    } else {
+      return from(this.indexedDbService.getAllPendingAgreement()).pipe(
+        switchMap((pendingAgreement: any[]) => {
+          if (pendingAgreement && pendingAgreement.length > 0) {
+            const transformedSurveys = pendingAgreement.map((survey: any) => this.transformSurvey(survey));
+            const result = { beneficiaries: transformedSurveys };
+            return of(result);
+          } else {
+            const fallbackResponse = { beneficiaries: [] };
+            return of(fallbackResponse);
+          }
+        })
+      );
+    }
+  }
 
   private transformSurvey(survey: any): any {
     survey.updatedDate = survey.updatedAt.split('T')[0];
@@ -1226,11 +1336,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
-  getAllByRejectedDNP() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllRejectedDNP`)
+  getAllByRejectedDNP(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRejectedDNP`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.updatedDate = survey.updatedAt.split('T')[0];
 
             if (survey.secondName) {
@@ -1278,11 +1388,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
-  getAllByRejectedARN() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllRejectedARN`)
+  getAllByRejectedARN(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRejectedARN`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.updatedDate = survey.updatedAt.split('T')[0];
             if (survey.secondName) {
               survey.name += ' ';
@@ -1329,11 +1439,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
-  getAllByRejectedDPS() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllRejectedDPS`)
+  getAllByRejectedDPS(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRejectedDPS`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.updatedDate = survey.updatedAt.split('T')[0];
             if (survey.secondName) {
               survey.name += ' ';
@@ -1379,11 +1489,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
-  getAllByPendingDNP() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllPendingDNP`)
+  getAllByPendingDNP(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllPendingDNP`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.beneficiaries = response.beneficiaries.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.updatedDate = survey.updatedAt.split('T')[0];
             if (!survey.createdAt) {
               survey.createdAt = 'Sin Fecha Para Mostrar'
@@ -1474,11 +1584,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
-  getAllByPendingARN() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllPendingARN`)
+  getAllByPendingARN(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllPendingARN`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.beneficiaries = response.beneficiaries.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.updatedDate = survey.updatedAt.split('T')[0];
             if (survey.bornDate) {
               survey.bornDate = survey.bornDate.split('T')[0];
@@ -1574,11 +1684,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
-  getAllByPendingDPS() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllPendingDPS`)
+  getAllByPendingDPS(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllPendingDPS`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.beneficiaries = response.beneficiaries.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.updatedDate = survey.updatedAt.split('T')[0];
             if (!survey.createdAt) {
               survey.createdAt = 'Sin Fecha Para Mostrar'
@@ -1954,11 +2064,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
-  getAllByPendingDPSGeneral() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllpendingDPSGeneral`)
+  getAllByPendingDPSGeneral(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllpendingDPSGeneral`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.updatedDate = survey.updatedAt.split('T')[0];
             if (!survey.createdAt) {
               survey.createdAt = 'Sin Fecha Para Mostrar'
@@ -2049,11 +2159,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
-  getAllByPendingDNPGeneral() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllpendingDNPGeneral`)
+  getAllByPendingDNPGeneral(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllpendingDNPGeneral`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.updatedDate = survey.updatedAt.split('T')[0];
             if (!survey.createdAt) {
               survey.createdAt = 'Sin Fecha Para Mostrar'
@@ -2144,11 +2254,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
-  getAllByPendingARNGeneral() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllpendingARNGeneral`)
+  getAllByPendingARNGeneral(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllpendingARNGeneral`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.updatedDate = survey.updatedAt.split('T')[0];
             if (!survey.createdAt) {
               survey.createdAt = 'Sin Fecha Para Mostrar'
@@ -2389,11 +2499,11 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
-  getAllByProfessionalTeamAndAccountCertRejectedOrPending() {
-    return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllByBankingCertificationRejectedOrPending`)
+  getAllByProfessionalTeamAndAccountCertRejectedOrPending(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByBankingCertificationRejectedOrPending`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.beneficiaries = response.beneficiaries.map((survey: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.updatedDate = survey.updatedAt.split('T')[0];
             survey.name = survey?.firstName + ' ' + survey.secondName + ' ' + survey?.firstLastName + ' ' + survey.secondLastName;
             survey.stateAgreement = survey?.state;

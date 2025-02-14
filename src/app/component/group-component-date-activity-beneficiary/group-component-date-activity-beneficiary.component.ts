@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { AfterViewInit, Component, OnInit, ViewChild, OnChanges } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { GroupComponentService } from '../../service/group-component.service';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
+import { PaginatorService } from '../../service/paginator.service';
+
 
 @Component({
   selector: 'app-group-component-date-activity-beneficiary',
@@ -14,10 +16,11 @@ import { GroupComponentDateActivityBenefiaryService } from '../../service/group-
   templateUrl: './group-component-date-activity-beneficiary.component.html',
   styleUrl: './group-component-date-activity-beneficiary.component.scss'
 })
-export class GroupComponentDateActivityBeneficiaryComponent {
+export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, AfterViewInit {
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
     new MatSort();
   @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
+  @ViewChild(MatSort) sort!: MatSort;
 
   showAddPeriod = false;
 
@@ -32,21 +35,30 @@ export class GroupComponentDateActivityBeneficiaryComponent {
     user: 'Beneficiario',
     userIdentification: 'Identificación del Beneficiario',
     userIdentificationType: 'Tipo de Identificación del Beneficiario',
-
     state: 'Estado',
-
   };
   recordsTableColumns: string[] = [];
   periods: any;
   isFormVisible = false;
   groupComponent: any = {};
   user: any = {};
+  isData: boolean = false;
+
+  totalItems = 0;
+  pageSize = 10;
+  pageIndex = 0;
+
+  loading = false;
+  totalSize = 0;
+  groupComponentDateActivityBeneficiary: any;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
     private router: Router,
     private groupComponentService: GroupComponentService,
     public dialog: MatDialog,
+    private paginatorService: PaginatorService,
     private _groupComponentDateActivityBeneficiaryServiceService: GroupComponentDateActivityBenefiaryService
   ) {
     this.recordsTableColumns = Object.keys(this.columns);
@@ -61,10 +73,15 @@ export class GroupComponentDateActivityBeneficiaryComponent {
   ngOnInit(): void {
     this.showGroupComponent();
   }
-  getAll(groupComponentDateActivityBeneficiary: any){
-    this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndUser(groupComponentDateActivityBeneficiary).subscribe({
+  getAll(){
+    this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndUser(this.groupComponentDateActivityBeneficiary).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.groupComponentDateActivityBeneficiaries;
+        this.loadData(response)
+        this.loading = false;
+        if (this.dataSource.data.length > 0) {
+          this.isData = true;
+        }
       },
       error: (err: any) => {
         console.error('Error al obtener los ciclos de grupo:', err);
@@ -85,22 +102,45 @@ export class GroupComponentDateActivityBeneficiaryComponent {
     this.router.navigateByUrl(`/app/group-component-date-activity-beneficiary-add/${this.groupComponent.id}`);
   }
 
+  async onPageChange(event: PageEvent) {
+    this.loading = true;
+      this.groupComponentDateActivityBeneficiary = {
+        userId: this.user.id,
+        groupComponentId: this.groupComponent.id,
+        pageIndex: event.pageIndex,
+        pageSize: event.pageSize, 
+      }
+      await this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndUser(this.groupComponentDateActivityBeneficiary).subscribe({
+        next: async (response: any) => {
+          this.loading = false;
+          this.loadData(response);
+        },
+        error: (err) => {
+          this.loading = false;
+          console.error("Error en la solicitud: ", err);
+        }
+      });
+    // Puedes realizar una acción, como cargar nuevos datos
+  }
+
   /**
   * After view init
   */
   ngAfterViewInit(): void {
     // Make the data source sortable
     this.dataSource.sort = this.recordsTableMatSort;
-    this.dataSource.paginator = this.paginator;
   }
+
 
   async onSelectSurvey(event: any) {
     this.user.id = event.id;
-    let groupComponentDateActivityBeneficiary = {
+    this.groupComponentDateActivityBeneficiary = {
       userId: this.user.id,
-      groupComponentId: this.groupComponent.id
+      groupComponentId: this.groupComponent.id,
+      pageIndex: 0,
+      pageSize: 10, 
     }
-    await this.getAll(groupComponentDateActivityBeneficiary);
+    await this.getAll();
   }
 
   /**
@@ -121,6 +161,19 @@ export class GroupComponentDateActivityBeneficiaryComponent {
     this.dataSource.filter = event.target.value.trim().toLowerCase();
   }
 
+  async loadData(response: any) {
+    this.dataSource.data = response.groupComponentDateActivityBeneficiaries;
+    this.totalSize = response?.total;
+    await this.timer(100);
+    this.dataSource.sort = this.recordsTableMatSort;
+    this.paginator.length = this.totalSize;
+    this.loading = false;
+  }
+
+  timer(ms: number) {
+    return new Promise(res => setTimeout(res, ms));
+  }
+
   handlePeriods(emittedPeriods: any) {
     if (Array.isArray(emittedPeriods) && emittedPeriods.length > 0) {
       this.dataSource.data = emittedPeriods; // Asignar datos a la tabla
@@ -132,4 +185,14 @@ export class GroupComponentDateActivityBeneficiaryComponent {
   redirectByPeriod(periodId: number) {
     this.router.navigateByUrl(`app/period/${periodId}`)
   }
+  getRowBorderColor(hasAssitence: string | null | undefined): string {
+    if (!hasAssitence || hasAssitence.trim().toLowerCase() === '') {
+      return '!bg-red-200'; // Fondo rojo cuando el valor es null o vacío
+    } else if (hasAssitence.trim().toLowerCase() === 'si' || hasAssitence.trim().toLowerCase() === 'asistió') {
+      return '!bg-green-200'; // Fondo verde si asistió
+    } else {
+      return '!bg-red-200'; // Si no coincide, también rojo
+    }
+  }
+  
 }

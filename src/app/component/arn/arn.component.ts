@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,6 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SurveyService } from '../../service/survey.service';
+import { PaginatorService } from '../../service/paginator.service';
 
 @Component({
   selector: 'app-arn',
@@ -13,10 +14,12 @@ import { SurveyService } from '../../service/survey.service';
   templateUrl: './arn.component.html',
   styleUrl: './arn.component.scss'
 })
-export class ArnComponent {
+export class ArnComponent implements OnInit, AfterViewInit {
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
   new MatSort();
 @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
+@ViewChild(MatSort) sort!: MatSort;
+
 
 dataSource: MatTableDataSource<any> = new MatTableDataSource();
 columns: any = {
@@ -31,10 +34,21 @@ columns: any = {
 recordsTableColumns: string[] = [];
 isData: boolean = false;
 
+totalItems = 0;  
+pageSize = 10;   
+pageIndex = 0;   
+
+loading = false;
+totalSize = 0;
+searchValue: string = ''; 
+
+
+
 constructor(
   private surveyService: SurveyService,
   private titleService: Title,
   private router: Router,
+  private paginatorService: PaginatorService,
   public dialog: MatDialog,
 ) {
   this.recordsTableColumns = Object.keys(this.columns);
@@ -54,24 +68,69 @@ ngOnInit(): void {
 ngAfterViewInit(): void {
   // Make the data source sortable
   this.dataSource.sort = this.recordsTableMatSort;
-  this.dataSource.paginator = this.paginator;
+  // this.dataSource.paginator = this.paginator;
+
+  this.loading = true;
+  this.paginatorService.onPageChange(this.paginator, (pageIndex, pageSize) => {
+    this.surveyService.getAllByPendingARNGeneral(pageIndex, pageSize).subscribe({
+      next: async (response: any) => {
+        this.loadData(response);
+        this.loading = false;
+      },
+      error: (err) => {
+          this.loading = false;
+        console.error("Error en la solicitud: ", err);
+      }
+    });
+  });
 }
 
 ngOnDestroy(): void { }
 
 async getAll() {
-  await this.surveyService.getAllByPendingARNGeneral().subscribe({
+
+  this.loading = true;
+  await this.surveyService.getAllByPendingARNGeneral(0,10).subscribe({
       next: (response: any) => {
           this.dataSource.data = response.surveys;
+          this.loadData(response)
+          this.loading = false;
           if(this.dataSource.data.length > 0) {
             this.isData = true;
           }
       },
+      error: (err) => {
+        this.loading = false;
+        console.error("Error en la solicitud: ", err);
+      }
   });
 }
 
 massiveARN() {
   this.router.navigateByUrl(`/app/survey-massive-arn`);
+}
+
+searchByFilter() {
+  this.surveyService.filterByWord(this.searchValue).subscribe({
+    next: (response: any) => {
+      this.dataSource.data = response.surveys;
+      this.loadData(response);
+      },
+  })
+}
+
+
+async loadData(response: any) {
+  this.dataSource.data = response.surveys;
+  this.totalSize = response?.total;
+  await this.timer(100);
+  this.dataSource.sort = this.recordsTableMatSort;
+  this.paginator.length = this.totalSize;
+  this.loading = false;
+}
+
+timer(ms: number) {
+  return new Promise(res => setTimeout(res, ms));
 }
 
 download() {

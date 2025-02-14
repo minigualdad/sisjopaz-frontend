@@ -1,4 +1,4 @@
-<div class="flex flex-col flex-auto min-w-0" >
+<div class="flex flex-col flex-auto min-w-0">
 
     <!-- Main -->
     <div class="flex-auto p-6 sm:p-10">
@@ -10,8 +10,10 @@
 
                 <div class="flex items-center justify-between w-full">
                     <div>
-                        <h2 class="text-3xl font-semibold tracking-tight leading-8">Jóvenes del Grupo <strong *ngIf="group">{{group.name}}</strong> </h2>
-                        <div class="font-medium tracking-tight text-secondary">A continuación encontrará la información general de jóvenes</div>
+                        <h2 class="text-3xl font-semibold tracking-tight leading-8">Jóvenes del Grupo <strong
+                                *ngIf="group">{{group.name}}</strong> </h2>
+                        <div class="font-medium tracking-tight text-secondary">A continuación encontrará la información
+                            general de jóvenes</div>
                     </div>
                     <div class="flex items-center ml-6">
                         <button class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
@@ -23,14 +25,24 @@
                 </div>
 
                 <!-- Recent transactions table -->
-                <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden mt-4" >
+                <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden mt-4">
                     <div class="overflow-x-auto mx-6">
                         <mat-form-field class="bg-white rounded-md w-full mt-4">
                             <mat-label>Buscar en todos los campos</mat-label>
-                            <input matInput (keyup)="applyFilter($event)" placeholder="Buscar"
-                                class="py-2 px-3 rounded-md shadow-sm text-gray-700 leading-5 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+                            <div class="flex items-center">
+                                <!-- Campo de entrada -->
+                                <input matInput (keyup)="applyFilter($event)" placeholder="Buscar"
+                                    class="py-2 px-3 rounded-md shadow-sm text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 flex-grow">
+
+                                <button mat-icon-button (click)="searchByFilter()"
+                                    class="bg-blue-500 text-white rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ml-2">
+                                    <mat-icon class="flex items-center justify-center">
+                                        <img src="svg/search.svg" alt="Buscar" class="w-6 h-6">
+                                    </mat-icon>
+                                </button>
+                            </div>
                         </mat-form-field>
-                        Resultados: {{dataSource.data.length}}
+                        Resultados: {{totalSize}}
                         <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
                             [trackBy]="trackByFn" #recordsTable="matSort">
 
@@ -50,11 +62,11 @@
                                             <mat-icon>more_vert</mat-icon>
                                         </button>
                                         <mat-menu class="bg-white" #menu="matMenu">
-                                            <!-- <button                                             
-                                            mat-menu-item [routerLink]="['/app', 'beneficiary', transaction.id]">
-                                            <mat-icon>search</mat-icon>
-                                                Ver jóvenes
-                                            </button> -->
+                                            <button mat-menu-item
+                                                [routerLink]="['/app', 'group-change', transaction.id]">
+                                                <mat-icon>swap_vert</mat-icon>
+                                                Cambiar de Grupo
+                                            </button>
                                         </mat-menu>
                                     </td>
                                 </ng-container>
@@ -74,7 +86,8 @@
                             <tr class="h-16 border-0" mat-footer-row *matFooterRowDef="['recordsTableFooter']"></tr>
                         </table>
 
-                        <mat-paginator [length]="dataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                        <mat-paginator #paginator [length]="dataSource.data.length" [pageSize]="10"
+                            [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 
                     </div>
                 </div>
@@ -83,3 +96,5 @@
         </div>
     </div>
 </div>
+
+<app-loading *ngIf="loading"></app-loading>

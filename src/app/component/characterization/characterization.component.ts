@@ -167,7 +167,7 @@ export class CharacterizationComponent implements OnInit {
                 .subscribe({
                     next: (response: any) => {
                         Swal.fire('Operación correcta', 'Caracterización creada correctamente', 'success');
-                        this.router.navigateByUrl(`/app/professional-team-beneficiary`)
+                        this.router.navigateByUrl(`/app/home`)
                     },
                     error: (error: any) => {
                         console.error(error);

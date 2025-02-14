@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,80 +6,136 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SurveyService } from '../../service/survey.service';
+import { PaginatorService } from '../../service/paginator.service';
+
 @Component({
   selector: 'app-professional-team-beneficiary-arn-rejected',
   standalone: false,
   templateUrl: './professional-team-beneficiary-arn-rejected.component.html',
   styleUrl: './professional-team-beneficiary-arn-rejected.component.scss'
 })
-export class ProfessionalTeamBeneficiaryArnRejectedComponent {
+export class ProfessionalTeamBeneficiaryArnRejectedComponent implements OnInit, AfterViewInit {
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
-  new MatSort();
-@ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
+    new MatSort();
+  @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
+  @ViewChild(MatSort) sort!: MatSort;
 
-dataSource: MatTableDataSource<any> = new MatTableDataSource();
-columns: any = {
-  id: 'Id',
-  state: 'Estado',
-  ARNCheck: 'Estado ARN',
-  ARNCheckDate: 'Fecha Actualización ARN',
-  ARNMotive: 'Motivo del Rechazo',
-  updatedDate: 'Fecha de Actualización',
-  name: 'Nombre',
-  identificationType: 'Tipo de Identificación',
-  identification: 'Identificación',
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  columns: any = {
+    id: 'Id',
+    state: 'Estado',
+    ARNCheck: 'Estado ARN',
+    ARNCheckDate: 'Fecha Actualización ARN',
+    ARNMotive: 'Motivo del Rechazo',
+    updatedDate: 'Fecha de Actualización',
+    name: 'Nombre',
+    identificationType: 'Tipo de Identificación',
+    identification: 'Identificación',
 
-};
-recordsTableColumns: string[] = [];
+  };
+  recordsTableColumns: string[] = [];
+  isData: boolean = false;
 
+  totalItems = 0;
+  pageSize = 10;
+  pageIndex = 0;
 
-constructor(
-  private surveyService: SurveyService,
-  private titleService: Title,
-  public dialog: MatDialog,
-  public activatedRoute: ActivatedRoute,
-) {
-  this.recordsTableColumns = Object.keys(this.columns);
-  this.titleService.setTitle('No Validados ARN');
-}
+  loading = false;
+  totalSize = 0;
+  searchValue: string = '';
 
-/**
-* On init
-*/
-ngOnInit(): void {
-      this.getAll();
-}
+  constructor(
+    private surveyService: SurveyService,
+    private titleService: Title,
+    public dialog: MatDialog,
+    public activatedRoute: ActivatedRoute,
+    private paginatorService: PaginatorService,
 
-/**
-* After view init
-*/
-ngAfterViewInit(): void {
-  // Make the data source sortable
-  this.dataSource.sort = this.recordsTableMatSort;
-  this.dataSource.paginator = this.paginator;
-}
+  ) {
+    this.recordsTableColumns = Object.keys(this.columns);
+    this.titleService.setTitle('No Validados ARN');
+  }
 
-ngOnDestroy(): void { }
+  /**
+  * On init
+  */
+  ngOnInit(): void {
+    this.getAll();
+  }
 
-async getAll() {
-  await this.surveyService.getAllByRejectedARN().subscribe({
+  /**
+  * After view init
+  */
+  ngAfterViewInit(): void {
+    // Make the data source sortable
+    this.dataSource.sort = this.recordsTableMatSort;
+    this.loading = true;
+    this.paginatorService.onPageChange(this.paginator, (pageIndex, pageSize) => {
+      this.surveyService.getAllByRejectedARN(pageIndex, pageSize).subscribe({
+        next: async (response: any) => {
+          this.loading = false;
+          this.loadData(response);
+        },
+        error: (err) => {
+          this.loading = false;
+          console.error("Error en la solicitud: ", err);
+        }
+      });
+    });
+  }
+
+  ngOnDestroy(): void { }
+
+  async getAll() {
+    await this.surveyService.getAllByRejectedARN(0,10).subscribe({
       next: (response: any) => {
-          this.dataSource.data = response.surveys;
+        this.dataSource.data = response.surveys;
+        this.loadData(response)
+        this.loading = false;
+        if (this.dataSource.data.length > 0) {
+          this.isData = true;
+        }
       },
-  });
-}
+      error: (err) => {
+        this.loading = false;
+        console.error("Error en la solicitud: ", err);
+      }
+    });
+  }
 
-/**
-* Track by function for ngFor loops
-*
-* @param index
-* @param item
-*/
-trackByFn(index: number, item: any): any {
-  return item.id || index;
-}
+  searchByFilter() {
+    this.surveyService.filterByWord(this.searchValue).subscribe({
+      next: (response: any) => {
+        this.dataSource.data = response.surveys;
+        this.loadData(response);
+      },
+    })
+  }
 
-applyFilter(filterValue: any) {
-  this.dataSource.filter = filterValue.target.value.trim().toLowerCase();
-}
+  async loadData(response: any) {
+    this.dataSource.data = response.surveys;
+    this.totalSize = response?.total;
+    await this.timer(100);
+    this.dataSource.sort = this.recordsTableMatSort;
+    this.paginator.length = this.totalSize;
+    this.loading = false;
+  }
+
+  timer(ms: number) {
+    return new Promise(res => setTimeout(res, ms));
+  }
+
+  /**
+  * Track by function for ngFor loops
+  *
+  * @param index
+  * @param item
+  */
+  trackByFn(index: number, item: any): any {
+    return item.id || index;
+  }
+
+  applyFilter(filterValue: any) {
+    this.dataSource.filter = filterValue.target.value.trim().toLowerCase();
+  }
 }

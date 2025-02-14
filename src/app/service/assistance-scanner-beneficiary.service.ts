@@ -16,6 +16,7 @@ export class AssistanceScannerBeneficiaryService {
       map( (response: any) => {
         response.beneficiaryAssistances = response.beneficiaryAssistances.map( (beneficiaryAssistance: any) => {
           beneficiaryAssistance.urlFileImageProcessed = beneficiaryAssistance.AssistanceScanner?.urlFileImageProcessed;
+          beneficiaryAssistance.urlFileImageOriginal = beneficiaryAssistance.AssistanceScanner?.urlFileImageOriginal;
           beneficiaryAssistance.name = beneficiaryAssistance.Survey?.firstName;
           if (beneficiaryAssistance.Survey.secondName) {
             beneficiaryAssistance.name += ' ';
@@ -38,5 +39,9 @@ export class AssistanceScannerBeneficiaryService {
         return response;
       })
     )
+  }
+
+  show(id: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScannerBeneficiary/${id}/getById`, {});
   }
 }
