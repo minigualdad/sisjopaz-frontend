@@ -642,7 +642,7 @@ export class SurveyService {
       )
   }
 
-  // roleVerify([Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_PSICOJURIDICO])
+  // roleVerify([Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO])
   getAllNoValidatesByProfessional(currentPage: number, pageSize: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/getNoRegistraduryValidateByProfessional`, {currentPage, pageSize})
       .pipe(
@@ -998,6 +998,48 @@ export class SurveyService {
       )
   }
 
+  getAllExtemporary(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllExtemporary`, {currentPage, pageSize})
+      .pipe(
+        map((response: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
+            survey.name = survey.firstName;
+            if (survey.secondName) {
+              survey.name += ' ';
+              survey.name += survey.secondName;
+            }
+            survey.name += ' ';
+            survey.name += survey.firstLastName;
+            if (survey.secondLastName) {
+              survey.name += ' ';
+              survey.name += survey.secondLastName;
+            }
+            survey.nameOriginal = survey.firstNameOriginal;
+            if (survey.secondNameOriginal) {
+              survey.nameOriginal += ' ';
+              survey.nameOriginal += survey.secondNameOriginal;
+            } else {
+              survey.secondNameOriginal = '';
+            }
+            survey.nameOriginal += ' ';
+            survey.nameOriginal += survey.firstLastNameOriginal;
+            if (survey.secondLastNameOriginal) {
+              survey.nameOriginal += ' ';
+              survey.nameOriginal += survey.secondLastNameOriginal;
+            } else {
+              survey.secondLastNameOriginal = '';
+            }
+            if (survey.createdAt) {
+              survey.startProgramDate = survey.createdAt?.split('T')[0];
+            }
+            survey.divipola = survey.Divipola.name
+            return survey;
+          })
+          return response;
+        })
+      )
+  } 
+
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.APOYO_A_LA_COORDINACION])
   setValidateDocuments(survey: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/setValidateDocuments`, survey);
@@ -1056,7 +1098,7 @@ export class SurveyService {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/getByIdentification`, { survey })
   }
 
-  // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOJURIDICO, Roles.PROFESIONAL_PSICOSOCIAL])
+  // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.PROFESIONAL_PSICOSOCIAL])
   getByIdentificationTypeAndIdentification(survey: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/getByIdentificationTypeAndIdentification`, { survey })
   }
@@ -1238,7 +1280,13 @@ export class SurveyService {
     });
   }
 
-  // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.APOYO_A_LA_COORDINACION, Roles.GESTORES_SOCIALES, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_PSICOJURIDICO, Roles.PROFESIONAL_PSICOSOCIAL])
+  downloadExtemporary() {
+    return this._httpClient.get(environment.apiUrl + '/app/survey/downloadExtemporary', {
+      responseType: 'blob'
+    });
+  }
+
+  // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.APOYO_A_LA_COORDINACION, Roles.GESTORES_SOCIALES, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.PROFESIONAL_PSICOSOCIAL])
   getAllByAccepted() {
     this.connectionStatusCheck();
     if(this.connectionStatus){

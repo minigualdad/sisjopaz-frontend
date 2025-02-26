@@ -32,6 +32,7 @@ columns: any = {
 recordsTableColumns: string[] = [];
 user: any;
 group: any
+loading: boolean = false;
 
 constructor(
   private groupComponentService: GroupComponentService,
@@ -123,8 +124,8 @@ downloadAssistanceTemplate(id: any) {
       height: 'auto',
       data: { id }
     });
-  
     dialogRef.afterClosed().subscribe(result => {
+
       this.getAll();
     });
   }

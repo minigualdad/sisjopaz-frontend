@@ -9,7 +9,7 @@ export class AssistanceScannerBeneficiaryService {
 
  constructor(private _httpClient: HttpClient) { }
 
-  //roleVerify([Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_PSICOJURIDICO, Roles.DIRECCION, Roles.ADMIN])
+  //roleVerify([Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.DIRECCION, Roles.ADMIN])
   getAllById(id: number) {
     return this._httpClient.get(`${environment.apiUrl}/app/assistanceScannerBeneficiary/${id}/getAllByUser`)
     .pipe(

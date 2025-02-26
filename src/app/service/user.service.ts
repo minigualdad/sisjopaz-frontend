@@ -100,4 +100,17 @@ export class UserService {
     return this.http.post(`${environment.apiUrl}/reset-password`, {token,password});
   }
 
+  downloadMassiveTemplate() {
+    return this.http.get(`${environment.apiUrl}/app/users/downloadUserMassiveTemplate`, {
+      responseType: 'blob'
+    });
+  }
+
+  uploadUserMassive(file: File) {
+    const selectedFile = file;
+    const fd = new FormData();
+    fd.append('file', selectedFile, selectedFile.name);
+    return this.http.post(environment.apiUrl + '/app/users/uploadUserMassive', fd, { responseType: 'blob' });
+  }
+
 }

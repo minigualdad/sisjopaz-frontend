@@ -318,9 +318,9 @@ export class PreRegisterComponent implements OnChanges {
     this.form.get('hasCorrectAgeRange')?.setValue(event);
   }
 
-  setMunicipality(event: any) {
+  async setMunicipality(event: any) {
     this.form.get('municipality')?.setValue(event);
-  }
+}
 
   setSignDate(event: Date) {
     this.form.get('signDate')?.setValue(event);

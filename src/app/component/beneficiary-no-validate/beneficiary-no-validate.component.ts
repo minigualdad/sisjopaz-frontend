@@ -1,8 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { UserService } from '../../service/user.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -24,14 +23,15 @@ export class BeneficiaryNoValidateComponent implements OnInit, AfterViewInit {
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   columns: any = {
+    actions: 'acciones',
     id: 'Id',
     identificationType: 'Tipo de Identificación',
     identification: 'Número de Documento',
-    firstName: 'Primer Nombre',
-    secondName: 'Segundo Nombre',
-    firstLastName: 'Primer Apellido',
-    secondLastName: 'Segundo Apellido',
-    bornDate: 'Fecha de Nacimiento',
+    firstNameOriginal: 'Primer Nombre',
+    secondNameOriginal: 'Segundo Nombre',
+    firstLastNameOriginal: 'Primer Apellido',
+    secondLastNameOriginal: 'Segundo Apellido',
+    bornDateOriginal: 'Fecha de Nacimiento',
     identificationExpedition: 'Fecha de Expedición del Documento',
   };
   recordsTableColumns: string[] = [];

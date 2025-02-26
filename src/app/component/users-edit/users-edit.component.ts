@@ -38,9 +38,6 @@ export class UsersEditComponent implements OnInit, OnDestroy {
         this.roles = Object.entries(Roles);
         this.form = new FormGroup({
             email: new FormControl('', [Validators.required, Validators.email]),
-            password: new FormControl('', [
-                Validators.required,  Validators.minLength(6)
-            ]),
             name: new FormControl('', [Validators.required, this.noNumbersValidator()]),
             identificationType: new FormControl('', [Validators.required]),
             identification: new FormControl('', [Validators.required]),
@@ -86,10 +83,11 @@ export class UsersEditComponent implements OnInit, OnDestroy {
             next: (response: any) => {
                 this.loading = false;
                 this.user = response.user;
-                 this.form.patchValue(this.user);
+                this.form.patchValue(this.user);
                 this.form.get('municipalityId')?.setValue(this.user.divipolaId);
                 this.form.get('linkageType')?.setValue(this.user.linkageType);
                 this.form.get('role')?.setValue(this.user.role);
+                this.form.get('contactPhone')?.setValue(this.user.contactPhone);
             },
         });
         this._divipolService.getAll().subscribe({
@@ -105,7 +103,6 @@ export class UsersEditComponent implements OnInit, OnDestroy {
     isFormValid(): boolean {
         const requiredFields = [
           'email',
-          'password',
           'name',
           'identificationType',
           'identification',

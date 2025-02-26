@@ -25,7 +25,7 @@ export enum Roles {
     PROFESIONAL_EDUCACION = 'PROFESIONAL_EDUCACION',
     PROFESIONAL_CORRESPONSABILIDAD = 'PROFESIONAL_CORRESPONSABILIDAD',
     PROFESIONAL_PSICOSOCIAL = 'PROFESIONAL_PSICOSOCIAL',
-    PROFESIONAL_PSICOJURIDICO = 'PROFESIONAL_PSICOJURIDICO',
+    PROFESIONAL_SOCIOJURIDICO = 'PROFESIONAL_SOCIOJURIDICO',
     PROFESIONAL_PREREGISTRO = 'PROFESIONAL_PREREGISTRO',
     GESTORES_SOCIALES = 'GESTORES_SOCIALES',
 }
@@ -39,7 +39,7 @@ export const RoleHierarchy: any = {
     [Roles.PROFESIONAL_EDUCACION]: [Roles.PROFESIONAL_EDUCACION],
     [Roles.PROFESIONAL_CORRESPONSABILIDAD]: [Roles.PROFESIONAL_CORRESPONSABILIDAD],
     [Roles.PROFESIONAL_PSICOSOCIAL]: [Roles.PROFESIONAL_PSICOSOCIAL],
-    [Roles.PROFESIONAL_PSICOJURIDICO]: [Roles.PROFESIONAL_PSICOJURIDICO],
+    [Roles.PROFESIONAL_SOCIOJURIDICO]: [Roles.PROFESIONAL_SOCIOJURIDICO],
     [Roles.PROFESIONAL_PREREGISTRO]: [Roles.PROFESIONAL_PREREGISTRO],
     [Roles.GESTORES_SOCIALES]: [Roles.GESTORES_SOCIALES],
 };
@@ -50,11 +50,11 @@ export const NAV_ITEMS = [
         role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,
         Roles.PROFESIONAL_PREREGISTRO, Roles.PROFESIONAL_EDUCACION,
         Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL,
-        Roles.PROFESIONAL_PSICOJURIDICO, Roles.APOYO_A_LA_COORDINACION, Roles.GESTORES_SOCIALES]
+        Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION, Roles.GESTORES_SOCIALES]
     },
     {
         name: 'Tablero de Control', route: '/app/dashboard', icon: 'svg/dashboard.svg',
-        role: [Roles.DIRECCION, Roles.PROFESIONAL_PSICOJURIDICO, Roles.APOYO_A_LA_COORDINACION,
+        role: [Roles.DIRECCION, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION,
         Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.ADMIN,
         Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_PREREGISTRO,
         Roles.PROFESIONAL_EDUCACION, Roles.GESTORES_SOCIALES]
@@ -64,7 +64,7 @@ export const NAV_ITEMS = [
         role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION,
         Roles.PROFESIONAL_PREREGISTRO, Roles.PROFESIONAL_EDUCACION,
         Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL,
-        Roles.PROFESIONAL_PSICOJURIDICO, Roles.APOYO_A_LA_COORDINACION, Roles.GESTORES_SOCIALES]
+        Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION, Roles.GESTORES_SOCIALES]
     },
     {
         name: 'Parámetros Administrativos', route: null, icon: 'svg/flujo.svg',
@@ -169,8 +169,12 @@ export const NAV_ITEMS = [
         ]
     },
     {
-        name: 'Encuesta Preregistro', route: '/app/preregister', icon: 'svg/encuestas.svg',
-        role: [Roles.DIRECCION, Roles.ADMIN, Roles.GESTORES_SOCIALES, Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.COORDINACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_PSICOJURIDICO, Roles.PROFESIONAL_PREREGISTRO, Roles.ENLACE_REGIONAL]
+        name: 'Encuesta Prerregistro', route: '/app/preregister', icon: 'svg/encuestas.svg',
+        role: [Roles.DIRECCION, Roles.ADMIN, Roles.GESTORES_SOCIALES, Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.COORDINACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.PROFESIONAL_PREREGISTRO, Roles.ENLACE_REGIONAL]
+    },
+    {
+        name: 'Prerregistros Extemporáneos', route: '/app/extemporary-survey', icon: 'svg/book.svg',
+        role: [Roles.DIRECCION, Roles.ADMIN]
     },
     {
         name: 'Administración Dirección', route: null, icon: 'svg/register.svg',
@@ -225,7 +229,7 @@ export const NAV_ITEMS = [
                 role: 'DIRECCION'
             },
             {
-                name: 'Beneficiarios Sin Grupo',
+                name: 'Jóvenes Sin Grupo',
                 route: `/app/beneficiary-without-group`,
                 icon: 'svg/circle.svg',
                 role: 'DIRECCION'
@@ -261,13 +265,13 @@ export const NAV_ITEMS = [
                 role: 'DIRECCION'
             },
             {
-                name: 'Administración de Beneficiarios',
+                name: 'Administración de Jóvenes',
                 route: '/app/survey',
                 icon: 'svg/circle.svg',
                 role: 'DIRECCION'
             },
             {
-                name: 'Documentación de Beneficiarios',
+                name: 'Documentación de Jóvenes',
                 route: '/app/survey-documents',
                 icon: 'svg/circle.svg',
                 role: 'DIRECCION'
@@ -309,7 +313,7 @@ export const NAV_ITEMS = [
                 role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION]
             },
             {
-                name: 'Beneficiarios Sin Grupo',
+                name: 'Jóvenes Sin Grupo',
                 route: `/app/beneficiary-without-group`,
                 icon: 'svg/circle.svg',
                 role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION]
@@ -355,7 +359,7 @@ export const NAV_ITEMS = [
 
     {
         name: 'Mis Grupos', route: '/app/my-group', icon: 'svg/group.svg',
-        role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_PSICOJURIDICO, Roles.GESTORES_SOCIALES]
+        role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.GESTORES_SOCIALES]
     },
 
     {
@@ -369,7 +373,7 @@ export const NAV_ITEMS = [
     {
         name: 'Firmar Acuerdos', route: '/app/agreement-signature', icon: 'svg/signature.svg',
         role: [Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, 
-            Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_PSICOJURIDICO, Roles.GESTORES_SOCIALES]
+            Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.GESTORES_SOCIALES]
     },
 
 ];

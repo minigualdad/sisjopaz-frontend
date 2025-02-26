@@ -14,6 +14,7 @@ export class ComponentGroupTemplateComponent implements OnInit {
   form: FormGroup;
   months: { value: number; name: string }[] = [];
   years: number[] = [];
+  loading: boolean = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { id: number },
@@ -59,6 +60,7 @@ export class ComponentGroupTemplateComponent implements OnInit {
       const month = this.form.get('month')?.value;
       const year = this.form.get('year')?.value;
       let jsonData: any;
+      this.loading = true;
       this.surveyService.pdfAssistanceTemplate(this.form.value).subscribe({
         next: (response) => {
           const blob = new Blob([response], { type: 'application/pdf' });
@@ -76,6 +78,8 @@ export class ComponentGroupTemplateComponent implements OnInit {
             text: 'El archivo se descargó correctamente.',
             confirmButtonText: 'Continuar',
           }).then(() => {
+            this.loading = false;
+
             this.dialogRef.close();
           });
         },

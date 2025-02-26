@@ -5,7 +5,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import { MatPaginator } from '@angular/material/paginator'; 
 import { UserService } from '../../service/user.service';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 
 
@@ -44,7 +43,7 @@ constructor(
   private userService: UserService
 ) {
   this.recordsTableColumns = Object.keys(this.columns);
-  this.titleService.setTitle('Enlace Regional');
+  this.titleService.setTitle('Usuarios');
 }
 
 /**
@@ -93,6 +92,10 @@ async getAll() {
 }
 create() {
   this.router.navigateByUrl('/app/user-add');
+}
+
+userMassive() {
+  this.router.navigateByUrl('/app/user-massive');
 }
 
 /**

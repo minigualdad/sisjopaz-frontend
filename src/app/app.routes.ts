@@ -172,6 +172,9 @@ import { BankSelectorComponent } from './component/bank-selector/bank-selector.c
 import { AgreementSignaureComponent } from './component/agreement-signaure/agreement-signaure.component';
 import { ImageViewerComponent } from './component/image-viewer/image-viewer.component';
 import { GroupChangeComponent } from './component/group-change/group-change.component';
+import { MassiveUserComponent } from './component/massive-user/massive-user.component';
+import { ExtemporarySurveyComponent } from './component/extemporary-survey/extemporary-survey.component';
+import { UpdatePreregisterComponent } from './component/update-preregister/update-preregister.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -188,7 +191,7 @@ export const routes: Routes = [
                 canActivate: [RoleGuard], data: {
                     role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,
                     Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD,
-                    Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_PSICOJURIDICO,
+                    Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO,
                     Roles.PROFESIONAL_PREREGISTRO, Roles.APOYO_A_LA_COORDINACION,
                     Roles.GESTORES_SOCIALES, Roles.APOYO_A_LA_COORDINACION, Roles.GESTORES_SOCIALES]
                 }
@@ -352,7 +355,7 @@ export const routes: Routes = [
             {
                 path: 'dashboard', component: DashboardComponent,
                 canActivate: [RoleGuard], data: { 
-                    role: [Roles.ENLACE_REGIONAL, Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_PSICOJURIDICO, 
+                    role: [Roles.ENLACE_REGIONAL, Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_SOCIOJURIDICO, 
                         Roles.PROFESIONAL_PSICOSOCIAL, Roles.DIRECCION, Roles.ADMIN, 
                         Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.COORDINACION, 
                         Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_PREREGISTRO,
@@ -360,13 +363,13 @@ export const routes: Routes = [
             },
             {
                 path: 'preregister', component: PreRegisterComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.COORDINACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_PSICOJURIDICO, Roles.PROFESIONAL_PREREGISTRO, Roles.ENLACE_REGIONAL, Roles.GESTORES_SOCIALES] }
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.COORDINACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.PROFESIONAL_PREREGISTRO, Roles.ENLACE_REGIONAL, Roles.GESTORES_SOCIALES] }
             },
             {
                 path: 'agreement/:id', component: AgreementComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION, Roles.COORDINACION, Roles.ENLACE_REGIONAL,
                     Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, 
-                    Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_PSICOJURIDICO, Roles.GESTORES_SOCIALES
+                    Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.GESTORES_SOCIALES
                 ] }
             },
             {
@@ -432,7 +435,7 @@ export const routes: Routes = [
             {
                 path: 'beneficiary-no-validate-professional', component: BeneficiaryNoValidateProfessionalComponent,
                 canActivate: [RoleGuard], data: {
-                    role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_PSICOJURIDICO]
+                    role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO]
                 }
             },
             {
@@ -541,7 +544,7 @@ export const routes: Routes = [
                 data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, 
                         Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION, 
                         Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
-                        Roles.PROFESIONAL_PSICOJURIDICO, Roles.PROFESIONAL_PREREGISTRO, 
+                        Roles.PROFESIONAL_SOCIOJURIDICO, Roles.PROFESIONAL_PREREGISTRO, 
                         Roles.GESTORES_SOCIALES] }
             },
             {
@@ -606,7 +609,7 @@ export const routes: Routes = [
                     role: [
                         Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,
                         Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD,
-                        Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_PSICOJURIDICO,
+                        Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO,
                         Roles.PROFESIONAL_PREREGISTRO, Roles.APOYO_A_LA_COORDINACION,
                         Roles.GESTORES_SOCIALES, Roles.APOYO_A_LA_COORDINACION, Roles.GESTORES_SOCIALES]
                 }
@@ -640,7 +643,7 @@ export const routes: Routes = [
                 canActivate: [RoleGuard], data: {
                     role: [Roles.DIRECCION, Roles.ADMIN,
                     Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION,
-                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOJURIDICO,
+                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_SOCIOJURIDICO,
                     Roles.PROFESIONAL_PSICOSOCIAL, Roles.GESTORES_SOCIALES]
                 }
             },
@@ -650,7 +653,7 @@ export const routes: Routes = [
             },
             {
                 path: 'assistance-scanner-beneficiary', component: AssistanceScannerBeneficiaryComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOJURIDICO, Roles.PROFESIONAL_PSICOSOCIAL] }
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.PROFESIONAL_PSICOSOCIAL] }
             },
             {
                 path: 'beneficiary-without-group', component: BeneficiaryWithoutGroupComponent,
@@ -674,7 +677,7 @@ export const routes: Routes = [
                     role: [Roles.DIRECCION, Roles.ADMIN, Roles.GESTORES_SOCIALES,
                     Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION,
                     Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL,
-                    Roles.PROFESIONAL_PSICOJURIDICO, Roles.PROFESIONAL_PREREGISTRO]
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.PROFESIONAL_PREREGISTRO]
                 }
             },
             {
@@ -697,11 +700,23 @@ export const routes: Routes = [
             {
                 path: 'agreement-signature', component: AgreementSignaureComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_EDUCACION, 
-                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOJURIDICO, Roles.APOYO_A_LA_COORDINACION, 
+                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION, 
                     Roles.GESTORES_SOCIALES] }
             },
             {
                 path: 'group-change/:id', component: GroupChangeComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
+            },
+            {
+                path: 'user-massive', component: MassiveUserComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
+            },
+            {
+                path: 'extemporary-survey', component: ExtemporarySurveyComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
+            },
+            {
+                path: 'update-preregister/:id', component: UpdatePreregisterComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
             },
             
@@ -855,6 +870,9 @@ export const routes: Routes = [
         AgreementSignaureComponent,
         ImageViewerComponent,
         GroupChangeComponent,
+        MassiveUserComponent,
+        ExtemporarySurveyComponent,
+        UpdatePreregisterComponent,
     ],
     imports: [
     RouterModule.forRoot(routes),

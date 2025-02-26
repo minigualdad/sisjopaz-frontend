@@ -66,8 +66,12 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu class="bg-white" #menu="matMenu">
-                  <!-- Opciones del menú -->
-                </mat-menu>
+                    <button
+                    mat-menu-item [routerLink]="['/app', 'update-preregister', transaction.id]">
+                    <mat-icon>edit</mat-icon>
+                        Subsanar Datos Básicos
+                    </button>
+                </mat-menu>                
               </td>
             </ng-container>
 

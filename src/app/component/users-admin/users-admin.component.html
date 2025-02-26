@@ -19,6 +19,11 @@
                             <mat-icon class="icon-size-5 text-white">add</mat-icon>
                             <span class="ml-2 text-white font-bold">Crear Usuario</span>
                         </button>
+                        <button *ngIf="user && user.role === 'ADMIN'" class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                        (click)="userMassive()">
+                        <mat-icon class="icon-size-5 text-white">add</mat-icon>
+                        <span class="ml-2 text-white font-bold">Crear Masivo</span>
+                    </button>
                     </div>
                 </div>
 
