@@ -77,6 +77,12 @@ export const NAV_ITEMS = [
                 role: ['ADMIN', 'DIRECCION']
             },
             {
+                name: 'Puntos',
+                route: `/app/point-index`,
+                icon: 'svg/circle.svg',
+                role: ['ADMIN', 'DIRECCION']
+            },
+            {
                 name: 'Componentes',
                 route: `/app/component`,
                 icon: 'svg/circle.svg',
@@ -127,6 +133,12 @@ export const NAV_ITEMS = [
             {
                 name: 'Divipola',
                 route: `/app/divipol`,
+                icon: 'svg/circle.svg',
+                role: ['ADMIN', 'DIRECCION']
+            },
+            {
+                name: 'Puntos',
+                route: `/app/point-index`,
                 icon: 'svg/circle.svg',
                 role: ['ADMIN', 'DIRECCION']
             },
@@ -213,6 +225,12 @@ export const NAV_ITEMS = [
             {
                 name: 'Certificación Bancaria No Validada',
                 route: `/app/bank-certification-no-validate`,
+                icon: 'svg/circle.svg',
+                role: 'DIRECCION'
+            },
+            {
+                name: 'Jóvenes Validados RNEC',
+                route: `/app/rnec-validated`,
                 icon: 'svg/circle.svg',
                 role: 'DIRECCION'
             },

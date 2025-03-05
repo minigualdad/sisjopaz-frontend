@@ -175,6 +175,10 @@ import { GroupChangeComponent } from './component/group-change/group-change.comp
 import { MassiveUserComponent } from './component/massive-user/massive-user.component';
 import { ExtemporarySurveyComponent } from './component/extemporary-survey/extemporary-survey.component';
 import { UpdatePreregisterComponent } from './component/update-preregister/update-preregister.component';
+import { RnecValidatedComponent } from './component/rnec-validated/rnec-validated.component';
+import { RnecValidatedEditComponent } from './component/rnec-validated-edit/rnec-validated-edit.component';
+import { UpdateMassiveGroupComponent } from './component/update-massive-group/update-massive-group.component';
+import { PointIndexComponent } from './component/point-index/point-index.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -719,6 +723,23 @@ export const routes: Routes = [
                 path: 'update-preregister/:id', component: UpdatePreregisterComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
             },
+            {
+                path: 'rnec-validated', component: RnecValidatedComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
+            },
+            {
+                path: 'rnec-validated-edit/:id', component: RnecValidatedEditComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
+            },
+
+            {
+                path: 'update-massive-group', component: UpdateMassiveGroupComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
+            },
+            {
+                path: 'point-index', component: PointIndexComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
+            },
             
         ]
     },
@@ -873,6 +894,10 @@ export const routes: Routes = [
         MassiveUserComponent,
         ExtemporarySurveyComponent,
         UpdatePreregisterComponent,
+        RnecValidatedComponent,
+        RnecValidatedEditComponent,
+        UpdateMassiveGroupComponent,
+        PointIndexComponent,
     ],
     imports: [
     RouterModule.forRoot(routes),

@@ -5,12 +5,12 @@ import { Router } from '@angular/router';
 import { GroupService } from '../../service/group.service';
 
 @Component({
-  selector: 'app-beneficiary-massive-group',
+  selector: 'app-update-massive-group',
   standalone: false,
-  templateUrl: './beneficiary-massive-group.component.html',
-  styleUrl: './beneficiary-massive-group.component.scss'
+  templateUrl: './update-massive-group.component.html',
+  styleUrl: './update-massive-group.component.scss'
 })
-export class BeneficiaryMassiveGroupComponent {
+export class UpdateMassiveGroupComponent {
 
   form: FormGroup;
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -48,7 +48,7 @@ export class BeneficiaryMassiveGroupComponent {
   async create() {
       this.loading = true;
       this.surveyService
-          .uploadGroupAssignation(this.form.get('file')?.value)
+          .uploadGroupUpdate(this.form.get('file')?.value)
           .subscribe((response: any) => {
               const url = window.URL.createObjectURL(response);
               const link = document.createElement('a');
@@ -67,24 +67,6 @@ export class BeneficiaryMassiveGroupComponent {
       this.form.get('file')?.setValue(this.file);
   }
 
-  download() {
-    this.surveyService.downloadWithoutGroup().subscribe({
-        next: (response: Blob) => {
-            const url = window.URL.createObjectURL(response);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'beneficiarios_sin_grupo.xlsx';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        },
-        error: (error) => {
-            console.error('Error descargando el archivo:', error);
-            alert('Error descargando el archivo.');
-        }
-    });
-  }
 
   downloadEmptyTemplate() {
     this.surveyService.downloadTemplateGroup().subscribe({

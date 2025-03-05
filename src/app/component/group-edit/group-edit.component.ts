@@ -13,13 +13,17 @@ import { GroupService } from '../../service/group.service';
 export class GroupEditComponent {
   group: any;
   form: FormGroup;
+  divipolaId: any;
 
   constructor(private groupService: GroupService,
     private router: Router,
     private activatedRoute: ActivatedRoute) {
     this.form = new FormGroup({
       name: new FormControl('', Validators.required),
+      regionalLinkId: new FormControl('', Validators.required),
       initDate: new FormControl('', Validators.required),
+      divipolaId: new FormControl('', Validators.required),
+      pointId: new FormControl('', Validators.required),
       observations: new FormControl('', Validators.required),
     });
     this.group = {};
@@ -49,5 +53,19 @@ export class GroupEditComponent {
           Swal.fire('Operación incorrecta', 'No se ha podido editar el grupo', 'error');
         }
       });
+  }
+
+  onDivipolSelect(event: any) {
+    this.divipolaId = event;
+    this.form.patchValue({ divipolaId: event });
+    const defaultPoint = null;
+    this.onPointSelect(defaultPoint);
+  }
+
+  onRegionalLinkSelect(event: any) {
+    this.form.patchValue({ regionalLinkId: event });
+  }
+  onPointSelect(event: any) {
+    this.form.patchValue({ pointId: event });
   }
 }

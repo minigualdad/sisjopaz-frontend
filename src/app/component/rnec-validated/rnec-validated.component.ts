@@ -1,25 +1,21 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SurveyService } from '../../service/survey.service';
-import { BeneficiaryService } from '../../service/beneficiary.service';
 import Swal from 'sweetalert2';
 import { environment } from '../../../enviroment/enviroment';
 import { PaginatorService } from '../../service/paginator.service';
-import { MonitoringService } from '../../service/monitoring.service';
-import { CharacterizationService } from '../../service/characterization.service';
 
 @Component({
-  selector: 'app-extemporary-survey',
+  selector: 'app-rnec-validated',
   standalone: false,
-  templateUrl: './extemporary-survey.component.html',
-  styleUrl: './extemporary-survey.component.scss'
+  templateUrl: './rnec-validated.component.html',
+  styleUrl: './rnec-validated.component.scss'
 })
-export class ExtemporarySurveyComponent implements OnInit, AfterViewInit {
+export class RnecValidatedComponent implements OnInit, AfterViewInit {
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
     new MatSort();
   @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
@@ -30,11 +26,19 @@ export class ExtemporarySurveyComponent implements OnInit, AfterViewInit {
     actions: 'Acciones',
     id: 'Id',
     state: 'Estado',
-    name: 'Nombre Completo',
     identificationType: 'Tipo de Identificación',
     identification: 'Número de Documento',
-    divipola: 'Municipio',
-    startProgramDate: 'Fecha de Prerregistro',
+    firstNameOriginal: 'Primer Nombre Pre-Inscripción',
+    secondNameOriginal: 'Segundo Nombre Pre-Inscripción',
+    firstLastNameOriginal: 'Primer Apellido Pre-Inscripción',
+    secondLastNameOriginal: 'Segundo Apellid Pre-Inscripción',
+    bornDateOriginal: 'Fecha de Nacimiento Pre-Inscripción',
+    firstName: 'Primer Nombre RNEC',
+    secondName: 'Segundo Nombre RNEC',
+    firstLastName: 'Primer Apellido RNEC',
+    secondLastName: 'Segundo Apellido RNEC',
+    bornDate : 'Fecha de Nacimiento RNEC',
+
   };
   recordsTableColumns: string[] = [];
   serverUrl = environment.apiUrl;
@@ -47,16 +51,12 @@ export class ExtemporarySurveyComponent implements OnInit, AfterViewInit {
 
   constructor(
     private surveyService: SurveyService,
-    private _beneficiaryService: BeneficiaryService,
     private titleService: Title,
     private paginatorService: PaginatorService,
-    private router: Router,
     public dialog: MatDialog,
-    private _characterizationService: CharacterizationService,
-    private _monitoringService: MonitoringService,
   ) {
     this.recordsTableColumns = Object.keys(this.columns);
-    this.titleService.setTitle('Prerregistros Extemporaneos');
+    this.titleService.setTitle('Jóvenes Validados');
   }
 
   /**
@@ -88,7 +88,7 @@ export class ExtemporarySurveyComponent implements OnInit, AfterViewInit {
   ngOnDestroy(): void { }
 
   async getAll() {
-    await this.surveyService.getAllExtemporary(0,10).subscribe({
+    await this.surveyService.getAllRNECValidated(0,10).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
@@ -106,32 +106,6 @@ export class ExtemporarySurveyComponent implements OnInit, AfterViewInit {
     })
   }
 
-  downloadPDFCaracterization(characterizationId: number) {
-    this._characterizationService.getCharacterizationPdf(characterizationId).subscribe({
-      next: (response: any) => {
-
-        window.open(`${environment.apiUrl}/${response.path}`, '_blank');
-      },
-      error: (err: any) => {
-        console.error('Error al descargar el PDF:', err);
-        alert('Hubo un error al descargar el PDF.');
-      },
-    });
-  }
-
-  downloadPDFMonitoring(monitoringId: number) {
-    this._monitoringService.getMonitoringPdf(monitoringId).subscribe({
-      next: (response: any) => {
-
-        window.open(`${environment.apiUrl}/${response.path}`, '_blank');
-      },
-      error: (err: any) => {
-        console.error('Error al descargar el PDF:', err);
-        alert('Hubo un error al descargar el PDF.');
-      },
-    });
-  }
-
   async loadData(response: any) {
     this.dataSource.data = response.surveys;
     this.totalSize = response?.total;
@@ -145,49 +119,13 @@ export class ExtemporarySurveyComponent implements OnInit, AfterViewInit {
     return new Promise(res => setTimeout(res, ms));
   }
 
-    downloadPDF(id:number) {
-      this._beneficiaryService.getPDF(id).subscribe((response: any) => {
-        const file = `${this.serverUrl}/${response.pdfFile}`;
-        const url = file;
-        const a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank';
-        a.download = 'Acuerdo_Firmado.pdf'; // Nombre del archivo descargado
-        a.click();
-        window.URL.revokeObjectURL(url);
-        Swal.fire('Se ha generado el PDF', 'Se ha generado el PDF exitosamente', 'success');
-      },
-      (error:any) =>{
-        Swal.fire('Error generando PDF', 'Ha ocurrido un eror durante la creación del PDF', 'error');
-      }
-    );
-    }
-  
-    downloadPDFPreRegister(id: number) {
-      this._beneficiaryService.getPDFPreRegister(id).subscribe(
-        (response: any) => {
-          if (response && response.pdfPath) {
-            // Abrir directamente la URL proporcionada en una nueva pestaña
-            window.open(response.pdfPath, '_blank');
-            Swal.fire('PDF Generado', 'El PDF se ha generado exitosamente y se abrió en una nueva pestaña.', 'success');
-          } else {
-            Swal.fire('Error', 'No se recibió la ruta del PDF.', 'error');
-          }
-        },
-        (error: any) => {
-          console.error('Error al obtener el PDF:', error);
-          Swal.fire('Error', 'Ha ocurrido un error al generar el PDF.', 'error');
-        }
-      );
-    }
-
     downloadData() {
-      this.surveyService.downloadExtemporary().subscribe({
+      this.surveyService.downloadRNECValidated().subscribe({
         next: (response: Blob) => {
           const url = window.URL.createObjectURL(response);
           const a = document.createElement('a');
           a.href = url;
-          a.download = 'prerregistros_extemporaneos.xlsx';
+          a.download = 'datos_validados.xlsx';
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -208,7 +146,6 @@ export class ExtemporarySurveyComponent implements OnInit, AfterViewInit {
               confirmButtonText: 'Aceptar'
           });
       }
-      
       });
     }
 

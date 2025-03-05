@@ -114,6 +114,10 @@ export class BeneficiaryWithoutGroupComponent implements OnInit, AfterViewInit{
     this.router.navigateByUrl(`/app/beneficiary-massive-group`);
   }
 
+  massiveUpdate() {
+    this.router.navigateByUrl(`/app/update-massive-group`);
+  }
+
   download() {
     this.surveyService.downloadWithoutGroup().subscribe({
         next: (response: Blob) => {

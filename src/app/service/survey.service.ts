@@ -1040,6 +1040,44 @@ export class SurveyService {
       )
   } 
 
+  getAllRNECValidated(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRNECValidated`, {currentPage, pageSize})
+      .pipe(
+        map((response: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
+            survey.name = survey.firstName;
+            if (survey.secondName) {
+              survey.name += ' ';
+              survey.name += survey.secondName;
+            }
+            survey.name += ' ';
+            survey.name += survey.firstLastName;
+            if (survey.secondLastName) {
+              survey.name += ' ';
+              survey.name += survey.secondLastName;
+            }
+            survey.nameOriginal = survey.firstNameOriginal;
+            if (survey.secondNameOriginal) {
+              survey.nameOriginal += ' ';
+              survey.nameOriginal += survey.secondNameOriginal;
+            } else {
+              survey.secondNameOriginal = '';
+            }
+            survey.nameOriginal += ' ';
+            survey.nameOriginal += survey.firstLastNameOriginal;
+            if (survey.secondLastNameOriginal) {
+              survey.nameOriginal += ' ';
+              survey.nameOriginal += survey.secondLastNameOriginal;
+            } else {
+              survey.secondLastNameOriginal = '';
+            }
+            return survey;
+          })
+          return response;
+        })
+      )
+  } 
+
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.APOYO_A_LA_COORDINACION])
   setValidateDocuments(survey: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/setValidateDocuments`, survey);
@@ -1139,6 +1177,10 @@ export class SurveyService {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/update`, { survey });
   }
 
+  editRNECData(id: number, survey: any) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/updateDataRNEC`, { survey });
+  }
+
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   groupAssignation(survey: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/groupAssignation`, { survey });
@@ -1183,6 +1225,13 @@ export class SurveyService {
     const fd = new FormData();
     fd.append('file', selectedFile, selectedFile.name);
     return this._httpClient.post(environment.apiUrl + '/app/survey/uploadMassiveGroup', fd, { responseType: 'blob' });
+  }
+
+  uploadGroupUpdate(file: File) {
+    const selectedFile = file;
+    const fd = new FormData();
+    fd.append('file', selectedFile, selectedFile.name);
+    return this._httpClient.post(environment.apiUrl + '/app/survey/uploadMassiveUpdateGroup', fd, { responseType: 'blob' });
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
@@ -1280,8 +1329,20 @@ export class SurveyService {
     });
   }
 
+  downloadTemplateGroup() {
+    return this._httpClient.get(environment.apiUrl + '/app/survey/downloadGroupTemplate', {
+      responseType: 'blob'
+    });
+  }
+
   downloadExtemporary() {
     return this._httpClient.get(environment.apiUrl + '/app/survey/downloadExtemporary', {
+      responseType: 'blob'
+    });
+  }
+
+  downloadRNECValidated() {
+    return this._httpClient.get(environment.apiUrl + '/app/survey/downloadRNECValidated', {
       responseType: 'blob'
     });
   }

@@ -5,7 +5,7 @@
                 <div class="md:col-span-1">
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">
-                            Asignación Masiva de Jóvenes a Grupos
+                            Actualización Masiva de Jóvenes a Grupos
                         </h3>
                         <p class="mt-1 text-sm text-gray-600">
                             Los resultados queradán disponibles
@@ -13,29 +13,26 @@
                             excel. Grupo (ingrese el id del grupo desde el diccionario, si no lo tiene <strong (click)="getGroupInfo()">Descárguelo haciendo click aquí</strong>),
                             este campo viene vacio en el descargable encontrado en la pantalla anterior. si no lo tiene por favor dé click en el botón.
                        </p>
-                       <button class="m-4" type="button" mat-raised-button (click)="download()">Descargar Plantilla con Benefciarios</button>
                        <button class="m-4" type="button" mat-raised-button (click)="downloadEmptyTemplate()">Descargar Plantilla  en Blanco</button>
-
                     </div>
                 </div>
-                <div class="mt-5 md:col-span-2 md:mt-0">
+                <div class="mt-5 md:col-span-2 md:mt-0">         
                     <div class="mb-4">
-                            <button type="button" mat-raised-button (click)="openInput()">
-                                Carga masiva de grupos excel
-                            </button>
-                            <div *ngIf="file">
-                                Archivo seleccionado: {{ file.name }}, Peso: {{ file.size / 1024 | number: '1.0-2' }} KB
-                            </div>
-                            <input
-                                #fileInput
-                                hidden
-                                type="file"
-                                (change)="fileChange($event)"
-                                name="file"
-                                accept=".xls,.xlsx,application/vnd.oasis.opendocument.spreadsheet"
-                            />
-                    </div>            
-                    
+                        <button type="button" mat-raised-button (click)="openInput()">
+                            Actualización masiva de grupos excel
+                        </button>
+                        <div *ngIf="file">
+                            Archivo seleccionado: {{ file.name }}, Peso: {{ file.size / 1024 | number: '1.0-2' }} KB
+                        </div>
+                        <input
+                            #fileInput
+                            hidden
+                            type="file"
+                            (change)="fileChange($event)"
+                            name="file"
+                            accept=".xls,.xlsx,application/vnd.oasis.opendocument.spreadsheet"
+                        />
+                </div>          
                 </div>
                 <button
                 class="bg-indigo-500 text-white p-2 rounded-lg hover:bg-indigo-600 mt-10

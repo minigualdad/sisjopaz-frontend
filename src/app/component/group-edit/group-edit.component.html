@@ -18,10 +18,21 @@
                         </mat-form-field>
                     </div>
                     <div class="mb-4">
+                        <app-regional-link-selector
+                            (regionalLinkIdListen)="onRegionalLinkSelect($event)"></app-regional-link-selector>
+                    </div>
+                    <div class="mb-4">
                         <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                            <mat-label>Fecha de Inicio:</mat-label>
+                            <mat-label>Fecha Inicio Grupo:</mat-label>
                             <input type="date" matInput formControlName="initDate">
                         </mat-form-field>
+                    </div>
+                    <div class="mb-4">
+                        <app-divipol-selector (divipolIdListen)="onDivipolSelect($event)"></app-divipol-selector>
+                    </div>
+                    <div class="mb-4" *ngIf="divipolaId">
+                        <app-point-selector [divipolaId]="divipolaId"
+                            (pointIdListen)="onPointSelect($event)"></app-point-selector>
                     </div>
                     <div class="mb-4">
                         <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">

@@ -30,6 +30,14 @@
                             <mat-icon class="icon-size-5 text-white">upload</mat-icon>
                             <span class="ml-2 text-white font-bold">Cargar Masivo</span>
                         </button>
+
+                        <button
+                        *ngIf="user && (user.role === 'ENLACE_REGIONAL' || user.role === 'DIRECCION' || user.role === 'ADMIN')"
+                        class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                        (click)="massiveUpdate()">
+                        <mat-icon class="icon-size-5 text-white">upload</mat-icon>
+                        <span class="ml-2 text-white font-bold">Actualizar Masivo</span>
+                    </button>
                     </div>
                 </div>
 
