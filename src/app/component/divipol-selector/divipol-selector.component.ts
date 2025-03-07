@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DivipolService } from '../../service/divipol.service';
 @Component({
@@ -36,7 +36,10 @@ export class DivipolSelectorComponent {
   }
   ngOnInit() {
     this.checkValue();
+  }
 
+  AfterViewInit(){
+    this.checkValue();
   }
 
   filterOptions() {

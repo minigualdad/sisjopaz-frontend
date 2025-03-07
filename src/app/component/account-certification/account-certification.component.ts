@@ -38,6 +38,7 @@ export class AccountCertificationComponent implements OnInit, AfterViewInit {
 
   loading = false;
   totalSize = 0;
+  searchValue: string = ''; 
 
 
   constructor(
@@ -97,6 +98,15 @@ export class AccountCertificationComponent implements OnInit, AfterViewInit {
         console.error("Error en la solicitud: ", err);
       }
     });
+  }
+
+  searchByFilter() {
+    this.surveyService.filterByWord(this.searchValue).subscribe({
+      next: (response: any) => {
+        this.dataSource.data = response.surveys;
+        this.loadData(response);
+        },
+    })
   }
 
   download() {
@@ -216,8 +226,9 @@ export class AccountCertificationComponent implements OnInit, AfterViewInit {
     return item.id || index;
   }
 
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  applyFilter(event: any) {
+    this.searchValue = event.target.value.trim().toLowerCase();
+    // this.dataSource.filter = this.searchValue;
   }
 
   massiveAgr() {

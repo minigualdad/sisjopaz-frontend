@@ -126,7 +126,7 @@ trackByFn(index: number, item: any): any {
   return item.id || index;
 }
 
-applyFilter(filterValue: string) {
-  this.dataSource.filter = filterValue.trim().toLowerCase();
+applyFilter(filterValue: any) {
+  this.dataSource.filter = filterValue.target.value.trim().toLowerCase();
 }
 }

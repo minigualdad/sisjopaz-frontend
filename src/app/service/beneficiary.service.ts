@@ -577,11 +577,11 @@ export class BeneficiaryService {
   }
 
   // roleVerify([Roles.ADMIN, Roles.DIRECCION])
-  getAllSignedAgreement() {
-    return this._httpClient.get(`${environment.apiUrl}/app/beneficiary/getAllSignedAgreement`)
+  getAllSignedAgreement(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/beneficiary/getAllSignedAgreement`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.beneficiaries = response.beneficiaries.map((beneficiary: any) => {
+          response.beneficiaries = response.beneficiaries.beneficiaries.map((beneficiary: any) => {
             beneficiary.updatedDate = beneficiary.updatedAt.split('T')[0];            
             beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
             beneficiary.name = beneficiary.firstName;

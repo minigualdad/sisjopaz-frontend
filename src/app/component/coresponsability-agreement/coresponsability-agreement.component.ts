@@ -1,13 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { UserService } from '../../service/user.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { BeneficiaryService } from '../../service/beneficiary.service';
 import { SurveyService } from '../../service/survey.service';
+import { PaginatorService } from '../../service/paginator.service';
 @Component({
   selector: 'app-coresponsability-agreement',
   standalone: false,
@@ -29,10 +29,19 @@ columns: any = {
   identification: 'Identificación',
 };
 recordsTableColumns: string[] = [];
+totalItems = 0;  
+pageSize = 10;   
+pageIndex = 0;   
+
+loading = false;
+totalSize = 0;
+
+searchValue: string = ''; 
 
 constructor(
   private beneficiaryService: BeneficiaryService,
   private surveyService: SurveyService,
+  private paginatorService: PaginatorService,
   private titleService: Title,
   private router: Router,
   public dialog: MatDialog
@@ -54,21 +63,54 @@ ngOnInit(): void {
 ngAfterViewInit(): void {
   // Make the data source sortable
   this.dataSource.sort = this.recordsTableMatSort;
-  this.dataSource.paginator = this.paginator;
+
+  this.paginatorService.onPageChange(this.paginator, (pageIndex, pageSize) => {
+    this.beneficiaryService.getAllSignedAgreement(pageIndex, pageSize).subscribe({
+      next: async (response: any) => {
+        this.loadData(response);
+      },
+      error: (err) => {
+        console.error("Error en la solicitud: ", err);
+      }
+    });
+  });
 }
 
 ngOnDestroy(): void { }
 
+searchByFilter() {
+  this.surveyService.filterByWord(this.searchValue).subscribe({
+    next: (response: any) => {
+      this.dataSource.data = response.surveys;
+      this.loadData(response);
+      },
+  })
+}
+
 async getAll() {
-  await this.beneficiaryService.getAllSignedAgreement().subscribe({
+  await this.beneficiaryService.getAllSignedAgreement(0,10).subscribe({
       next: (response: any) => {
           this.dataSource.data = response.beneficiaries;
+          this.loadData(response)
       },
   });
 }
 
 massiveAgr() {
   this.router.navigateByUrl(`/app/coresponsability-agreement-masive`);
+}
+
+async loadData(response: any) {
+  this.dataSource.data = response.beneficiaries;
+  this.totalSize = response?.total;
+  await this.timer(100);
+  this.dataSource.sort = this.recordsTableMatSort;
+  this.paginator.length = this.totalSize;
+  this.loading = false;
+}
+
+timer(ms: number) {
+  return new Promise(res => setTimeout(res, ms));
 }
 
 download() {
@@ -102,6 +144,7 @@ download() {
   }
 
   applyFilter(event: any) {
-    this.dataSource.filter = event.target.value.trim().toLowerCase();
+    this.searchValue = event.target.value.trim().toLowerCase();
+    // this.dataSource.filter = this.searchValue;
   }
 }

@@ -20,7 +20,7 @@ export class CoordinatorEditComponent {
     this.form = new FormGroup({
       name: new FormControl('', Validators.required),
       userId: new FormControl('', Validators.required),
-      divipolId: new FormControl('', Validators.required),
+      divipolaId: new FormControl('', Validators.required),
       regionalLinkId: new FormControl('', Validators.required),
     });
     this.coordinator = {};

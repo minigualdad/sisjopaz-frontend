@@ -35,6 +35,15 @@ columns: any = {
 };
 recordsTableColumns: string[] = [];
 user: any;
+searchValue: string = ''; 
+totalItems = 0;  
+pageSize = 10;   
+pageIndex = 0;   
+
+loading = false;
+totalSize = 0;
+
+
 
 constructor(
   private titleService: Title,
@@ -90,9 +99,34 @@ async getAll() {
     },
   });
 }
+
+searchByFilter() {
+  this.userService.filterByWord(this.searchValue).subscribe({
+    next: (response: any) => {
+      this.dataSource.data = response.users;
+      this.loadData(response);
+      },
+  })
+}
+
+async loadData(response: any) {
+  this.dataSource.data = response.users;
+  this.totalSize = response?.total;
+  await this.timer(100);
+  this.dataSource.sort = this.recordsTableMatSort;
+  this.paginator.length = this.totalSize;
+  this.loading = false;
+}
+
+timer(ms: number) {
+  return new Promise(res => setTimeout(res, ms));
+}
+
 create() {
   this.router.navigateByUrl('/app/user-add');
 }
+
+
 
 userMassive() {
   this.router.navigateByUrl('/app/user-massive');
@@ -108,7 +142,7 @@ trackByFn(index: number, item: any): any {
   return item.id || index;
 }
 
-applyFilter(filterValue: string) {
-  this.dataSource.filter = filterValue.trim().toLowerCase();
+applyFilter(event: any) {
+  this.searchValue = event.target.value.trim().toLowerCase();
 }
 }

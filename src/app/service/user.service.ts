@@ -35,8 +35,12 @@ export class UserService {
   
   getUsers(): Observable<any> {
     return this.http.get( environment.apiUrl +  '/app/users/getAll')
-      }
+  }
   
+  filterByWord(value:string){
+    return this.http.post(`${environment.apiUrl}/app/users/getAllByValue`, {value})
+  }
+
   getUser(): Observable<any> {
     return this.http.get( environment.apiUrl +  '/app/users');
   }
