@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { RegionalService } from '../../service/regional.service';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -74,6 +75,31 @@ async getAll() {
 create() {
   this.router.navigateByUrl('/app/region-add');
 }
+
+  async remove(id: number) {
+    const result = await Swal.fire({
+      title: '¿Estás seguro que deseas deshabilitar esta región?',
+      text: '¡No es posible deshacer esta acción!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, deshabilitarla!',
+      cancelButtonText: 'No, conservarlo',
+    });
+    if (result.value) {
+      this._regionService.disableRegion(id).subscribe({
+        next: () => {
+          this.ngOnInit();
+          Swal.fire(
+            '¡Deshabilitada!',
+            'La región ha sido deshabilitada.',
+            'success'
+          );
+        },
+      });
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire('Cancelado', 'No se ha deshabilitado la región', 'error');
+    }
+  }
 
 /**
 * Track by function for ngFor loops

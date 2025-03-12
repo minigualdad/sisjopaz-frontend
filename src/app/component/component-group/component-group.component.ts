@@ -125,7 +125,7 @@ downloadAssistanceTemplate(id: any) {
       data: { id }
     });
     dialogRef.afterClosed().subscribe(result => {
-
+      this.loading = false;
       this.getAll();
     });
   }

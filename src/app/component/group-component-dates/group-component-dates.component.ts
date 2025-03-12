@@ -34,7 +34,6 @@ export class GroupComponentDatesComponent {
   component: any = {};
 
   constructor(
-    private calendarService: CalendarService,
     private titleService: Title,
     private activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
@@ -49,13 +48,7 @@ export class GroupComponentDatesComponent {
    * On init
    */
   ngOnInit(): void {
-    this.groupComponentDateActivityService
-      .getAllByGroupComponentId(this.groupComponent.id)
-      .subscribe( (response: any) => {
-        this.group = response.group;
-        this.component = response.component;
-        this.dataSource.data = response.groupComponentDateActivities;
-      });
+    this.getAll()
   }
 
   /**
@@ -70,11 +63,13 @@ export class GroupComponentDatesComponent {
   ngOnDestroy(): void {}
 
   async getAll() {
-    await this.calendarService.getAll().subscribe({
-      next: (response: any) => {
-        this.dataSource.data = response.calendarWorkingDays;
-      },
-    });
+    await this.groupComponentDateActivityService
+      .getAllByGroupComponentId(this.groupComponent.id)
+      .subscribe( (response: any) => {
+        this.group = response.group;
+        this.component = response.component;
+        this.dataSource.data = response.groupComponentDateActivities;
+      });
   }
 
   async remove(id: number) {
@@ -87,9 +82,10 @@ export class GroupComponentDatesComponent {
       cancelButtonText: 'No, conservarlo',
     });
     if (result.value) {
-      this.calendarService.delete(id).subscribe({
+      this.groupComponentDateActivityService.delete(id).subscribe({
         next: () => {
           this.ngOnInit();
+          this.getAll();
           Swal.fire('¡Borrado!', 'Día hábil ha sido eliminado.', 'success');
         },
       });

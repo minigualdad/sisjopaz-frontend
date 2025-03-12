@@ -50,6 +50,11 @@
                                             <mat-icon>edit</mat-icon>
                                                 Modificar Punto
                                             </button>
+                                            <button
+                                            mat-menu-item (click)="remove(transaction.id)">
+                                            <mat-icon>remove_circle_outline</mat-icon>
+                                            Deshabilitar Punto
+                                            </button>
                                         </mat-menu>
                                     </td>
                                 </ng-container>

@@ -126,7 +126,7 @@ export class UsersAdminCreateComponent implements OnInit, OnDestroy {
                 console.error(error);
                 Swal.fire(
                     'Operación incorrecta',
-                    'No se ha podido crear el usuario',
+                    `No se ha podido crear el usuario ${error.error.message}`,
                     'error'
                 );
             },

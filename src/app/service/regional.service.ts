@@ -33,5 +33,9 @@ export class RegionalService {
   show(id: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/region/${id}/getById`, {});
   }
+
+  disableRegion(id: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/region/${id}/disableRegion`, {});
+  }
   
 }

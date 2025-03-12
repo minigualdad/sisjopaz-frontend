@@ -25,4 +25,8 @@ export class GroupComponentDateActivityService {
     });
   }
 
+  delete(id: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivity/${id}/delete`, {});
+  }
+
 }

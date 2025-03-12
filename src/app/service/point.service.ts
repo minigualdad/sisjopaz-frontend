@@ -57,4 +57,8 @@ export class PointService {
   delete(id: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/point/${id}/delete`, {});
   }
+
+  disablePoint(id: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/point/${id}/changeState`, {});
+  }
 }

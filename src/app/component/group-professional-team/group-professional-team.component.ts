@@ -22,7 +22,7 @@ export class GroupProfessionalTeamComponent {
 
 dataSource: MatTableDataSource<any> = new MatTableDataSource();
 columns: any = {
-  // actions: 'Acciones',
+  actions: 'Acciones',
   id: 'Id',
   professionalTeam: 'Descripción del Profesional',
   professionalTeamUser: 'Usuario del Profesional',
@@ -89,11 +89,11 @@ edit(id: number) {
 
 async remove(id: number) {
   const result = await Swal.fire({
-      title: '¿Estás seguro que deseas eliminar el grupo de equipo profesional?',
+      title: '¿Estás seguro que deseas desvincular del grupo a este profesional?',
       text: '¡No es posible deshacer esta acción!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, borrarlo!',
+      confirmButtonText: 'Sí, desvincularlo!',
       cancelButtonText: 'No, conservarlo',
   });
   if (result.value) {
@@ -101,14 +101,14 @@ async remove(id: number) {
           next: () => {
               this.ngOnInit();
               Swal.fire(
-                  '¡Borrado!',
-                  'grupo de equipo profesional ha sido eliminado.',
+                  'Desvinculado!',
+                  'El profesional ha sido desvinculado.',
                   'success'
               );
           },
       });
   } else if (result.dismiss === Swal.DismissReason.cancel) {
-      Swal.fire('Cancelado', 'No se ha eliminado el grupo de equipo profesional', 'error');
+      Swal.fire('Cancelado', 'No se ha desvinculado el profesional', 'error');
   }
 }
 

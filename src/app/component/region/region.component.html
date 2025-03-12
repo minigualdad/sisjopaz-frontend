@@ -1,4 +1,4 @@
-<div class="flex flex-col flex-auto min-w-0" >
+<div class="flex flex-col flex-auto min-w-0">
 
     <!-- Main -->
     <div class="flex-auto p-6 sm:p-10">
@@ -11,7 +11,8 @@
                 <div class="flex items-center justify-between w-full">
                     <div>
                         <h2 class="text-3xl font-semibold tracking-tight leading-8">Regiones</h2>
-                        <div class="font-medium tracking-tight text-secondary">A continuación encontrará la información general de regiones</div>
+                        <div class="font-medium tracking-tight text-secondary">A continuación encontrará la información
+                            general de regiones</div>
                     </div>
                     <div class="flex items-center ml-6">
                         <button class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
@@ -23,7 +24,7 @@
                 </div>
 
                 <!-- Recent transactions table -->
-                <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-visible mt-4" >
+                <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-visible mt-4">
                     <div class="overflow-x-auto mx-6">
                         <mat-form-field class="bg-white rounded-md w-full mt-4">
                             <mat-label>Buscar en todos los campos</mat-label>
@@ -50,26 +51,23 @@
                                             <mat-icon>more_vert</mat-icon>
                                         </button>
                                         <mat-menu class="bg-white" #menu="matMenu">
-                                            <button
-                                            mat-menu-item [routerLink]="['/app/regional-link', transaction.id]">
-                                            <mat-icon>edit_note</mat-icon>
-                                            Enlace regional
-                                          </button>
-                                          <button
-                                            mat-menu-item [routerLink]="['/app/coordinator', transaction.id]">
-                                            <mat-icon>group</mat-icon>
-                                            Coordinadores
-                                          </button>
-                                          <button
-                                            mat-menu-item [routerLink]="['/app/professional-team', transaction.id]">
-                                            <mat-icon>groups</mat-icon>
-                                            Profesionales
-                                          </button>
-                                          
-                                            <!-- <button mat-menu-item (click)="remove(transaction.id)">
+                                            <button mat-menu-item [routerLink]="['/app/regional-link', transaction.id]">
+                                                <mat-icon>edit_note</mat-icon>
+                                                Enlace regional
+                                            </button>
+                                            <button mat-menu-item [routerLink]="['/app/coordinator', transaction.id]">
+                                                <mat-icon>group</mat-icon>
+                                                Coordinadores
+                                            </button>
+                                            <button mat-menu-item
+                                                [routerLink]="['/app/professional-team', transaction.id]">
+                                                <mat-icon>groups</mat-icon>
+                                                Profesionales
+                                            </button>
+                                            <button mat-menu-item (click)="remove(transaction.id)">
                                                 <mat-icon>remove_circle_outline</mat-icon>
-                                                Borrar Región
-                                            </button> -->
+                                                Deshabilitar Región
+                                            </button>
                                         </mat-menu>
                                     </td>
                                 </ng-container>
@@ -89,7 +87,8 @@
                             <tr class="h-16 border-0" mat-footer-row *matFooterRowDef="['recordsTableFooter']"></tr>
                         </table>
 
-                        <mat-paginator [length]="dataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                        <mat-paginator [length]="dataSource.data.length" [pageSize]="10"
+                            [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 
                     </div>
                 </div>
