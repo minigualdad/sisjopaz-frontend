@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { GroupComponentService } from '../../service/group-component.service';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
 import { PaginatorService } from '../../service/paginator.service';
+import Swal from 'sweetalert2';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 
 @Component({
@@ -27,6 +29,7 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   columns: any = {
     actions: 'Acciones',
+    select: 'Selección', // Asegurar que el nombre sea 'select'
     id: 'Id',
     groupComponent: 'Componente',
     groupCycleId: 'Ciclo - Periodo',
@@ -37,21 +40,27 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     userIdentificationType: 'Tipo de Identificación del Beneficiario',
     state: 'Estado',
   };
+  
+  selectedIds: number[] = [];
   recordsTableColumns: string[] = [];
+  displayedColumns: string[] = [];
+  
   periods: any;
   isFormVisible = false;
   groupComponent: any = {};
   user: any = {};
   isData: boolean = false;
-
+  groupComponentId = localStorage.getItem('componentId');
+  backRoute = `app/component-group/${this.groupComponentId}`;
+  
   totalItems = 0;
   pageSize = 10;
   pageIndex = 0;
-
+  
   loading = false;
   totalSize = 0;
   groupComponentDateActivityBeneficiary: any;
-
+  
   constructor(
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
@@ -61,10 +70,10 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     private paginatorService: PaginatorService,
     private _groupComponentDateActivityBeneficiaryServiceService: GroupComponentDateActivityBenefiaryService
   ) {
-    this.recordsTableColumns = Object.keys(this.columns);
+    this.recordsTableColumns = Object.keys(this.columns).filter(col => col !== 'actions' && col !== 'select');
+    this.displayedColumns = ['actions', 'select', ...this.recordsTableColumns]; // Acciones primero, luego checkbox y demás columnas
     this.titleService.setTitle('Actividades');
-    this.groupComponent = {};
-    this.groupComponent.id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.groupComponent = { id: this.activatedRoute.snapshot.paramMap.get('id') };
   }
 
   /**
@@ -73,6 +82,25 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
   ngOnInit(): void {
     this.showGroupComponent();
   }
+
+  toggleSelection(id: number) {
+    const index = this.selectedIds.indexOf(id);
+    if (index === -1) {
+      this.selectedIds.push(id);
+    } else {
+      this.selectedIds.splice(index, 1);
+    }
+  }
+  
+  // Manejar selección de todos los elementos
+  toggleSelectAll(event: any) {
+    if (event.checked) {
+      this.selectedIds = this.dataSource.data.map((item: any) => item.id);
+    } else {
+      this.selectedIds = [];
+    }
+  }
+
   getAll(){
     this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndUser(this.groupComponentDateActivityBeneficiary).subscribe({
       next: (response: any) => {
@@ -131,6 +159,21 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     this.dataSource.sort = this.recordsTableMatSort;
   }
 
+  transformDateActivities(data: any) {
+    const daysOfWeek = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+
+    return data.groupComponentDateActivityBeneficiaries.map((activity: any) => {
+        const date = new Date(activity.dateActivity + "T00:00:00Z");
+        const day = daysOfWeek[date.getUTCDay()];
+        const formattedDay = day.charAt(0).toUpperCase() + day.slice(1);
+        return {
+            ...activity,
+            dateActivity: `${activity.dateActivity} - ${formattedDay}`
+        };
+    });
+  }
+
+
 
   async onSelectSurvey(event: any) {
     this.user.id = event.id;
@@ -162,7 +205,7 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
   }
 
   async loadData(response: any) {
-    this.dataSource.data = response.groupComponentDateActivityBeneficiaries;
+    this.dataSource.data = this.transformDateActivities(response);
     this.totalSize = response?.total;
     await this.timer(100);
     this.dataSource.sort = this.recordsTableMatSort;
@@ -194,5 +237,51 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
       return '!bg-red-200'; // Si no coincide, también rojo
     }
   }
+
+    async remove(id: number) {
+      const result = await Swal.fire({
+        title: '¿Estás seguro que deseas eliminar el día de asistencia?',
+        text: '¡No es posible deshacer esta acción!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, borrarlo!',
+        cancelButtonText: 'No, conservarlo',
+      });
+      if (result.value) {
+        this._groupComponentDateActivityBeneficiaryServiceService.delete(id).subscribe({
+          next: () => {
+            this.ngOnInit();
+            this.getAll();
+            Swal.fire('¡Borrado!', 'Día de asistencia ha sido eliminado.', 'success');
+          },
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('Cancelado', 'No se ha eliminado el día de asistencia', 'error');
+      }
+    }
   
+    async removeIds() {
+      const result = await Swal.fire({
+        title: '¿Estás seguro que deseas eliminar estos días de asistencia?',
+        text: '¡No es posible deshacer esta acción!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, borrarlo!',
+        cancelButtonText: 'No, conservarlo',
+      });
+      if (result.value) {
+        this._groupComponentDateActivityBeneficiaryServiceService.deleteIds(this.selectedIds).subscribe({
+          next: () => {
+            this.ngOnInit();
+            this.getAll();
+            Swal.fire('¡Borrado!', 'Los días de asistencia han sido eliminado.', 'success');
+          },
+          error: (error: any) =>{
+            Swal.fire('Cancelado', 'No se han eliminado los días de asistencia', 'error');
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('Cancelado', 'No se han eliminado los días de asistencia', 'error');
+      }
+    }
 }

@@ -18,9 +18,7 @@ export class PaginatorService {
   // }
 
   onPageChange(matPaginator: MatPaginator, callback: (pageIndex: number, pageSize: number) => void): void {
-    console.log('entra al onPAgeChange')
     matPaginator.page.subscribe((pageEvent: PageEvent) => {
-      console.log(pageEvent, 'ANTES DEL CALLBACK')
       callback(pageEvent.pageIndex, pageEvent.pageSize);
     });
   }

@@ -7,10 +7,12 @@
         <div class="h-400 min-h-400 max-h-400">
 
             <div class="grid grid-cols-1 xl:grid-cols-1 w-full ">
-
                 <div class="flex items-center justify-between w-full">
                     <div>
-                        <h2 class="text-3xl font-semibold tracking-tight leading-8">Equipo Profesional</h2>
+                        <div class="w-full flex sm:items-center justify-start mb-2 flex-col sm:flex-row">
+                            <app-button-back [routeBack]="backRoute" class="mb-2"></app-button-back>
+                            <h2 class="text-3xl font-semibold tracking-tight leading-8">Equipo Profesional</h2>
+                        </div>
                         <hr class="my-2">
                         <h2 class="text-xl  tracking-tight leading-8">Grupo: <strong *ngIf="group"> {{ group?.name | titlecase}}</strong></h2>
                         <h2 class="text-xl  tracking-tight leading-8">Componente: <strong *ngIf="component"> {{ component?.name | titlecase}}</strong></h2>

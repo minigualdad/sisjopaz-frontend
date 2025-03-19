@@ -332,7 +332,7 @@ export const NAV_ITEMS = [
             },
             {
                 name: 'Jóvenes Sin Grupo',
-                route: `/app/beneficiary-without-group`,
+                route: `/app/my-regional-beneficiary-without-group`,
                 icon: 'svg/circle.svg',
                 role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION]
             },

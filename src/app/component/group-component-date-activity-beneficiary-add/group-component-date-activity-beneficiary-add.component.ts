@@ -4,6 +4,7 @@ import { GroupCycleService } from '../../service/group-cycle.service';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
+import { GroupComponentService } from '../../service/group-component.service';
 
 @Component({
   selector: 'app-group-component-date-activity-beneficiary-add',
@@ -25,35 +26,31 @@ groupComponent: any = {};
 
 constructor(
   private groupComponentDateActivityBenefiaryService: GroupComponentDateActivityBenefiaryService,
-  private _groupCycleService: GroupCycleService,
+  private groupComponentService: GroupComponentService,
   private router: Router,
   private activatedRoute: ActivatedRoute) {
         this.form = new FormGroup( {
           userId: new FormControl('', Validators.required),
-          groupCycleId: new FormControl('', Validators.required),
           dateActivity: new FormControl('', Validators.required),
           groupComponentId: new FormControl('', Validators.required),
         });
         this.groupComponent = {};
-        this.groupComponent.id = this.activatedRoute.snapshot.paramMap.get('id');
+        this.groupComponent.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
         this.form.controls['groupComponentId'].setValue(this.groupComponent.id);
 }
 
 ngOnInit(): void {
-this.getCycles();
+  this.showGroupComponent();
 }
 
-getCycles(){
-  this._groupCycleService.getAllGroupCycles().subscribe({
-    next: (response:any) =>{
-      this.cycles = response.groupCycle.map((item: { id: any; cycle: any; Period: { year: any; month: number; }; }) => ({
-        id: item.id,
-        name: `${item.cycle}.       ${item.Period.year} - ${this.months[item.Period.month - 1]}`,
-      }))
+showGroupComponent(){
+  this.groupComponentService.show(this.groupComponent.id)
+  .subscribe({
+    next: (response: any) => {
+      this.groupComponent = response.groupComponent;
     }
-  })
+  });
 }
-
 create(){
   this.groupComponentDateActivityBenefiaryService.create(this.form.value)
   .subscribe({

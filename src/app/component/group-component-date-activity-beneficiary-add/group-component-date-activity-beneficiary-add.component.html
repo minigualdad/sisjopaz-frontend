@@ -6,8 +6,8 @@
           <div class="md:grid md:grid-cols-3 md:gap-6">
               <div class="md:col-span-1">
                   <div class="px-4 sm:px-0">
-                      <h3 class="text-lg font-medium leading-6 text-gray-900">Asignación de Actividad</h3>
-                      <p class="mt-1 text-sm text-gray-600">Esta será información con la que se asignará la actividad al joven.
+                      <h3 class="text-lg font-medium leading-6 text-gray-900">Asignación de Actividad Para el grupo <strong *ngIf="groupComponent"> {{groupComponent.Group?.name}}</strong> </h3>
+                      <p class="mt-1 text-sm text-gray-600">Esta será información con la que se asignará la actividad al joven en el componente <strong *ngIf="groupComponent"> {{groupComponent.Component?.name}}.</strong>
                       </p>
                   </div>
               </div>
@@ -15,14 +15,6 @@
                   <div class="mb-4">
                     <app-survey-finder (surveyListen)="onSurveySelect($event)"></app-survey-finder>
                   </div>
-                  <div class="mb-4">                       
-                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                    <mat-label>Ciclo/Periodo:</mat-label>
-                    <mat-select class="bg-white" formControlName="groupCycleId">
-                      <mat-option class="bg-white" *ngFor="let cycle of cycles" [value]="cycle.id">{{ cycle.name }}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
                 <div class="mb-4">
                   <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                       <mat-label>Fecha:</mat-label>

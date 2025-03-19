@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RegionalLinkService } from '../../service/regional-link.service';
 
@@ -8,7 +8,7 @@ import { RegionalLinkService } from '../../service/regional-link.service';
   templateUrl: './regional-link-selector.component.html',
   styleUrl: './regional-link-selector.component.scss'
 })
-export class RegionalLinkSelectorComponent {
+export class RegionalLinkSelectorComponent implements AfterContentInit {
   form: FormGroup;
   regionalLinks: any = [];
   @Output() regionalLinkIdListen: EventEmitter<number> = new EventEmitter();
@@ -39,6 +39,7 @@ export class RegionalLinkSelectorComponent {
   }
 
   ngAfterContentInit() {
+    this.checkValue();
   }
 
   checkValue() {
@@ -46,7 +47,7 @@ export class RegionalLinkSelectorComponent {
       if (this.regionalLink) {
         this.form.patchValue({ regionalLinkId: this.regionalLink });
       }
-    }, 300);
+    }, 500);
 
   }
 

@@ -32,6 +32,8 @@ export class GroupComponentDatesComponent {
   groupComponent: any = {};
   group: any = {};
   component: any = {};
+  groupComponentId = localStorage.getItem('componentId')
+  backRoute = `app/component-group/${this.groupComponentId}`
 
   constructor(
     private titleService: Title,
@@ -68,9 +70,23 @@ export class GroupComponentDatesComponent {
       .subscribe( (response: any) => {
         this.group = response.group;
         this.component = response.component;
-        this.dataSource.data = response.groupComponentDateActivities;
+        this.dataSource.data = this.transformDateActivities(response);
       });
   }
+
+  transformDateActivities(data: any) {
+    const daysOfWeek = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+
+    return data.groupComponentDateActivities.map((activity: any) => {
+        const date = new Date(activity.dateActivity + "T00:00:00Z");
+        const day = daysOfWeek[date.getUTCDay()];
+        const formattedDay = day.charAt(0).toUpperCase() + day.slice(1);
+        return {
+            ...activity,
+            dateActivity: `${activity.dateActivity} - ${formattedDay}`
+        };
+    });
+}
 
   async remove(id: number) {
     const result = await Swal.fire({

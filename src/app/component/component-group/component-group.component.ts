@@ -33,6 +33,7 @@ recordsTableColumns: string[] = [];
 user: any;
 group: any
 loading: boolean = false;
+backRoute = "app/my-group";
 
 constructor(
   private groupComponentService: GroupComponentService,
@@ -47,6 +48,8 @@ constructor(
   this.titleService.setTitle('Componentes');
   this.group = {};
   this.group.id = this.activatedRoute.snapshot.paramMap.get('id');
+
+  localStorage.setItem('componentId', this.group.id);
 }
 
 /**
@@ -55,6 +58,11 @@ constructor(
 ngOnInit(): void {
   this.userService.getUser().subscribe((response: any) => {
       this.user = response.user;
+
+      if(response?.user?.role == "ADMIN" || response?.user?.role == "DIRECCION"){
+        this.backRoute = "app/group"
+      }
+
       this.getAll();
       this.showGroup();
   });

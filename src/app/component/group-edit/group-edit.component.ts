@@ -14,6 +14,7 @@ export class GroupEditComponent {
   group: any;
   form: FormGroup;
   divipolaId: any;
+  backRoute = "app/group";
 
   constructor(private groupService: GroupService,
     private router: Router,
@@ -36,7 +37,6 @@ export class GroupEditComponent {
       .subscribe({
         next: (response: any) => {
           this.group = response.group;
-          // this.group.date = response.group.date.split('T')[0]
           this.form.patchValue(response.group);
         }
       });
@@ -58,8 +58,6 @@ export class GroupEditComponent {
   onDivipolSelect(event: any) {
     this.divipolaId = event;
     this.form.patchValue({ divipolaId: event });
-    const defaultPoint = null;
-    this.onPointSelect(defaultPoint);
   }
 
   onRegionalLinkSelect(event: any) {

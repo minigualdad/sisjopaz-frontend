@@ -114,4 +114,8 @@ export class GroupComponentDateActivityBenefiaryService {
   delete(id: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/${id}/delete`, {});
   }
+
+  deleteIds(ids: any) {
+    return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/deleteIds`, { ids});
+  }
 }

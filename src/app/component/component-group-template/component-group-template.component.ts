@@ -26,6 +26,7 @@ export class ComponentGroupTemplateComponent implements OnInit {
       groupComponentId: [null, Validators.required],
       month: [null, Validators.required],
       year: [null, Validators.required],
+      overwrite: [false],
     });
   }
 
@@ -95,6 +96,7 @@ export class ComponentGroupTemplateComponent implements OnInit {
               confirmButtonText: 'Intentar nuevamente',
             });  
           });
+          this.loading = false;
         },
       });
     }

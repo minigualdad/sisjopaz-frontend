@@ -77,4 +77,10 @@ export class GroupService {
       responseType: 'blob'
     });
   }
+
+  downloadGroupInfoByDivipola(){
+    return this._httpClient.get(environment.apiUrl + '/app/group/downloadGroupInfoByDivipola', {
+      responseType: 'blob'
+    });
+  }
 }

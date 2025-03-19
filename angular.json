@@ -97,6 +97,9 @@
             "production": {
               "buildTarget": "sisjep-frontend:build:production"
             },
+            "testing": {
+              "buildTarget": "sisjep-frontend:build:testing"
+            },
             "development": {
               "buildTarget": "sisjep-frontend:build:development"
             }

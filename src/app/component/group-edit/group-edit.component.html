@@ -5,36 +5,40 @@
             <div class="md:grid md:grid-cols-3 md:gap-6">
                 <div class="md:col-span-1">
                     <div class="px-4 sm:px-0">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">Grupo</h3>
+                        <div class="w-full flex sm:items-center justify-start mb-2 flex-col sm:flex-row">
+                            <app-button-back [routeBack]="backRoute" class="mb-2"></app-button-back>
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Grupo</h3>
+                        </div>
                         <p class="mt-1 text-sm text-gray-600">Esta será información con la que se modificará el grupo.
                         </p>
                     </div>
                 </div>
                 <div class="mt-5 md:col-span-2 md:mt-0">
-                    <div class="mb-4">
+                    <div class="mb-4" *ngIf="this.group">
                         <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                             <mat-label>Nombre:</mat-label>
                             <input type="text" matInput formControlName="name">
                         </mat-form-field>
                     </div>
-                    <div class="mb-4">
-                        <app-regional-link-selector
+                    <div class="mb-4" *ngIf="this.group">
+                        <app-regional-link-selector [regionalLink]="group.regionalLinkId"
                             (regionalLinkIdListen)="onRegionalLinkSelect($event)"></app-regional-link-selector>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-4" *ngIf="this.group">
                         <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                             <mat-label>Fecha Inicio Grupo:</mat-label>
                             <input type="date" matInput formControlName="initDate">
                         </mat-form-field>
                     </div>
-                    <div class="mb-4">
-                        <app-divipol-selector (divipolIdListen)="onDivipolSelect($event)"></app-divipol-selector>
+                    <div class="mb-4" *ngIf="this.group">
+                        <app-divipol-selector [divipol]="this.form.get('divipolaId')?.value" 
+                        (divipolIdListen)="onDivipolSelect($event)"></app-divipol-selector>
                     </div>
-                    <div class="mb-4" *ngIf="divipolaId">
-                        <app-point-selector [divipolaId]="divipolaId"
+                    <div class="mb-4" *ngIf="this.group">
+                        <app-point-selector [point]="group.pointId" [divipolaId]="this.form.get('divipolaId')?.value"
                             (pointIdListen)="onPointSelect($event)"></app-point-selector>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-4" *ngIf="this.group">
                         <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                             <mat-label>Observaciones:</mat-label>
                             <input type="text" matInput formControlName="observations">

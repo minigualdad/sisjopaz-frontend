@@ -1,10 +1,20 @@
-<form [formGroup]="form" class="bg-white" >
+<form [formGroup]="form" class="bg-white">
     <div class="mb-4 bg-white">
-        <mat-form-field class="w-full bg-white" [subscriptSizing]="'dynamic'">
-            <mat-label class="bg-white">Seleccione un Usuario</mat-label>
-            <mat-select class="bg-white" formControlName="userId" required (selectionChange)="selectUserId($event)">
-                <mat-option class="bg-white" *ngFor="let user of users" [value]="user.id">{{ user.name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
+      <mat-form-field class="w-full bg-white" [subscriptSizing]="'dynamic'">
+        <mat-label class="bg-white">Seleccione un Usuario</mat-label>
+        <input
+          type="text"
+          matInput
+          [formControl]="userFilter"
+          [matAutocomplete]="auto"
+          class="bg-white"
+        />
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectUserId($event)">
+          <mat-option *ngFor="let user of filteredUsers" [value]="user.id">
+            {{ user.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
     </div>
-</form>
+  </form>
+  

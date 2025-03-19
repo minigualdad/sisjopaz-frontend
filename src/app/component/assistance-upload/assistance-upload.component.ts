@@ -180,7 +180,7 @@ export class AssistanceUploadComponent implements OnInit{
     .subscribe({
       next: (response: any) => {
         this.showTableData = true;
-        this.dataSource.data = response.response.assistanceScannerBeneficiaries;
+        this.dataSource.data = this.transformDateActivities(response);
         const imageResult = `${environment.apiUrl}/${response?.response?.imageResult}`;
         this.imageUrl = imageResult
         this.imagePreviewResult = this.sanitizer.bypassSecurityTrustResourceUrl(imageResult);
@@ -196,6 +196,20 @@ export class AssistanceUploadComponent implements OnInit{
       }
     });
 
+  }
+
+  transformDateActivities(data: any) {
+    const daysOfWeek = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+
+    return data.response.assistanceScannerBeneficiaries.map((activity: any) => {
+        const date = new Date(activity.assistanceSignDate + "T00:00:00Z");
+        const day = daysOfWeek[date.getUTCDay()];
+        const formattedDay = day.charAt(0).toUpperCase() + day.slice(1);
+        return {
+            ...activity,
+            assistanceSignDate: `${activity.assistanceSignDate} - ${formattedDay}`
+        };
+    });
   }
 
   redirectTo(url:string){

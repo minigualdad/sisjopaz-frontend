@@ -1,6 +1,12 @@
 <div class="w-full h-full flex flex-col justify-center items-center overflow-x-hidden p-6">
-    <h2 class="font-bold text-2xl text-[#3e75a6]">ACUERDO DE PARTICIPACIÓN Y CORRESPONSABILIDAD - PROGRAMA NACIONAL
-        JÓVENES EN PAZ</h2>
+
+    <div class="fixed top-10 left-[364px]">
+        <app-button-back [routeBack]="backRoute"></app-button-back>
+    </div>
+
+        <h2 class="font-bold text-2xl text-[#3e75a6] mt-8">ACUERDO DE PARTICIPACIÓN Y CORRESPONSABILIDAD - PROGRAMA NACIONAL
+            JÓVENES EN PAZ</h2>
+
 
         <button
         (click)="syncWithServer()" type="button" *ngIf="qty > 0"

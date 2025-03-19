@@ -24,6 +24,7 @@ import { InputComponent } from './input/input.component';
 import { SelectedComponent } from './selected/selected.component';
 import { MultipleOptionComponent } from './multiple-option/multiple-option.component';
 import { MatTooltip } from '@angular/material/tooltip';
+import { ButtonBackComponent } from './button-back/button-back.component';
 
 @NgModule({
     declarations: [],
@@ -53,7 +54,7 @@ import { MatTooltip } from '@angular/material/tooltip';
         MultipleOptionComponent,
         InputComponent,
         SelectedComponent,
-        MatTooltip
+        MatTooltip,
     ],
     exports: [
         CommonModule,

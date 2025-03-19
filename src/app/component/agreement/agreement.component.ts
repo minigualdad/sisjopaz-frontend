@@ -12,11 +12,12 @@ import { DepartmentService } from '../../service/department.service';
 import Swal from 'sweetalert2';
 import { IndexedDbService } from '../../service/indexed-db.service';
 import imageCompression from 'browser-image-compression';
+import { ButtonBackComponent } from "../../shared/button-back/button-back.component";
 
 
 @Component({
   selector: 'app-agreement',
-  imports: [ReactiveFormsModule, CommonModule, SelectedComponent, InputComponent, DrawerComponent],
+  imports: [ReactiveFormsModule, CommonModule, SelectedComponent, InputComponent, DrawerComponent, ButtonBackComponent],
   templateUrl: './agreement.component.html',
   styleUrl: './agreement.component.scss'
 })
@@ -33,7 +34,7 @@ export class AgreementComponent {
   digitalSignFile: File | null = null;
   legalRepresentativeDigitalSignFile: File | null = null;
   custodyFile: File | null = null;
-
+  backRoute = "app/professional-team-beneficiary-accepted";
 
   age = 0;
   survey: any;

@@ -181,6 +181,87 @@ export class SurveyService {
     )
   }
 
+  getAllWithoutGroupByDivipola(currentPage: number, pageSize: number){
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllWithoutGroupByDivipola`, {currentPage, pageSize})
+    .pipe(
+      map((response: any) => {
+        response.surveys = response.surveys.surveys.map((survey: any) => {
+          survey.dateSlplitted = survey.date?.split('T')[0];
+          survey.divipola = survey.Divipola?.name;
+          survey.name = survey.firstName;
+          if (survey.secondName) {
+            survey.name += ' ';
+            survey.name += survey.secondName;
+          }
+          survey.name += ' ';
+          survey.name += survey.firstLastName;
+          if (survey.secondLastName) {
+            survey.name += ' ';
+            survey.name += survey.secondLastName;
+          }
+          survey.nameOriginal = survey.firstNameOriginal;
+          if (survey.secondNameOriginal) {
+            survey.nameOriginal += ' ';
+            survey.nameOriginal += survey.secondNameOriginal;
+          } else {
+            survey.secondNameOriginal = '';
+          }
+          survey.nameOriginal += ' ';
+          survey.nameOriginal += survey.firstLastNameOriginal;
+          if (survey.secondLastNameOriginal) {
+            survey.nameOriginal += ' ';
+            survey.nameOriginal += survey.secondLastNameOriginal;
+          } else {
+            survey.secondLastNameOriginal = '';
+          }
+          survey.startProgramDate = survey.createdAt.split('T')[0];
+          survey.group = survey.Group?.name;
+          if (survey.DNPCheckDate) {
+            survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
+          } else {
+            survey.DNPCheckDate = 'Sin Revisar'
+          }
+          if (survey.ARNCheckDate) {
+            survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
+          } else {
+            survey.ARNCheckDate = 'Sin Revisar'
+          }
+          if (survey.DPSCheckDate) {
+            survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
+          } else {
+            survey.DPSCheckDate = 'Sin Revisar'
+          }
+          if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
+            survey.DNPCheck = 'No Validado'
+          }
+          if (survey.DNPCheck === 'si' && survey.DNPCheckDate) {
+            survey.DNPCheck = 'Validado'
+          } else {
+            survey.DNPCheck = 'Sin Revisar'
+          }
+          if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
+            survey.ARNCheck = 'No Validado'
+          }
+          if (survey.ARNCheck === 'si' && survey.ARNCheckDate) {
+            survey.ARNCheck = 'Validado'
+          } else {
+            survey.ARNCheck = 'Sin Revisar'
+          }
+          if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
+            survey.ARNCheck = 'No Validado'
+          }
+          if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
+            survey.DPSCheck = 'Validado'
+          } else {
+            survey.DPSCheck = 'Sin Revisar'
+          }
+          return survey;
+        })
+        return response;
+      })
+    )
+  }
+
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.COORDINACION, Roles.ENLACE_REGIONAL])
   getAllWithoutGroup(currentPage: number, pageSize: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllWithoutGroup`, {currentPage, pageSize})
@@ -262,6 +343,8 @@ export class SurveyService {
         })
       )
   }
+
+
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   getAllByGroup(id: number, currentPage: number, pageSize: number) {
@@ -1325,6 +1408,12 @@ export class SurveyService {
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
   downloadWithoutGroup() {
     return this._httpClient.get(environment.apiUrl + '/app/survey/downloadWithoutGroup', {
+      responseType: 'blob'
+    });
+  }
+
+  downloadPendingGroupByDivipola() {
+    return this._httpClient.get(environment.apiUrl + '/app/survey/downloadWithoutGroupByDivipola', {
       responseType: 'blob'
     });
   }

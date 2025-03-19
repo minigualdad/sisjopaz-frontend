@@ -171,7 +171,7 @@
           <mat-select formControlName="municipalityId" class="w-full h-auto py-2 rounded-lg shadow-xl px-10 bg-slate-200 flex items-center justify-center my-3"
                       placeholder="Seleccione una opción"            
                       [ngClass]="{'border-2 border-red-500': form.get('municipalityId')?.invalid && form.get('municipalityId')?.touched}">
-            <mat-option class="bg-white" *ngFor="let divi of divipol" [value]="divi.id">{{ divi.name }}</mat-option>
+            <mat-option class="bg-white" *ngFor="let divi of divipol" [value]="divi.id">{{ divi.name }} - {{divi.ListDepartment?.name}}</mat-option>
           </mat-select>
           <div *ngIf="form.get('municipalityId')?.hasError('required') && form.get('municipalityId')?.touched" class="text-red-500">
             Este campo es obligatorio.

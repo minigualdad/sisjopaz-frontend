@@ -179,6 +179,10 @@ import { RnecValidatedComponent } from './component/rnec-validated/rnec-validate
 import { RnecValidatedEditComponent } from './component/rnec-validated-edit/rnec-validated-edit.component';
 import { UpdateMassiveGroupComponent } from './component/update-massive-group/update-massive-group.component';
 import { PointIndexComponent } from './component/point-index/point-index.component';
+import { ButtonBackComponent } from './shared/button-back/button-back.component';
+import { MyRegionalBeneficiaryWithoutGroupComponent } from './component/my-regional-beneficiary-without-group/my-regional-beneficiary-without-group.component';
+import { MyRegionalBeneficiaryMassiveGroupComponent } from './component/my-regional-beneficiary-massive-group/my-regional-beneficiary-massive-group.component';
+import { RegionalLinkUpdateMassiveGroupComponent } from './component/regional-link-update-massive-group/regional-link-update-massive-group.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -661,11 +665,19 @@ export const routes: Routes = [
             },
             {
                 path: 'beneficiary-without-group', component: BeneficiaryWithoutGroupComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
+            },
+            {
+                path: 'my-regional-beneficiary-without-group', component: MyRegionalBeneficiaryWithoutGroupComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
+            },
+            {
+                path: 'my-regional-beneficiary-massive-group', component: MyRegionalBeneficiaryMassiveGroupComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
             },
             {
                 path: 'beneficiary-massive-group', component: BeneficiaryMassiveGroupComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL] }
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
             },
             {
                 path: 'region', component: RegionComponent,
@@ -739,6 +751,10 @@ export const routes: Routes = [
             {
                 path: 'point-index', component: PointIndexComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
+            },
+            {
+                path: 'regional-link-update-massive-group', component: RegionalLinkUpdateMassiveGroupComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
             },
             
         ]
@@ -898,6 +914,9 @@ export const routes: Routes = [
         RnecValidatedEditComponent,
         UpdateMassiveGroupComponent,
         PointIndexComponent,
+        MyRegionalBeneficiaryWithoutGroupComponent,
+        MyRegionalBeneficiaryMassiveGroupComponent,
+        RegionalLinkUpdateMassiveGroupComponent,
     ],
     imports: [
     RouterModule.forRoot(routes),
@@ -916,6 +935,7 @@ export const routes: Routes = [
     BaseChartDirective,
     CommonModule,
     LoadingComponent,
+    ButtonBackComponent
     
 ],
     exports: [RouterModule, SharedModule, MatTableModule,

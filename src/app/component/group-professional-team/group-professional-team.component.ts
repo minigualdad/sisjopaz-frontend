@@ -34,7 +34,8 @@ group: any;
 groupName = "";
 groupComponent: any = { id: 0 };
 component: any;
-
+groupComponentId = localStorage.getItem('componentId')
+backRoute = `app/component-group/${this.groupComponentId}`
 
 constructor(
   private groupProfessionalTeamService: GroupProfessionalTeamService,
