@@ -22,7 +22,6 @@ export class GroupComponentDateActivityBenefiaryService {
       map( (response: any) => {
         response.groupComponentDateActivityBeneficiaries = response.groupComponentDateActivityBeneficiaries.map( (groupComponentDateActivityBeneficiary: any) => {
           groupComponentDateActivityBeneficiary.groupComponent = groupComponentDateActivityBeneficiary.GroupComponent?.Component?.name;
-          groupComponentDateActivityBeneficiary.groupCycle = groupComponentDateActivityBeneficiary.GroupCycle?.cycle;
           groupComponentDateActivityBeneficiary.user = groupComponentDateActivityBeneficiary.UserId?.firstName;
           if (groupComponentDateActivityBeneficiary.UserId.secondName) {
             groupComponentDateActivityBeneficiary.user += ' ';
@@ -55,7 +54,6 @@ export class GroupComponentDateActivityBenefiaryService {
       map( (response: any) => {
         response.groupComponentDateActivityBeneficiaries = response.groupComponentDateActivityBeneficiaries.groupComponentDateActivityBeneficiaries.map( (groupComponentDateActivityBeneficiary: any) => {
           groupComponentDateActivityBeneficiary.groupComponent = groupComponentDateActivityBeneficiary.GroupComponent?.Component?.name;
-          groupComponentDateActivityBeneficiary.groupCycle = groupComponentDateActivityBeneficiary.GroupCycle?.cycle;
           groupComponentDateActivityBeneficiary.user = groupComponentDateActivityBeneficiary.UserId?.firstName;
           if (groupComponentDateActivityBeneficiary.UserId.secondName) {
             groupComponentDateActivityBeneficiary.user += ' ';
@@ -87,7 +85,6 @@ export class GroupComponentDateActivityBenefiaryService {
     .pipe(
       map( (response: any) => {
         response.groupComponentDateActivityBeneficiaries = response.groupComponentDateActivityBeneficiaries.map( (groupComponentDateActivityBeneficiary: any) => {
-          groupComponentDateActivityBeneficiary.cycle = groupComponentDateActivityBeneficiary.GroupCycle?.cycle;
           return groupComponentDateActivityBeneficiary;
         })
         return response;

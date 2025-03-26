@@ -55,6 +55,6 @@ export class CoordinatorEditComponent {
   }
 
   onDivipolSelect(event: any) {
-    this.form.patchValue({ divipolId: event });
+    this.form.patchValue({ divipolaId: event });
   }
 }

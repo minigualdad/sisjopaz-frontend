@@ -46,6 +46,20 @@ export class UserSelectorComponent {
     .subscribe(filtered => (this.filteredUsers = filtered));
   }
 
+  async afterContentInit(){
+    this.userService.getUsers().subscribe({
+      next: (response: any) => {
+        this.users = response.users;
+        this.filteredUsers = this.users;
+
+        if (this.user) {
+          this.form.patchValue({ userId: this.user });
+          this.setUserName(this.user);
+        }
+      }
+    });
+  }
+
   private filterUsers(value: string): User[] {
     const filterValue = this.normalizeString(value);
     return this.users.filter(user => this.normalizeString(user.name).includes(filterValue));

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { GroupCycleService } from '../../service/group-cycle.service';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,7 +15,6 @@ export class GroupComponentDateActivityBeneficiaryAddComponent {
 
 loading = false;
 form: FormGroup;
-cycles: { id: number; name: string }[] = [];
 months: string[] = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'

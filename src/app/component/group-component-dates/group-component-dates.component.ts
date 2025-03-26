@@ -24,7 +24,6 @@ export class GroupComponentDatesComponent {
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   columns: any = {
     actions: 'Acciones',
-    groupCycleId: 'Ciclo',
     dateActivity: 'Fecha',
   };
   recordsTableColumns: string[] = [];

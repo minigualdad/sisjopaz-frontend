@@ -83,10 +83,6 @@ create() {
   this.router.navigateByUrl(`/app/group-professional-team-add/${this.groupComponent.id}`);
 }
 
-edit(id: number) {
-  this.router.navigateByUrl('/app/group-professional-team-edit');
-
-}
 
 async remove(id: number) {
   const result = await Swal.fire({

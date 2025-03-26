@@ -48,7 +48,7 @@ export class ProfessionalTeamService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   show(id: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/professionalTeam/${id}/getById`, {});
+    return this._httpClient.get(`${environment.apiUrl}/app/professionalTeam/${id}/getById`);
   }
 
   // No se usa

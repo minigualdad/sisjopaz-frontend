@@ -9,7 +9,6 @@ import { GroupComponentService } from '../../service/group-component.service';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
 import { PaginatorService } from '../../service/paginator.service';
 import Swal from 'sweetalert2';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 
 
 @Component({
@@ -32,7 +31,6 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     select: 'Selección', // Asegurar que el nombre sea 'select'
     id: 'Id',
     groupComponent: 'Componente',
-    groupCycleId: 'Ciclo - Periodo',
     dateActivity: 'Fecha Citación',
     hasAssitence: 'Asistencía',
     user: 'Beneficiario',
@@ -224,9 +222,6 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     } else {
       console.warn('No se recibieron períodos válidos:', emittedPeriods);
     }
-  }
-  redirectByPeriod(periodId: number) {
-    this.router.navigateByUrl(`app/period/${periodId}`)
   }
   getRowBorderColor(hasAssitence: string | null | undefined): string {
     if (!hasAssitence || hasAssitence.trim().toLowerCase() === '') {

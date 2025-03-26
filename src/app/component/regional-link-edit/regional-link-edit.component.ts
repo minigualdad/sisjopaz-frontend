@@ -19,7 +19,8 @@ export class RegionalLinkEditComponent {
     private activatedRoute: ActivatedRoute) {
     this.form = new FormGroup({
       name: new FormControl('', Validators.required),
-      userId: new FormControl('', Validators.required)
+      userId: new FormControl('', Validators.required),
+      regionId: new FormControl('', Validators.required),
     });
     this.regionalLink = {};
     this.regionalLink.id = this.activatedRoute.snapshot.paramMap.get('id');
@@ -39,7 +40,7 @@ export class RegionalLinkEditComponent {
       .subscribe({
         next: (response: any) => {
           Swal.fire('Operación correcta', 'Enlace regional editado correctamente', 'success');
-          this.router.navigateByUrl('/app/regional-link')
+          this.router.navigateByUrl(`/app/regional-link/${this.regionalLink.regionId}`)
         },
         error: (error: any) => {
           console.error(error);

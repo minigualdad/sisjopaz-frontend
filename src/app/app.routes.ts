@@ -140,11 +140,8 @@ import { GroupComponentDatesComponent } from './component/group-component-dates/
 import { CoresponsabilityAgreementMasiveComponent } from './component/coresponsability-agreement-masive/coresponsability-agreement-masive.component';
 import { AccountCertificationMasiveComponent } from './component/account-certification-masive/account-certification-masive.component';
 import { ComponentGroupTemplateComponent } from './component/component-group-template/component-group-template.component';
-import { FormGroupCycleComponent } from './component/form-group-cycle/form-group-cycle.component';
-import { GroupCycleComponent } from './component/group-cycle/group-cycle.component';
 import { ChangeMyPasswordComponent } from './component/change-my-password/change-my-password.component';
 import { PeriodsAddComponent } from './component/periods-add/periods-add.component';
-import { PeriodComponent } from './component/period/period.component';
 import { GroupComponentDateActivityBeneficiaryComponent } from './component/group-component-date-activity-beneficiary/group-component-date-activity-beneficiary.component';
 import { GroupComponentDateActivityBeneficiaryAddComponent } from './component/group-component-date-activity-beneficiary-add/group-component-date-activity-beneficiary-add.component';
 import { PeriodSelectorComponent } from './component/period-selector/period-selector.component';
@@ -604,14 +601,6 @@ export const routes: Routes = [
                 canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
             },
             {
-                path: 'period/:id', component: PeriodComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
-            },
-            {
-                path: 'group-cycles', component: GroupCycleComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
-            },
-            {
                 path: 'change-my-password', component: ChangeMyPasswordComponent,
                 canActivate: [RoleGuard], data: {
                     role: [
@@ -755,8 +744,7 @@ export const routes: Routes = [
             {
                 path: 'regional-link-update-massive-group', component: RegionalLinkUpdateMassiveGroupComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
-            },
-            
+            },            
         ]
     },
     { path: '**', component: NotFoundComponent },
@@ -875,11 +863,8 @@ export const routes: Routes = [
         AccountCertificationMasiveComponent,
         GroupComponentDatesComponent,
         ComponentGroupTemplateComponent,
-        FormGroupCycleComponent,
-        GroupCycleComponent,
         ChangeMyPasswordComponent,
         PeriodsAddComponent,
-        PeriodComponent,
         GroupComponentDateActivityBeneficiaryComponent,
         GroupComponentDateActivityBeneficiaryAddComponent,
         PeriodSelectorComponent,

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { GroupCycleService } from '../../service/group-cycle.service';
 import { PeriodService } from '../../service/period.service';
 import Swal from 'sweetalert2';
 
@@ -50,7 +49,6 @@ export class PeriodsAddComponent {
   onSubmit() {
     this._periodService.createPeriods(this.form.value).subscribe({
       next: (response: any) => {
-        
         Swal.fire({
           title: '¡Periodo creado!',
           text: 'El periodo ha sido creado correctamente.',
@@ -67,7 +65,6 @@ export class PeriodsAddComponent {
       }
     });
   }
-
   onCancel() {
     this.periodsEmitted.emit(false);
   }
