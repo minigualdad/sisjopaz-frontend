@@ -6,33 +6,31 @@
                 <div class="md:col-span-1">
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">Programación</h3>
-                        <p class="mt-1 text-sm text-gray-600">Esta será información con la que se creará la programación.
+                        <p class="mt-1 text-sm text-gray-600">Esta será información con la que se creará la
+                            programación.
                         </p>
                     </div>
                 </div>
                 <div class="mt-5 md:col-span-2 md:mt-0">
-
-                    
                     <div class="mb-4">
                         <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                             <mat-label>Nombre:</mat-label>
-                            <input type="text" matInput formControlName="name">
+                            <input type="text" matInput formControlName="name" (input)="onNameInput($event)"
+                                style="text-transform: uppercase;">
                         </mat-form-field>
                     </div>
                     <div class="mb-4">
-                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                            <mat-label>Día de la semana:</mat-label>
-                            <mat-select formControlName="weekDays">
-                                <mat-option *ngFor="let day of daysOfWeek" [value]="day">
-                                    {{ day }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                        <label class="block font-medium mb-2">Seleccione los días de la semana de la
+                            programación:</label>
+                        <div *ngFor="let day of daysOfWeek">
+                            <mat-checkbox [checked]="form.get('weekDays')?.value.includes(day.id)"
+                                (change)="onCheckboxChange($event, day.id)">
+                                {{ day.name }}
+                            </mat-checkbox>
+                        </div>
                     </div>
-                    
                 </div>
             </div>
-
         </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
