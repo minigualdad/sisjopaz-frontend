@@ -123,6 +123,11 @@ export const NAV_ITEMS = [
                 route: `/app/group`,
                 icon: 'svg/circle.svg',
                 role: 'ADMIN'
+            },{
+                name: 'Asistencias Generadas',
+                route: `/app/assistance-generates`,
+                icon: 'svg/circle.svg',
+                role: 'ADMIN'
             },
         ]
     },

@@ -12,6 +12,12 @@
   
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2 sm:gap-4 mt-4">
           <button 
+          class="bg-primary rounded-2xl inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 text-white font-bold"
+          mat-flat-button primary (click)="downloadSurveys()">
+          <mat-icon class="icon-size-5 text-white">cloud_download</mat-icon>
+          <span class="ml-2">Descargar Jóvenes</span>
+        </button>
+          <button 
             class="bg-primary rounded-2xl inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 text-white font-bold"
             mat-flat-button primary (click)="create()">
             <mat-icon class="icon-size-5 text-white">add</mat-icon>
@@ -28,6 +34,12 @@
             mat-flat-button primary (click)="arn()">
             <mat-icon class="icon-size-5 text-white">add</mat-icon>
             <span class="ml-2">Subir Masivo Aprobación ARN</span>
+          </button>
+          <button 
+            class="bg-primary rounded-2xl inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 text-white font-bold"
+            mat-flat-button primary (click)="update()">
+            <mat-icon class="icon-size-5 text-white">add</mat-icon>
+            <span class="ml-2">Subir Actualizacion Masiva</span>
           </button>
         </div>
       </div>

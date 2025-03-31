@@ -17,6 +17,16 @@
                     </div>
                     <div class="flex items-center ml-6">
                         <button class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                            (click)="dowloadYounger()">
+                            <mat-icon class="icon-size-5 text-white">download</mat-icon>
+                            <span class="ml-2 text-white font-bold">Descargar Jovenes</span>
+                        </button>
+                        <button class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                            (click)="downloadAssistanceBeneficiaries()">
+                            <mat-icon class="icon-size-5 text-white">download</mat-icon>
+                            <span class="ml-2 text-white font-bold">Descargar Asistentes por Grupo</span>
+                        </button>
+                        <button class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
                             (click)="create()">
                             <mat-icon class="icon-size-5 text-white">add</mat-icon>
                             <span class="ml-2 text-white font-bold">Crear</span>

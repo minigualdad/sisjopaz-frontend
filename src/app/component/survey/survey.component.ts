@@ -19,7 +19,7 @@ import { CharacterizationService } from '../../service/characterization.service'
   templateUrl: './survey.component.html',
   styleUrl: './survey.component.scss'
 })
-export class SurveyComponent implements OnInit, AfterViewInit{
+export class SurveyComponent implements OnInit, AfterViewInit {
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
     new MatSort();
   @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
@@ -50,14 +50,14 @@ export class SurveyComponent implements OnInit, AfterViewInit{
   recordsTableColumns: string[] = [];
   serverUrl = environment.apiUrl;
 
-  totalItems = 0;  
-  pageSize = 10;   
-  pageIndex = 0;   
+  totalItems = 0;
+  pageSize = 10;
+  pageIndex = 0;
 
   loading = false;
   totalSize = 0;
 
-  searchValue: string = ''; 
+  searchValue: string = '';
 
 
   constructor(
@@ -78,7 +78,7 @@ export class SurveyComponent implements OnInit, AfterViewInit{
   * On init
   */
   ngOnInit(): void {
-      this.getAll();
+    this.getAll();
   }
 
   /**
@@ -103,7 +103,7 @@ export class SurveyComponent implements OnInit, AfterViewInit{
   ngOnDestroy(): void { }
 
   async getAll() {
-    await this.surveyService.getAll(0,10).subscribe({
+    await this.surveyService.getAll(0, 10).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
@@ -117,7 +117,7 @@ export class SurveyComponent implements OnInit, AfterViewInit{
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
-        },
+      },
     })
   }
 
@@ -160,41 +160,60 @@ export class SurveyComponent implements OnInit, AfterViewInit{
     return new Promise(res => setTimeout(res, ms));
   }
 
-    downloadPDF(id:number) {
-      this._beneficiaryService.getPDF(id).subscribe((response: any) => {
-        const file = `${this.serverUrl}/${response.pdfFile}`;
-        const url = file;
-        const a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank';
-        a.download = 'Acuerdo_Firmado.pdf'; // Nombre del archivo descargado
-        a.click();
-        window.URL.revokeObjectURL(url);
-        Swal.fire('Se ha generado el PDF', 'Se ha generado el PDF exitosamente', 'success');
-      },
-      (error:any) =>{
+  downloadPDF(id: number) {
+    this._beneficiaryService.getPDF(id).subscribe((response: any) => {
+      const file = `${this.serverUrl}/${response.pdfFile}`;
+      const url = file;
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.download = 'Acuerdo_Firmado.pdf'; // Nombre del archivo descargado
+      a.click();
+      window.URL.revokeObjectURL(url);
+      Swal.fire('Se ha generado el PDF', 'Se ha generado el PDF exitosamente', 'success');
+    },
+      (error: any) => {
         Swal.fire('Error generando PDF', 'Ha ocurrido un eror durante la creación del PDF', 'error');
       }
     );
-    }
-  
-    downloadPDFPreRegister(id: number) {
-      this._beneficiaryService.getPDFPreRegister(id).subscribe(
-        (response: any) => {
-          if (response && response.pdfPath) {
-            // Abrir directamente la URL proporcionada en una nueva pestaña
-            window.open(response.pdfPath, '_blank');
-            Swal.fire('PDF Generado', 'El PDF se ha generado exitosamente y se abrió en una nueva pestaña.', 'success');
-          } else {
-            Swal.fire('Error', 'No se recibió la ruta del PDF.', 'error');
-          }
-        },
-        (error: any) => {
-          console.error('Error al obtener el PDF:', error);
-          Swal.fire('Error', 'Ha ocurrido un error al generar el PDF.', 'error');
+  }
+
+  downloadPDFPreRegister(id: number) {
+    this._beneficiaryService.getPDFPreRegister(id).subscribe(
+      (response: any) => {
+        if (response && response.pdfPath) {
+          // Abrir directamente la URL proporcionada en una nueva pestaña
+          window.open(response.pdfPath, '_blank');
+          Swal.fire('PDF Generado', 'El PDF se ha generado exitosamente y se abrió en una nueva pestaña.', 'success');
+        } else {
+          Swal.fire('Error', 'No se recibió la ruta del PDF.', 'error');
         }
-      );
-    }
+      },
+      (error: any) => {
+        console.error('Error al obtener el PDF:', error);
+        Swal.fire('Error', 'Ha ocurrido un error al generar el PDF.', 'error');
+      }
+    );
+  }
+
+  downloadSurveys() {
+    this.surveyService.downloadSurveys().subscribe({
+        next: (response: Blob) => {
+            const url = window.URL.createObjectURL(response);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'jovenes.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        },
+        error: (error) => {
+            console.error('Error descargando el archivo:', error);
+            alert('Error descargando el archivo.');
+        }
+    });
+  }
 
   create() {
     this.router.navigateByUrl(`/app/survey-massive-dnp`);
@@ -206,6 +225,10 @@ export class SurveyComponent implements OnInit, AfterViewInit{
 
   arn() {
     this.router.navigateByUrl(`/app/survey-massive-arn`);
+  }
+
+  update() {
+    this.router.navigateByUrl(`/app/survey-massive-update`);
   }
 
   edit(id: number) {

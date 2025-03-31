@@ -1,0 +1,47 @@
+<div class="p-6 bg-white rounded shadow-lg max-w-md mx-auto">
+    <h2 class="text-lg font-bold mb-4">Descargar Asistencias por Periodo</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label for="month" class="block text-sm font-medium mb-1">Mes</label>
+        <select id="month" formControlName="month" class="w-full border border-gray-300 rounded px-3 py-2">
+          <option value="" disabled selected>Seleccione un mes</option>
+          <option *ngFor="let month of months" [value]="month.value">
+            {{ month.name }}
+          </option>
+        </select>
+      </div>
+  
+      <div class="mb-4">
+        <label for="year" class="block text-sm font-medium mb-1">Año</label>
+        <select id="year" formControlName="year" class="w-full border border-gray-300 rounded px-3 py-2">
+          <option value="" disabled selected>Seleccione un año</option>
+          <option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </option>
+        </select>
+      </div>
+
+      <div class="flex space-x-4 mt-2">
+        <button
+            mat-raised-button 
+            color="primary"
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            [disabled]="form.invalid"
+        >
+          Descargar
+        </button>
+        <button
+            mat-raised-button 
+            color="warn"
+            type="button"
+            class="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
+            (click)="closeDialog()"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <app-loading *ngIf="loading"></app-loading>

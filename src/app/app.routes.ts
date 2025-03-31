@@ -180,6 +180,10 @@ import { ButtonBackComponent } from './shared/button-back/button-back.component'
 import { MyRegionalBeneficiaryWithoutGroupComponent } from './component/my-regional-beneficiary-without-group/my-regional-beneficiary-without-group.component';
 import { MyRegionalBeneficiaryMassiveGroupComponent } from './component/my-regional-beneficiary-massive-group/my-regional-beneficiary-massive-group.component';
 import { RegionalLinkUpdateMassiveGroupComponent } from './component/regional-link-update-massive-group/regional-link-update-massive-group.component';
+import { AssistanceGeneratesComponent } from './component/assistance-generates/assistance-generates.component';
+import { AssistanceGeneratesTableComponent } from './component/assistance-generates-table/assistance-generates-table.component';
+import { AssistanceGeneratesPeriodComponent } from './component/assistance-generates-period/assistance-generates-period.component';
+import { SurverMassiveUpdateComponent } from './component/surver-massive-update/surver-massive-update.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -339,6 +343,10 @@ export const routes: Routes = [
             },
             {
                 path: 'survey-massive-arn', component: SurveyMassiveArnComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
+            },
+            {
+                path: 'survey-massive-update', component: SurverMassiveUpdateComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
             },
             {
@@ -744,7 +752,12 @@ export const routes: Routes = [
             {
                 path: 'regional-link-update-massive-group', component: RegionalLinkUpdateMassiveGroupComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
-            },            
+            },
+            {
+                path: 'assistance-generates', component: AssistanceGeneratesComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN] }
+            },
+
         ]
     },
     { path: '**', component: NotFoundComponent },
@@ -902,6 +915,10 @@ export const routes: Routes = [
         MyRegionalBeneficiaryWithoutGroupComponent,
         MyRegionalBeneficiaryMassiveGroupComponent,
         RegionalLinkUpdateMassiveGroupComponent,
+        AssistanceGeneratesComponent,
+        AssistanceGeneratesTableComponent,
+        AssistanceGeneratesPeriodComponent,
+        SurverMassiveUpdateComponent
     ],
     imports: [
     RouterModule.forRoot(routes),

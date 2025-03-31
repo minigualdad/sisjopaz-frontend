@@ -1303,6 +1303,19 @@ export class SurveyService {
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
+  uploadUpdateExcel(file: File) {
+    const selectedFile = file;
+    const fd = new FormData();
+    fd.append('file', selectedFile, selectedFile.name);
+    return this._httpClient.post(environment.apiUrl + '/app/survey/uploadUpdateExcel', fd, { responseType: 'blob' });
+  }
+
+  // roleVerify([Roles.DIRECCION, Roles.ADMIN])
+  donwloadUpdateTemplateExcel() {
+    return this._httpClient.post(environment.apiUrl + '/app/survey/uploadUpdateExcel', {}, { responseType: 'blob' });
+  }
+
+  // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   uploadGroupAssignation(file: File) {
     const selectedFile = file;
     const fd = new FormData();
@@ -2721,7 +2734,30 @@ export class SurveyService {
     return this._httpClient.post(environment.apiUrl + '/app/survey/pdfAssistanceTemplate', { data }, { responseType: 'blob' });
   }
 
+  assistanceBenficiaries(data: any): Observable<Blob> {
+    return this._httpClient.post(environment.apiUrl + '/app/groupComponentDateActivityBeneficiary/downloadGroupAssistantByPeriod', { data }, { responseType: 'blob' });
+  }
+
   updateBankData(id: number, survey: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/updateBankData`, { survey });
+  }
+
+  downloadYounger(id: number) {
+    return this._httpClient.get(`${environment.apiUrl}/app/survey/${id}/downloadAllByGroup`, {
+      responseType: 'blob'
+    });
+  }
+  
+  //Cambiar la ruta
+  downloadAssistanceBeneficiaries(id: number) {
+    return this._httpClient.get(`${environment.apiUrl}/app/survey/${id}/downloadAssistanceBeneficiariesByGroup`, {
+      responseType: 'blob'
+    });
+  }
+
+  downloadSurveys() {
+    return this._httpClient.get(environment.apiUrl + '/app/survey/downloadAllBeneficiaries', {
+      responseType: 'blob'
+    });
   }
 }

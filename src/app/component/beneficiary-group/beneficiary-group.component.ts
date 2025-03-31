@@ -125,6 +125,44 @@ export class BeneficiaryGroupComponent implements OnInit, AfterViewInit{
     this.router.navigateByUrl(`/app/beneficiary-add-group/${this.group.id}`);
   }
 
+  downloadAssistanceBeneficiaries(){
+    this.surveyService.downloadAssistanceBeneficiaries(this.group.id).subscribe({
+      next: (response: Blob) => {
+          const url = window.URL.createObjectURL(response);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'Jovenes.xlsx';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+          console.error('Error descargando el archivo:', error);
+          alert('Error descargando el archivo.');
+      }
+  });
+  }
+
+  dowloadYounger(){
+    this.surveyService.downloadYounger(this.group.id).subscribe({
+      next: (response: Blob) => {
+          const url = window.URL.createObjectURL(response);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'Jovenes.xlsx';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+          console.error('Error descargando el archivo:', error);
+          alert('Error descargando el archivo.');
+      }
+  });
+  }
+
   searchByFilter() {
     this.surveyService.filterByWord(this.searchValue).subscribe({
       next: (response: any) => {

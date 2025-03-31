@@ -77,6 +77,15 @@
                                             <mat-icon>download</mat-icon>
                                             Plantilla de Asistencia
                                           </button>
+
+                                          <button *ngIf="(transaction.Component.name === 'Educación' && user.role === 'PROFESIONAL_EDUCACION') || 
+                                          (transaction.Component.name === 'Corresponsabilidad' && user.role === 'PROFESIONAL_CORRESPONSABILIDAD') || (transaction.Component.name === 'Psicosocial' && user.role === 'PROFESIONAL_PSICOSOCIAL') ||
+                                          (transaction.Component.name === 'Sociojurídico' && user.role === 'PROFESIONAL_SOCIOJURIDICO') ||
+                                          (user.role === 'DIRECCION') || (user.role === 'GESTORES_SOCIALES') || (user.role === 'ADMIN' || user.role === 'ENLACE_REGIONAL' || user.role === 'COORDINACION')"
+                                          mat-menu-item (click)="downloadAssistanceBeneficiries(transaction.id)">
+                                          <mat-icon>download</mat-icon>
+                                          Asistencia Jovenes
+                                        </button>
                              
                                         </mat-menu>
                                     </td>

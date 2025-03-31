@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { GroupComponentService } from '../../service/group-component.service';
 import { GroupService } from '../../service/group.service';
 import { ComponentGroupTemplateComponent } from '../component-group-template/component-group-template.component';
+import { AssistanceGeneratesPeriodComponent } from '../assistance-generates-period/assistance-generates-period.component';
 
 @Component({
   selector: 'app-component-group',
@@ -137,6 +138,21 @@ downloadAssistanceTemplate(id: any) {
       this.getAll();
     });
   }
+
+  downloadAssistanceBeneficiries(id: any) {
+    const dialogRef = this.dialog.open(AssistanceGeneratesPeriodComponent, {
+        hasBackdrop: true,
+        disableClose: true,
+        maxWidth: 'none',
+        width: 'auto',
+        height: 'auto',
+        data: { id }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        this.loading = false;
+        this.getAll();
+      });
+    }
 
 /**
 * Track by function for ngFor loops

@@ -44,4 +44,8 @@ export class AssistanceScannerBeneficiaryService {
   show(id: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/assistanceScannerBeneficiary/${id}/getById`, {});
   }
+
+  downloadAssistanceByScanner(id: number) {
+    return this._httpClient.get(`${environment.apiUrl}/app/assistanceScannerBeneficiary/${id}/downloadAssistanceByScanner`, { responseType: 'blob' });
+  }
 }
