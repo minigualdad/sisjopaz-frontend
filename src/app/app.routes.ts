@@ -347,7 +347,7 @@ export const routes: Routes = [
             },
             {
                 path: 'survey-massive-update', component: SurverMassiveUpdateComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN] }
             },
             {
                 path: 'coresponsability-agreement-masive', component: CoresponsabilityAgreementMasiveComponent,

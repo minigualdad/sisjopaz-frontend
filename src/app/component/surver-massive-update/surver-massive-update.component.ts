@@ -43,6 +43,28 @@ export class SurverMassiveUpdateComponent {
         });
         await this.router.navigateByUrl('/app/survey')
     }
+
+
+    async updateById() {
+        this.loading = true;
+        this.surveyService.uploadUpdateExcelById(this.form.get('file')?.value).subscribe({
+            next: (response: any) => {
+                const url = window.URL.createObjectURL(response);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'respuesta_update_masivo.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            },
+            error: (error) => {
+                console.error('Error descargando el archivo:', error);
+                alert('Error descargando el archivo.');
+            }
+        });
+        await this.router.navigateByUrl('/app/survey')
+    }
   
     file: any;
     async fileChange(event: any) {

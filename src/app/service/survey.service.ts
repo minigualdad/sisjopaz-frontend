@@ -1310,6 +1310,13 @@ export class SurveyService {
     return this._httpClient.post(environment.apiUrl + '/app/survey/uploadUpdateExcel', fd, { responseType: 'blob' });
   }
 
+  uploadUpdateExcelById(file: File) {
+    const selectedFile = file;
+    const fd = new FormData();
+    fd.append('file', selectedFile, selectedFile.name);
+    return this._httpClient.post(environment.apiUrl + '/app/survey/uploadUpdateExcelById', fd, { responseType: 'blob' });
+  }
+
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   donwloadUpdateTemplateExcel() {
     return this._httpClient.post(environment.apiUrl + '/app/survey/uploadUpdateExcel', {}, { responseType: 'blob' });
