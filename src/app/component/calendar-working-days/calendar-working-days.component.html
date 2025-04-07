@@ -50,6 +50,10 @@
                                             <mat-icon>more_vert</mat-icon>
                                         </button>
                                         <mat-menu class="bg-white" #menu="matMenu">
+                                            <button mat-menu-item (click)="edit(transaction.id)">
+                                                <mat-icon>edit</mat-icon>
+                                                Editar Día Hábil
+                                            </button>
                                             <button mat-menu-item (click)="remove(transaction.id)">
                                                 <mat-icon>remove_circle_outline</mat-icon>
                                                 Borrar Día Hábil

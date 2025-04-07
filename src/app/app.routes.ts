@@ -184,6 +184,7 @@ import { AssistanceGeneratesComponent } from './component/assistance-generates/a
 import { AssistanceGeneratesTableComponent } from './component/assistance-generates-table/assistance-generates-table.component';
 import { AssistanceGeneratesPeriodComponent } from './component/assistance-generates-period/assistance-generates-period.component';
 import { SurverMassiveUpdateComponent } from './component/surver-massive-update/surver-massive-update.component';
+import { CalendarWorkingDaysEditComponent } from './component/calendar-working-days-edit/calendar-working-days-edit.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -757,6 +758,10 @@ export const routes: Routes = [
                 path: 'assistance-generates', component: AssistanceGeneratesComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.ADMIN] }
             },
+            {
+                path: 'calendar-working-days-edit/:id', component: CalendarWorkingDaysEditComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.COORDINACION] }
+            },
 
         ]
     },
@@ -918,7 +923,8 @@ export const routes: Routes = [
         AssistanceGeneratesComponent,
         AssistanceGeneratesTableComponent,
         AssistanceGeneratesPeriodComponent,
-        SurverMassiveUpdateComponent
+        SurverMassiveUpdateComponent,
+        CalendarWorkingDaysEditComponent
     ],
     imports: [
     RouterModule.forRoot(routes),

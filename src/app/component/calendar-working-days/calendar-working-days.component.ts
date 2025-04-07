@@ -78,6 +78,9 @@ create() {
   this.router.navigateByUrl('/app/calendar-working-days-add');
 }
 
+edit(id: any) {
+  this.router.navigateByUrl(`/app/calendar-working-days-edit/${id}`);
+}
 
 async remove(id: number) {
   const result = await Swal.fire({
