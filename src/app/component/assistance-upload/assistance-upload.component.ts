@@ -52,6 +52,7 @@ export class AssistanceUploadComponent implements OnInit {
   showFormError = false;
   reportForm: FormGroup;
   errorDataSource: any;
+  assistanceScannerId:number = 0;
 
   constructor(private assistanceScannerService: AssistanceScannerService,
     private sanitizer: DomSanitizer,
@@ -111,7 +112,7 @@ export class AssistanceUploadComponent implements OnInit {
 
   submitReport() {
     const description = this.reportForm.value.errorDescription;
-    this.assistanceScannerService.sendReportError(description, this.selectedIds, 2533).subscribe({
+    this.assistanceScannerService.sendReportError(description, this.selectedIds, this.assistanceScannerId).subscribe({
       next: (response: any) => {
           Swal.fire({
             icon: 'success',
@@ -331,6 +332,7 @@ export class AssistanceUploadComponent implements OnInit {
 
   transformDateActivities(data: any) {
     const daysOfWeek = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+    this.assistanceScannerId = Number(data.response.assistanceScannerBeneficiaries[0].assistanceScannerId);
     return data.response.assistanceScannerBeneficiaries.map((activity: any) => {
       const date = new Date(activity.assistanceSignDate + "T00:00:00Z");
       const day = daysOfWeek[date.getUTCDay()];
