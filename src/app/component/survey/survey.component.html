@@ -97,6 +97,11 @@
                     <mat-icon>download</mat-icon>
                         Generar PDF - Prerregistro
                     </button>
+                    <button *ngIf="transaction?.state == 'ACUERDO FIRMADO'"
+                    mat-menu-item [routerLink]="['/app', 'group-change', transaction.id]">
+                    <mat-icon>swap_horiz</mat-icon>
+                        Cambiar Joven de Grupo
+                    </button>
                     <button *ngIf="transaction.hasMonitoring == 'SI'" mat-menu-item
                     (click)="downloadPDFMonitoring(transaction.id)">
                     <mat-icon>download</mat-icon>

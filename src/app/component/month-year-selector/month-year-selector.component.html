@@ -1,0 +1,23 @@
+<div class="p-6 bg-white rounded shadow-lg max-w-md r-0">
+    <h2 class="text-lg font-bold mb-4">Ver Asistencias</h2>
+      <div class="mb-4">
+        <label for="month" class="block text-sm font-medium mb-1">Mes</label>
+        <select id="month" class="w-full border border-gray-300 rounded px-3 py-2" (change)="selectMonth($event)">
+          <option value="" disabled selected>Seleccione un mes</option>
+          <option *ngFor="let month of months" [value]="month.value">
+            {{ month.name }}
+          </option>
+        </select>
+      </div>
+  
+      <div class="mb-4">
+        <label for="year" class="block text-sm font-medium mb-1">Año</label>
+        <select id="year" class="w-full border border-gray-300 rounded px-3 py-2" (change)="selectYear($event)">
+          <option value="" disabled selected>Seleccione un año</option>
+          <option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </option>
+        </select>
+      </div>
+  </div>
+  <app-loading *ngIf="loading"></app-loading>

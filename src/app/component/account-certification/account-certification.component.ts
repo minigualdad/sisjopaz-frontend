@@ -101,7 +101,7 @@ export class AccountCertificationComponent implements OnInit, AfterViewInit {
   }
 
   searchByFilter() {
-    this.surveyService.filterByWord(this.searchValue).subscribe({
+    this.surveyService.filterByWord(this.searchValue, 1).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);

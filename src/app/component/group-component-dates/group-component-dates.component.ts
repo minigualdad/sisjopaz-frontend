@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { CalendarService } from '../../service/calendar.service';
 import { GroupComponentDateActivityService } from '../../service/group-component-date-activity.service';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-group-component-dates',
@@ -16,23 +17,23 @@ import { GroupComponentDateActivityService } from '../../service/group-component
   styleUrl: './group-component-dates.component.scss',
 })
 export class GroupComponentDatesComponent {
-
-  @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
-    new MatSort();
-  @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
+  @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort = new MatSort();
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   columns: any = {
     actions: 'Acciones',
     dateActivity: 'Fecha',
   };
-  recordsTableColumns: string[] = [];
+  // En tu componente
+  recordsTableColumns = ['actions', ...Object.keys(this.columns).filter(col => col !== 'actions'), 'select'];
+  selection = new SelectionModel<any>(true, []); // true para selección múltiple
   user: any;
   groupComponent: any = {};
   group: any = {};
   component: any = {};
-  groupComponentId = localStorage.getItem('componentId')
-  backRoute = `app/component-group/${this.groupComponentId}`
+  groupComponentId = localStorage.getItem('componentId');
+  backRoute = `app/component-group/${this.groupComponentId}`;
 
   constructor(
     private titleService: Title,
@@ -40,66 +41,77 @@ export class GroupComponentDatesComponent {
     public dialog: MatDialog,
     private groupComponentDateActivityService: GroupComponentDateActivityService,
   ) {
-    this.recordsTableColumns = Object.keys(this.columns);
     this.titleService.setTitle('Horarios por Componente');
     this.groupComponent.id = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
-  /**
-   * On init
-   */
   ngOnInit(): void {
-    this.getAll()
+    this.getAll();
   }
 
-  /**
-   * After view init
-   */
   ngAfterViewInit(): void {
-    // Make the data source sortable
     this.dataSource.sort = this.recordsTableMatSort;
     this.dataSource.paginator = this.paginator;
   }
 
-  ngOnDestroy(): void {}
-
   async getAll() {
     await this.groupComponentDateActivityService
       .getAllByGroupComponentId(this.groupComponent.id)
-      .subscribe( (response: any) => {
+      .subscribe((response: any) => {
         this.group = response.group;
         this.component = response.component;
         this.dataSource.data = this.transformDateActivities(response);
+        this.selection.clear(); // Limpiar selección al cargar nuevos datos
       });
+  }
+
+  isAllSelected(): boolean {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  toggleAllRows(): void {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  toggleRowSelection(row: any): void {
+    this.selection.toggle(row);
+  }
+
+  getSelectedIds(): number[] {
+    return this.selection.selected.map(item => item.id);
   }
 
   transformDateActivities(data: any) {
     const daysOfWeek = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 
     return data.groupComponentDateActivities.map((activity: any) => {
-        const date = new Date(activity.dateActivity + "T00:00:00Z");
-        const day = daysOfWeek[date.getUTCDay()];
-        const formattedDay = day.charAt(0).toUpperCase() + day.slice(1);
-        return {
-            ...activity,
-            dateActivity: `${activity.dateActivity} - ${formattedDay}`
-        };
+      const date = new Date(activity.dateActivity + "T00:00:00Z");
+      const day = daysOfWeek[date.getUTCDay()];
+      const formattedDay = day.charAt(0).toUpperCase() + day.slice(1);
+      return {
+        ...activity,
+        dateActivity: `${activity.dateActivity} - ${formattedDay}`
+      };
     });
-}
+  }
 
   async remove(id: number) {
     const result = await Swal.fire({
       title: '¿Estás seguro que deseas eliminar el día hábil?',
-      text: '¡No es posible deshacer esta acción!',
+      text: '¡No es posible deshacer esta acción! Esta acción no borrará los dís de citación de los jóvenes.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, borrarlo!',
       cancelButtonText: 'No, conservarlo',
     });
+    
     if (result.value) {
       this.groupComponentDateActivityService.delete(id).subscribe({
         next: () => {
-          this.ngOnInit();
           this.getAll();
           Swal.fire('¡Borrado!', 'Día hábil ha sido eliminado.', 'success');
         },
@@ -109,12 +121,6 @@ export class GroupComponentDatesComponent {
     }
   }
 
-  /**
-   * Track by function for ngFor loops
-   *
-   * @param index
-   * @param item
-   */
   trackByFn(index: number, item: any): any {
     return item.id || index;
   }
@@ -122,5 +128,4 @@ export class GroupComponentDatesComponent {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-
 }

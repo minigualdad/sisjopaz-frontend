@@ -86,9 +86,8 @@ export class ComponentGroupTemplateComponent implements OnInit {
         },
         error: (error) => {
           processBlobAndShowSwal(error.error)
-          .then(() => console.log('Swal mostrado con éxito.'))
+          .then()
           .catch((error) => {
-            console.log(error);
             Swal.fire({
               icon: 'warning',
               title: 'No se pudo generar la planilla',

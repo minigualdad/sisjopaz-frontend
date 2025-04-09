@@ -98,7 +98,7 @@ export class ExtemporarySurveyComponent implements OnInit, AfterViewInit {
   }
 
   searchByFilter() {
-    this.surveyService.filterByWord(this.searchValue).subscribe({
+    this.surveyService.filterByWord(this.searchValue, 13).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);

@@ -164,7 +164,7 @@ export class BeneficiaryGroupComponent implements OnInit, AfterViewInit{
   }
 
   searchByFilter() {
-    this.surveyService.filterByWord(this.searchValue).subscribe({
+    this.surveyService.filterByWord(this.searchValue, 5, this.group.id).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
@@ -196,6 +196,6 @@ export class BeneficiaryGroupComponent implements OnInit, AfterViewInit{
   }
 
   applyFilter(event: any) {
-    this.dataSource.filter = event.target.value.trim().toLowerCase();
+    this.searchValue = event.target.value.trim().toLowerCase();
   }
 }

@@ -1,10 +1,19 @@
-<form [formGroup]="form" >
+<form [formGroup]="form">
     <div class="mb-4">
-        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-            <mat-label>Enlaces Regionales</mat-label>
-            <mat-select formControlName="regionalLinkId" required (selectionChange)="selectRegionalLinkId($event)">
-                <mat-option *ngFor="let regionalLink of regionalLinks" [value]="regionalLink.id">{{ regionalLink.name | uppercase }} - {{ regionalLink.email }} {{regionalLink.Region?.ListDepartment?.name}}</mat-option>
-            </mat-select>
-        </mat-form-field>
+      <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+        <mat-label>Enlaces Regionales</mat-label>
+        <input
+          type="text"
+          matInput
+          [formControl]="regionalLinkFilter"
+          [matAutocomplete]="auto"
+          placeholder="Buscar enlace regional..."
+        />
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectRegionalLinkId($event)">
+          <mat-option *ngFor="let regionalLink of filteredRegionalLinks" [value]="regionalLink.id">
+            {{ regionalLink.name | uppercase }} - {{ regionalLink.email }} {{ regionalLink.Region?.ListDepartment?.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
     </div>
-</form>
+  </form>

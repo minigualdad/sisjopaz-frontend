@@ -124,7 +124,7 @@ export class ProfessionalTeamBeneficiaryAcceptedComponent {
   }
 
   searchByFilter() {
-    this.surveyService.filterByWord(this.searchValue).subscribe({
+    this.surveyService.filterByWord(this.searchValue, 16).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
@@ -157,6 +157,6 @@ export class ProfessionalTeamBeneficiaryAcceptedComponent {
   }
 
   applyFilter(filterValue: any) {
-    this.dataSource.filter = filterValue.target.value.trim().toLowerCase();
+    this.searchValue = filterValue.target.value.trim().toLowerCase();
   }
 }

@@ -45,7 +45,44 @@ export class AssistanceScannerBeneficiaryService {
     return this._httpClient.post(`${environment.apiUrl}/app/assistanceScannerBeneficiary/${id}/getById`, {});
   }
 
+  deletedAssistance(assistanceScannerBeneficiaryId:Number){
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScannerBeneficiary/deleteById`, {assistanceScannerBeneficiaryId});
+  }
+
+  showByUserIdAndDate(data: any) {
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScannerBeneficiary/getByUserIdAndDate`, {data});
+  }
+
   downloadAssistanceByScanner(id: number) {
     return this._httpClient.get(`${environment.apiUrl}/app/assistanceScannerBeneficiary/${id}/downloadAssistanceByScanner`, { responseType: 'blob' });
+  }
+
+  
+  getAllByAssistanceSheetsId(assistanceSheetId: number) {
+    return this._httpClient.get(`${environment.apiUrl}/app/assistanceScannerBeneficiary/${assistanceSheetId}/getAllByAssistanceScanner`).pipe(
+      map((response: any) => {
+        if (response.ok && response.surveys) {
+          // Procesamos cada survey
+          return response.surveys.map((survey: any) => ({
+            id: survey.id,
+            identificationType: survey.Survey.identificationType,
+            identification: survey.Survey.identification,
+            assistanceSignDate: survey.assistanceSignDate,
+            firstName: survey.Survey.firstName,
+            secondName: survey.Survey.secondName,
+            firstLastName: survey.Survey.firstLastName,
+            secondLastName: survey.Survey.secondLastName,
+            // También puedes incluir otros campos si los necesitas
+            state: survey.state,
+            userId: survey.userId
+          }));
+        }
+        return [];
+      })
+    );
+  }
+
+  fixMistakeError( assistanceScannerId:number, surveyId:number, assistance:string, observation:string, dateActivity:Date){
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScannerBeneficiary/fixMistakeError`, { assistanceScannerId, surveyId, assistance, observation, dateActivity});
   }
 }

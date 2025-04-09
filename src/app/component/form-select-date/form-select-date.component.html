@@ -1,0 +1,4 @@
+<app-month-year-selector (monthYearListener)="onSelectYearMonth($event)"></app-month-year-selector>
+
+<button class="bg-primary text-white p-2 rounded-lg hover:bg-primary-200" mat-flat-button primary
+[disabled]="!monthSelected && !yearSelected" [type]="!monthSelected && !yearSelected ? 'button' : 'submit'"(click)="onSubmit()">Descargar</button>

@@ -23,10 +23,9 @@
       <!-- Contenedor de la Tabla -->
       <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden mt-4 h-auto">
         <div class="overflow-x-auto p-4">
-          <mat-form-field class="bg-white rounded-md w-full mt-4">
+          <!-- <mat-form-field class="bg-white rounded-md w-full mt-4">
             <mat-label>Buscar en todos los campos</mat-label>
             <div class="flex items-center">
-              <!-- Campo de entrada -->
               <input matInput (keyup)="applyFilter($event)" placeholder="Buscar"
                      class="py-2 px-3 rounded-md shadow-sm text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 flex-grow">
               
@@ -36,7 +35,7 @@
                 </mat-icon>
               </button>
             </div>
-          </mat-form-field>
+          </mat-form-field> -->
           <div class="mt-2 mb-2 text-sm text-gray-700">Resultados: {{dataSource.data.length}}</div>
   
           <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource" [trackBy]="trackByFn" #recordsTable>

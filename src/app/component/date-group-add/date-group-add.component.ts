@@ -42,7 +42,6 @@ export class DateGroupAddComponent {
   
 
   onCheckboxChange(event: any, id: number) {
-    console.log('Cambio checkbox:', event.checked, 'ID:', id); // <-- para debug
   
     const selectedDays = this.form.get('weekDays')?.value || [];
   

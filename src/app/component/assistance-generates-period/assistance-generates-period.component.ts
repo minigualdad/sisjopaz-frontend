@@ -87,7 +87,6 @@ export class AssistanceGeneratesPeriodComponent {
           processBlobAndShowSwal(error.error)
           .then()
           .catch((error) => {
-            console.log(error);
             Swal.fire({
               icon: 'warning',
               title: 'No se pudo generar la planilla',

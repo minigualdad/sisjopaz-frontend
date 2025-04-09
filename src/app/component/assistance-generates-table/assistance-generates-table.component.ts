@@ -105,14 +105,14 @@ export class AssistanceGeneratesTableComponent implements OnInit, AfterViewInit 
       });
     }
   
-    searchByFilter() {
-      this.surveyService.filterByWord(this.searchValue).subscribe({
-        next: (response: any) => {
-          this.dataSource.data = response.assistanceGenerate;
-          this.loadData(response);
-          },
-      })
-    }
+    // searchByFilter() {
+    //   this.surveyService.filterByWord(this.searchValue).subscribe({
+    //     next: (response: any) => {
+    //       this.dataSource.data = response.assistanceGenerate;
+    //       this.loadData(response);
+    //       },
+    //   })
+    // }
   
     async loadData(response: any) {
       this.dataSource.data = response;

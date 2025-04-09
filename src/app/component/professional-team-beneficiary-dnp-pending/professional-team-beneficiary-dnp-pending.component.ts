@@ -103,7 +103,7 @@ async getAll() {
 }
 
 searchByFilter() {
-  this.surveyService.filterByWord(this.searchValue).subscribe({
+  this.surveyService.filterByWord(this.searchValue, 19).subscribe({
     next: (response: any) => {
       this.dataSource.data = response.surveys;
       this.loadData(response);
@@ -135,7 +135,7 @@ trackByFn(index: number, item: any): any {
 }
 
 applyFilter(filterValue: any) {
-  this.dataSource.filter = filterValue.target.value.trim().toLowerCase();
+  this.searchValue = filterValue.target.value.trim().toLowerCase();
 }
 
 

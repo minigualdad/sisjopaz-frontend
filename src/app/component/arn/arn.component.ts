@@ -111,7 +111,7 @@ massiveARN() {
 }
 
 searchByFilter() {
-  this.surveyService.filterByWord(this.searchValue).subscribe({
+  this.surveyService.filterByWord(this.searchValue, 2).subscribe({
     next: (response: any) => {
       this.dataSource.data = response.surveys;
       this.loadData(response);
@@ -163,6 +163,6 @@ download() {
   }
 
   applyFilter(event: any) {
-    this.dataSource.filter = event.target.value.trim().toLowerCase();
+    this.searchValue = event.target.value.trim().toLowerCase();
   }
 }

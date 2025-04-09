@@ -32,4 +32,45 @@ export class AssistanceScannerService {
         )
   }
 
+  sendReportError(observation: string, assistanceBeneficiariesId:any, scannerId:number){
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScanner/mistakeError`, {observation, assistanceBeneficiariesId, scannerId})
+  }
+
+  getAllMistakeError(){
+    return this._httpClient.get(`${environment.apiUrl}/app/assistanceScanner/getAllBymistakeError`).pipe(
+      map((response: any) => {
+
+        if (!response?.assistanceScanner || !Array.isArray(response.assistanceScanner)) {
+          return [];
+        }
+
+        return response.assistanceScanner.map((item: any) => {
+          const data = item;
+          
+          const processedItem = {
+            ...item,
+            urlFileImageProcessed: data?.urlFileImageProcessed ?? 'Sin Procesar',
+            state: data?.state,
+            observation: data?.observation ?? 'Sin Observación',
+            year: data?.AssistanceSheet?.AssistanceGenerate?.year,
+            month: data?.AssistanceSheet?.AssistanceGenerate?.month,
+            group: data?.AssistanceSheet.AssistanceGenerate?.GroupComponent.Group.name,
+            component: data?.AssistanceSheet.AssistanceGenerate?.GroupComponent.Component.name,
+            updateBy: data?.updatedBy,
+            assistanceSignDate: data?.assistanceSignDate
+          };
+  
+          return processedItem;
+        });
+      })
+    );
+  }
+
+  getAllMistakeErrorById(id: number){
+    return this._httpClient.get(`${environment.apiUrl}/app/assistanceScanner/${id}/show`)
+  }
+
+  sendFixError(assistanceScannerBeneficiaryId:number, assistance:string | null, observation:string, dateActivity: Date){
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScanner/fixMistakeError`, {assistanceScannerBeneficiaryId, assistance, observation, dateActivity})
+  }
 }

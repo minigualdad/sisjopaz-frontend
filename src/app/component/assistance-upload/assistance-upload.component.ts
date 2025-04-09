@@ -9,6 +9,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
 
 @Component({
   selector: 'app-assistance-upload',
@@ -16,13 +18,13 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './assistance-upload.component.html',
   styleUrl: './assistance-upload.component.scss'
 })
-export class AssistanceUploadComponent implements OnInit{
-    @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
+export class AssistanceUploadComponent implements OnInit {
+  @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
     new MatSort();
   @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
 
   imagePreview: any | null = null;
-  imagePreviewResult: SafeResourceUrl | null = null; 
+  imagePreviewResult: SafeResourceUrl | null = null;
   rotatedImage: File | null = null;   // Imagen rotada
   file: any;
   rotationAngle = 0;
@@ -43,19 +45,96 @@ export class AssistanceUploadComponent implements OnInit{
   };
   recordsTableColumns: string[] = [];
   user: any;
+  selectedIds: number[] = [39116, 39117, 39115];
 
   imageUrl: string = '';
+  displayedColumns: string[] = [];
+  showFormError = false;
+  reportForm: FormGroup;
+  errorDataSource: any;
 
   constructor(private assistanceScannerService: AssistanceScannerService,
-              private sanitizer: DomSanitizer,
-              private route: Router,
-              public dialog: MatDialog,
+    private sanitizer: DomSanitizer,
+    private groupComponentDateActivityBeneficiaryService: GroupComponentDateActivityBenefiaryService,
+    private route: Router,
+    public dialog: MatDialog,
+    private fb: FormBuilder
   ) {
     this.recordsTableColumns = Object.keys(this.columns);
+    this.displayedColumns = ['select', ...this.recordsTableColumns, 'actions'];
+
+    this.reportForm = this.fb.group({
+      errorDescription: ['', Validators.required],
+    });
 
   }
   ngOnInit(): void {
+  }
+
+  getGroupCmponentDateActivityBeneficiary(data: any) {
+    let fromDay = data.response.assistanceScannerBeneficiaries[0]?.AssistanceScanner?.AssistanceSheet?.startDay;
+    let toDay = data.response.assistanceScannerBeneficiaries[0]?.AssistanceScanner?.AssistanceSheet?.endDay;
+    const month = data.response.assistanceScannerBeneficiaries[0]?.AssistanceScanner?.AssistanceSheet?.AssistanceGenerate?.month;
+    const year = data.response.assistanceScannerBeneficiaries[0]?.AssistanceScanner?.AssistanceSheet?.AssistanceGenerate?.year;
+    const formattedMonth = String(month).padStart(2, '0');
+    fromDay = String(fromDay).padStart(2, '0');
+    const fromDate = `${year}-${formattedMonth}-${fromDay}`;
+
+    toDay = String(toDay).padStart(2, '0');
+    const toDate = `${year}-${formattedMonth}-${toDay}`;
+    const groupComponentId = data.response.assistanceScannerBeneficiaries[0]?.AssistanceScanner?.AssistanceSheet?.AssistanceGenerate?.groupComponentId;
+    const serviceData = {
+      groupComponentId: groupComponentId,
+      fromDate: fromDate,
+      toDate: toDate,
+    }
+    this.groupComponentDateActivityBeneficiaryService.getAllByGroupComponentAndDates(serviceData)
+      .subscribe({
+        next: (response: any) => {
+          this.errorDataSource = response.groupComponentDateActivityBeneficiaries;
+          return this.dataSource.data;
+        },
+        error: (error: any) => {
+
+        }
+      })
+  }
+
+  formValid(): boolean {
+    const valor = !this.reportForm.invalid && this.selectedIds.length > 0;
+    return !valor;
+  }
+
+  get errorDescription() {
+    return this.reportForm.get('errorDescription');
+  }
+
+  submitReport() {
+    const description = this.reportForm.value.errorDescription;
+    this.assistanceScannerService.sendReportError(description, this.selectedIds, 2533).subscribe({
+      next: (response: any) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Reporte enviado',
+            text: 'El error ha sido reportado con éxito y será gestionado por alguien del Ministerio.',
+            confirmButtonColor: '#2563eb', // Azul Tailwind
+            confirmButtonText: 'Aceptar'
+          });
     
+          this.reportForm.reset();
+          this.showFormError = false;
+          this.selectedIds = [];
+      },
+      error: (error: any) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al enviar',
+          text: 'No se pudo enviar el reporte. Por favor, intenta nuevamente.',
+          confirmButtonColor: '#dc2626', // Rojo Tailwind
+          confirmButtonText: 'Reintentar'
+        });
+      }
+    })
   }
 
   ngAfterViewInit(): void {
@@ -67,45 +146,69 @@ export class AssistanceUploadComponent implements OnInit{
   trackByFn(index: number, item: any): any {
     return item.id || index;
   }
-  
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  toggleCheckboxesVisibility(): void {
+    this.showFormError = !this.showFormError;
+  }
+
+  onRowToggle(id: number, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      if (!this.selectedIds.includes(id)) {
+        this.selectedIds.push(id);
+      }
+    } else {
+      this.selectedIds = this.selectedIds.filter(item => item !== id);
+    }
+  }
+
+  onToggleAll(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      this.selectedIds = this.dataSource.data.map(row => row.id);
+    } else {
+      this.selectedIds = [];
+    }
+  }
+
+  isAllSelected(): boolean {
+    return this.dataSource && this.dataSource.data.length > 0 &&
+      this.selectedIds.length === this.dataSource.data.length;
+  }
   // Manejar la selección de un archivo
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-  
+
     if (input.files && input.files[0]) {
       const file = input.files[0];
-  
+
       // Validar que el archivo sea una imagen
       if (!file.type.startsWith('image/')) {
         this.alert = 'Por favor, selecciona un archivo de imagen.';
         return;
       }
-  
+
       this.alert = '';
-  
+
       // Opciones para la compresión de imagen
       const options = {
         maxSizeMB: 1,
         maxWidthOrHeight: 1920,
         useWebWorker: true,
       };
-  
       // Comprimir la imagen
       imageCompression(file, options)
         .then((compressedFile) => {
           this.file = compressedFile;
-  
           // Crear la URL para previsualización
           const reader = new FileReader();
           reader.onload = () => {
             this.imagePreview = reader.result as string;
           };
           reader.readAsDataURL(compressedFile);
-  
           // Reiniciar el ángulo de rotación
           this.rotationAngle = 0;
         })
@@ -115,59 +218,86 @@ export class AssistanceUploadComponent implements OnInit{
         });
     }
   }
-  
 
-    // Rotar la imagen hacia la izquierda
-    rotateLeft() {
-      this.rotationAngle -= 90;
-      this.applyRotation();
-    }
-  
-    // Rotar la imagen hacia la derecha
-    rotateRight() {
-      this.rotationAngle += 90;
-      this.applyRotation();
-    }
-  
-    // Aplicar la rotación a la imagen
-    private applyRotation() {
-      if (!this.imagePreview || !this.file) return;
-  
-      const img = new Image();
-      img.src = this.imagePreview;
-  
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d')!;
-  
-        // Ajustar el tamaño del canvas para rotar correctamente
-        if (this.rotationAngle % 180 !== 0) {
-          canvas.width = img.height;
-          canvas.height = img.width;
-        } else {
-          canvas.width = img.width;
-          canvas.height = img.height;
+
+  // Rotar la imagen hacia la izquierda
+  rotateLeft() {
+    this.rotationAngle -= 90;
+    this.applyRotation();
+  }
+
+  // Rotar la imagen hacia la derecha
+  rotateRight() {
+    this.rotationAngle += 90;
+    this.applyRotation();
+  }
+
+  // Aplicar la rotación a la imagen
+  private applyRotation() {
+    if (!this.imagePreview || !this.file) return;
+
+    const img = new Image();
+    img.src = this.imagePreview;
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d')!;
+
+      // Ajustar el tamaño del canvas para rotar correctamente
+      if (this.rotationAngle % 180 !== 0) {
+        canvas.width = img.height;
+        canvas.height = img.width;
+      } else {
+        canvas.width = img.width;
+        canvas.height = img.height;
+      }
+
+      // Rotar la imagen
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate((this.rotationAngle * Math.PI) / 180);
+      ctx.drawImage(img, -img.width / 2, -img.height / 2);
+
+      // Actualizar previsualización y archivo rotado
+      this.imagePreview = canvas.toDataURL('image/jpeg');
+      canvas.toBlob((blob) => {
+        if (blob) {
+          this.rotatedImage = new File([blob], this.file!.name, { type: this.file!.type });
         }
-  
-        // Rotar la imagen
-        ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate((this.rotationAngle * Math.PI) / 180);
-        ctx.drawImage(img, -img.width / 2, -img.height / 2);
-  
-        // Actualizar previsualización y archivo rotado
-        this.imagePreview = canvas.toDataURL('image/jpeg');
-        canvas.toBlob((blob) => {
-          if (blob) {
-            this.rotatedImage = new File([blob], this.file!.name, { type: this.file!.type });
-          }
-        }, this.file.type);
-      };
-    }
+      }, this.file.type);
+    };
+  }
 
-  newAssistance(){
+  newAssistance() {
     window.location.reload();
   }
-  
+
+  report() {
+    Swal.fire({
+      title: '¿Deseas reportar un error?',
+      text: 'Saldrás de esta pantalla para especificar el error encontrado',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Reportar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.showFormError = true;
+      }
+    });
+  }
+
+  getDisplayedColumns(): string[] {
+    return this.showFormError
+      ? ['select', ...this.recordsTableColumns, 'actions']
+      : [...this.recordsTableColumns, 'actions'];
+  }
+
+  closeModal() {
+    this.showFormError = false;
+    this.reportForm.reset();
+  }
 
   // Simular la subida de la imagen
   uploadImage() {
@@ -177,42 +307,42 @@ export class AssistanceUploadComponent implements OnInit{
     }
     this.loading = true;
     this.assistanceScannerService.uploadFile(file)
-    .subscribe({
-      next: (response: any) => {
-        this.showTableData = true;
-        this.dataSource.data = this.transformDateActivities(response);
-        const imageResult = `${environment.apiUrl}/${response?.response?.imageResult}`;
-        this.imageUrl = imageResult
-        this.imagePreviewResult = this.sanitizer.bypassSecurityTrustResourceUrl(imageResult);
-        this.loading = false;
-        this.imageLoaded = true;
-        // this.imagePreview = null;
-        Swal.fire('Correcto', 'Las planillas de Asistencia han sido cargadas correctamente', 'success');
-      },
-      error: (error: any) => {
+      .subscribe({
+        next: (response: any) => {
+          this.showTableData = true;
+          this.dataSource.data = this.transformDateActivities(response);
+          this.getGroupCmponentDateActivityBeneficiary(response);
+          const imageResult = `${environment.apiUrl}/${response?.response?.imageResult}`;
+          this.imageUrl = imageResult
+          this.imagePreviewResult = this.sanitizer.bypassSecurityTrustResourceUrl(imageResult);
+          this.loading = false;
+          this.imageLoaded = true;
+          // this.imagePreview = null;
+          Swal.fire('Correcto', 'Las planillas de Asistencia han sido cargadas correctamente', 'success');
+        },
+        error: (error: any) => {
 
-        this.loading = false;
-        Swal.fire('Advertencia', `Algo ha fallado, por favor revise la consistencia de la planilla. ${ error?.error?.message }`, 'warning');
-      }
-    });
+          this.loading = false;
+          Swal.fire('Advertencia', `Algo ha fallado, por favor revise la consistencia de la planilla. ${error?.error?.message}`, 'warning');
+        }
+      });
 
   }
 
   transformDateActivities(data: any) {
     const daysOfWeek = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-
     return data.response.assistanceScannerBeneficiaries.map((activity: any) => {
-        const date = new Date(activity.assistanceSignDate + "T00:00:00Z");
-        const day = daysOfWeek[date.getUTCDay()];
-        const formattedDay = day.charAt(0).toUpperCase() + day.slice(1);
-        return {
-            ...activity,
-            assistanceSignDate: `${activity.assistanceSignDate} - ${formattedDay}`
-        };
+      const date = new Date(activity.assistanceSignDate + "T00:00:00Z");
+      const day = daysOfWeek[date.getUTCDay()];
+      const formattedDay = day.charAt(0).toUpperCase() + day.slice(1);
+      return {
+        ...activity,
+        assistanceSignDate: `${activity.assistanceSignDate} - ${formattedDay}`
+      };
     });
   }
 
-  redirectTo(url:string){
+  redirectTo(url: string) {
     this.route.navigateByUrl(url)
   }
 

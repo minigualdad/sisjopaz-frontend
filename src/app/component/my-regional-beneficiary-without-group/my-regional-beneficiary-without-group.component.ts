@@ -163,7 +163,7 @@ export class MyRegionalBeneficiaryWithoutGroupComponent implements OnInit, After
   }
 
   searchByFilter() {
-    this.surveyService.filterByWord(this.searchValue).subscribe({
+    this.surveyService.filterByWord(this.searchValue, 14).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
@@ -195,6 +195,6 @@ export class MyRegionalBeneficiaryWithoutGroupComponent implements OnInit, After
   }
 
   applyFilter(event: any) {
-    this.dataSource.filter = event.target.value.trim().toLowerCase();
+    this.searchValue = event.target.value.trim().toLowerCase();
   }
 }

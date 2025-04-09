@@ -106,9 +106,8 @@ async getAll() {
 
 
 searchByFilter() {
-  this.surveyService.filterByWord(this.searchValue).subscribe({
+  this.surveyService.filterByWord(this.searchValue, 10).subscribe({
     next: (response: any) => {
-      this.dataSource.data = response.surveys;
       this.loadData(response);
     },
   })
@@ -162,6 +161,6 @@ massiveDNP() {
   }
 
   applyFilter(event: any) {
-    this.dataSource.filter = event.target.value.trim().toLowerCase();
+    this.searchValue = event.target.value.trim().toLowerCase();
   }
 }

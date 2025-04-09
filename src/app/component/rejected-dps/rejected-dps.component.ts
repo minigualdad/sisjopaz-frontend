@@ -103,7 +103,7 @@ export class RejectedDPSComponent implements OnInit, AfterViewInit {
   }
 
   searchByFilter() {
-    this.surveyService.filterByWord(this.searchValue).subscribe({
+    this.surveyService.filterByWord(this.searchValue, 22).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
@@ -135,6 +135,6 @@ export class RejectedDPSComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter(filterValue: any) {
-    this.dataSource.filter = filterValue.target.value.trim().toLowerCase();
+    this.searchValue = filterValue.target.value.trim().toLowerCase();
   }
 }

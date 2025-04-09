@@ -125,7 +125,7 @@ export class ProfessionalTeamBeneficiaryComponent implements OnInit, AfterViewIn
   }
 
   searchByFilter() {
-    this.surveyService.filterByWord(this.searchValue).subscribe({
+    this.surveyService.filterByWord(this.searchValue,15).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
@@ -220,6 +220,6 @@ export class ProfessionalTeamBeneficiaryComponent implements OnInit, AfterViewIn
 
 
   applyFilter(event: any) {
-    this.dataSource.filter = event.target.value.trim().toLowerCase();
+    this.searchValue = event.target.value.trim().toLowerCase();
   }
 }

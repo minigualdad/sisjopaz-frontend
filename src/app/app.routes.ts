@@ -185,6 +185,13 @@ import { AssistanceGeneratesTableComponent } from './component/assistance-genera
 import { AssistanceGeneratesPeriodComponent } from './component/assistance-generates-period/assistance-generates-period.component';
 import { SurverMassiveUpdateComponent } from './component/surver-massive-update/surver-massive-update.component';
 import { CalendarWorkingDaysEditComponent } from './component/calendar-working-days-edit/calendar-working-days-edit.component';
+import { AssistanceUploadsFixComponent } from './component/assistance-uploads-fix/assistance-uploads-fix.component';
+import { AssistanceEditComponent } from './component/assistance-edit/assistance-edit.component';
+import { AsssitanceDetectedComponent } from './component/asssitance-detected/asssitance-detected.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AttendancesByMonthComponent } from './component/attendances-by-month/attendances-by-month.component';
+import { MonthYearSelectorComponent } from './component/month-year-selector/month-year-selector.component';
+import { FormSelectDateComponent } from './component/form-select-date/form-select-date.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -654,6 +661,24 @@ export const routes: Routes = [
                 }
             },
             {
+                path: 'assistance-error', component: AssistanceUploadsFixComponent,
+                canActivate: [RoleGuard], data: {
+                    role: [Roles.DIRECCION, Roles.ADMIN,
+                    Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION,
+                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_SOCIOJURIDICO,
+                    Roles.PROFESIONAL_PSICOSOCIAL, Roles.GESTORES_SOCIALES]
+                }
+            },
+            {
+                path: 'assistance-edit/:id', component: AssistanceEditComponent,
+                canActivate: [RoleGuard], data: {
+                    role: [Roles.DIRECCION, Roles.ADMIN,
+                    Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION,
+                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_SOCIOJURIDICO,
+                    Roles.PROFESIONAL_PSICOSOCIAL, Roles.GESTORES_SOCIALES]
+                }
+            },
+            {
                 path: 'account-data-masive', component: AccountDataMassiveComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
             },
@@ -762,6 +787,15 @@ export const routes: Routes = [
                 path: 'calendar-working-days-edit/:id', component: CalendarWorkingDaysEditComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.COORDINACION] }
             },
+            {
+                path: 'attendance-by-month/:id', component: AttendancesByMonthComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.COORDINACION] }
+            },
+            {
+                path: 'prueba/:id', component: AsssitanceDetectedComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.COORDINACION] }
+            },
+            
 
         ]
     },
@@ -924,10 +958,17 @@ export const routes: Routes = [
         AssistanceGeneratesTableComponent,
         AssistanceGeneratesPeriodComponent,
         SurverMassiveUpdateComponent,
-        CalendarWorkingDaysEditComponent
+        CalendarWorkingDaysEditComponent,
+        AssistanceUploadsFixComponent,
+        AssistanceEditComponent,
+        AsssitanceDetectedComponent,
+        FormSelectDateComponent,
+        AssistanceEditComponent,
+        AttendancesByMonthComponent,
+        MonthYearSelectorComponent,
     ],
     imports: [
-    RouterModule.forRoot(routes),
+        RouterModule.forRoot(routes),
     SharedModule,
     MatTableModule,
     MatPaginatorModule,
@@ -943,7 +984,8 @@ export const routes: Routes = [
     BaseChartDirective,
     CommonModule,
     LoadingComponent,
-    ButtonBackComponent
+    ButtonBackComponent,
+    MatCheckboxModule
     
 ],
     exports: [RouterModule, SharedModule, MatTableModule,

@@ -115,7 +115,7 @@ export class BankCertificationNoValidateComponent implements OnInit, AfterViewIn
   }
 
   searchByFilter() {
-    this.surveyService.filterByWord(this.searchValue).subscribe({
+    this.surveyService.filterByWord(this.searchValue, 3).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
@@ -177,7 +177,7 @@ export class BankCertificationNoValidateComponent implements OnInit, AfterViewIn
   }
 
   applyFilter(event: any) {
-    this.dataSource.filter = event.target.value.trim().toLowerCase();
+    this.searchValue = event.target.value.trim().toLowerCase();
   }
 }
 

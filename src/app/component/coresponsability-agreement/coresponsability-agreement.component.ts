@@ -79,9 +79,8 @@ ngAfterViewInit(): void {
 ngOnDestroy(): void { }
 
 searchByFilter() {
-  this.surveyService.filterByWord(this.searchValue).subscribe({
+  this.surveyService.filterByWord(this.searchValue, 9).subscribe({
     next: (response: any) => {
-      this.dataSource.data = response.surveys;
       this.loadData(response);
       },
   })
@@ -101,7 +100,7 @@ massiveAgr() {
 }
 
 async loadData(response: any) {
-  this.dataSource.data = response.beneficiaries;
+  this.dataSource.data = response.beneficiaries || response?.surveys;
   this.totalSize = response?.total;
   await this.timer(100);
   this.dataSource.sort = this.recordsTableMatSort;

@@ -11,6 +11,7 @@ import { GroupComponentService } from '../../service/group-component.service';
 import { GroupService } from '../../service/group.service';
 import { ComponentGroupTemplateComponent } from '../component-group-template/component-group-template.component';
 import { AssistanceGeneratesPeriodComponent } from '../assistance-generates-period/assistance-generates-period.component';
+import { FormSelectDateComponent } from '../form-select-date/form-select-date.component';
 
 @Component({
   selector: 'app-component-group',
@@ -98,6 +99,10 @@ create() {
   this.router.navigateByUrl(`/app/component-group-add/${this.group.id}`);
 }
 
+downloadAssistanceByMonth(){
+
+}
+
 
 async remove(id: number) {
   const result = await Swal.fire({
@@ -138,6 +143,21 @@ downloadAssistanceTemplate(id: any) {
       this.getAll();
     });
   }
+
+  downloadAllAssistanceTemplate(id: any) {
+    const dialogRef = this.dialog.open(FormSelectDateComponent, {
+        hasBackdrop: true,
+        disableClose: true,
+        maxWidth: 'none',
+        width: 'auto',
+        height: 'auto',
+        data: { id }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        this.loading = false;
+        this.getAll();
+      });
+    }
 
   downloadAssistanceBeneficiries(id: any) {
     const dialogRef = this.dialog.open(AssistanceGeneratesPeriodComponent, {

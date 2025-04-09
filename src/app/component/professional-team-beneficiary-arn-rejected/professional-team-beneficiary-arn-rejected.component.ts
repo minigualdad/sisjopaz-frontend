@@ -104,7 +104,7 @@ export class ProfessionalTeamBeneficiaryArnRejectedComponent implements OnInit, 
   }
 
   searchByFilter() {
-    this.surveyService.filterByWord(this.searchValue).subscribe({
+    this.surveyService.filterByWord(this.searchValue, 18).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
@@ -136,6 +136,6 @@ export class ProfessionalTeamBeneficiaryArnRejectedComponent implements OnInit, 
   }
 
   applyFilter(filterValue: any) {
-    this.dataSource.filter = filterValue.target.value.trim().toLowerCase();
+    this.searchValue = filterValue.target.value.trim().toLowerCase();
   }
 }

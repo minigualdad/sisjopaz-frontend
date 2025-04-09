@@ -38,22 +38,6 @@ export class SurveyService {
               survey.name += ' ';
               survey.name += survey.secondLastName;
             }
-            survey.nameOriginal = survey.firstNameOriginal;
-            if (survey.secondNameOriginal) {
-              survey.nameOriginal += ' ';
-              survey.nameOriginal += survey.secondNameOriginal;
-            } else {
-              survey.secondNameOriginal = '';
-            }
-            survey.nameOriginal += ' ';
-            survey.nameOriginal += survey.firstLastNameOriginal;
-            if (survey.secondLastNameOriginal) {
-              survey.nameOriginal += ' ';
-              survey.nameOriginal += survey.secondLastNameOriginal;
-            } else {
-              survey.secondLastNameOriginal = '';
-            }
-            survey.startProgramDate = survey.createdAt.split('T')[0];
             survey.group = survey.Group?.name;
             if (survey.DNPCheckDate) {
               survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
@@ -101,76 +85,120 @@ export class SurveyService {
       )
   }
 
-  filterByWord(value:string){
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByValue`, {value})
+  filterByWord(value:string, typeSearch?: number, groupId?:number){
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/${typeSearch}/getAllByValue`, {value, groupId})
     .pipe(
       map((response: any) => {
         response.surveys = response.surveys.map((survey: any) => {
-          survey.dateSlplitted = survey.date?.split('T')[0];
-          survey.name = survey.firstName;
-          if (survey.secondName) {
-            survey.name += ' ';
-            survey.name += survey.secondName;
+          survey.name = `${survey!.firstName} ${survey!.secondName} ${survey!.firstLastName} ${survey!.secondLastName}`;
+          survey.divipola = survey?.Divipola?.name;
+          survey.group = survey?.Group?.name;
+          switch(typeSearch){
+            case 1: 
+              return survey;
+            case 2:
+              survey.ARNCheckDate = survey?.ARNCheckDate ? survey.ARNCheckDate.split('T')[0] : 'Sin Revisar';
+              survey.ARNCheck = (survey?.ARNCheck === 'si' && survey.ARNCheckDate) ? 'Validado' : 'Sin Revisar';
+              return survey;
+            case 3:
+              survey.accountCertificationDate = survey?.accountCertificationDate ? survey.accountCertificationDate.split('T')[0] : 'Sin Verificar';
+              survey.accountCertificationMotive = survey?.accountCertificationMotive ? survey.accountCertificationMotive : 'Sin Verificar';
+              return survey;
+            case 4:
+              survey.startProgramDate = survey?.createdAt.split('T')[0];
+              survey.updatedDate = survey?.updatedAt.split('T')[0];
+              return survey;
+            case 5:
+              return survey;
+            case 6:
+              survey.identificationExpeditionOriginal = survey?.identificationExpeditionOriginal.split('T')[0];
+              survey.bornDateOriginal = survey?.bornDateOriginal.split('T')[0];
+              return survey;
+            case 7:
+              survey.bornDate = survey?.bornDate.split('T')[0];
+              survey.identificationExpedition = survey?.identificationExpedition.split('T')[0];
+              return survey;
+            case 8:
+              return survey;
+            case 9:
+              survey.signDate = survey.signDate.split('T')[0];
+              return survey;
+            case 10:
+              survey.DNPCheck = survey.DNPCheck ? survey.DNPCheck  : 'Sin Revisar';
+              survey.DNPCheckDate = survey.DNPCheckDate ? survey.DNPCheckDate.split('T')[0]  : 'Sin Revisar';
+              return survey;
+            case 11:
+              survey.documentIdentificationCheck = survey.documentIdentificationCheck ? survey.documentIdentificationCheck : 'Sin Cargar';
+              survey.documentIdentificationMotive = survey.documentIdentificationMotive ? survey.documentIdentificationMotive : 'Sin Revisar';
+              survey.documentIdentificationDate = survey.documentIdentificationDate ? survey.documentIdentificationDate.split('T')[0]  : 'Sin Revisar';
+              return survey;
+            case 12:
+              survey.DPSCheck = survey.DPSCheck ? survey.DPSCheck : 'Sin Cargar';
+              survey.DPSCheckDate = survey.DPSCheckDate ? survey.DPSCheckDate.split('T')[0]  : 'Sin Revisar';
+              return survey;
+            case 13:
+              survey.startProgramDate = survey?.createdAt.split('T')[0];
+              return survey;
+            case 14:
+              return survey;
+            case 15: 
+              survey.signDate = survey.signDate.split('T')[0];
+              survey.ARNCheckDate = survey?.ARNCheckDate ? survey.ARNCheckDate.split('T')[0] : 'Sin Revisar';
+              survey.ARNCheck = (survey?.ARNCheck === 'si' && survey.ARNCheckDate) ? 'Validado' : 'Sin Revisar';
+              survey.registraduryValidateCheck = survey.registraduryValidateCheck ? survey.registraduryValidateCheck : 'Sin revisar';
+              survey.registraduryValidateDate = survey.registraduryValidateDate ? survey.registraduryValidateDate.split('T')[0]  : 'Sin Revisar';
+              survey.DNPCheck = survey.DNPCheck ? survey.DNPCheck  : 'Sin Revisar';
+              survey.DNPCheckDate = survey.DNPCheckDate ? survey.DNPCheckDate.split('T')[0]  : 'Sin Revisar';
+              survey.DPSCheck = survey.DPSCheck ? survey.DPSCheck : 'Sin Cargar';
+              survey.DPSCheckDate = survey.DPSCheckDate ? survey.DPSCheckDate.split('T')[0]  : 'Sin Revisar';
+              return survey;
+            case 16: 
+              survey.updatedDate = survey.updatedAt.split('T')[0];
+              return survey;
+            case 17:
+              survey.ARNCheck = survey.ARNCheck ? survey.ARNCheck : 'Sin Revisar';
+              survey.ARNCheckDate = survey.ARNCheckDate ? survey.ARNCheckDate.split('T')[0] : 'Sin Revisar';
+              survey.updatedDate = survey.updatedAt.split('T')[0];
+              survey.createdAt = survey.createdAt.split('T')[0];
+              return survey;
+            case 18:
+              survey.ARNMotive = survey.ARNMotive ? survey.ARNMotive : 'Sin Revisar';
+              survey.updatedDate = survey.updatedAt.split('T')[0];
+              return survey;
+            case 19:
+              survey.DNPCheck = survey.DNPCheck ? survey.DNPCheck : 'Sin Revisar';
+              survey.stateAgreement = survey.state;
+              survey.DNPCheckDate = survey.DNPCheckDate ? survey.DNPCheckDate.split('T')[0] : 'Sin Revisar';
+              survey.bornDate = survey.bornDate ? survey.bornDate.split('T')[0] : 'Sin Revisar';
+              survey.updatedDate = survey.updatedAt.split('T')[0];
+              survey.createdAt = survey.createdAt.split('T')[0];
+              return survey;
+            case 20:
+              survey.DNPMotive = survey.DNPMotive ? survey.DNPMotive : 'Sin Revisar';
+              survey.stateAgreement = survey.state;
+              survey.updatedDate = survey.updatedAt.split('T')[0];
+              return survey;
+            case 21:
+                survey.DPSCheck = survey.DPSCheck ? survey.DPSCheck : 'Sin Revisar';
+                survey.stateAgreement = survey.state;
+                survey.DPSCheckDate = survey.DPSCheckDate ? survey.DPSCheckDate.split('T')[0] : 'Sin Revisar';
+                survey.bornDate = survey.bornDate ? survey.bornDate.split('T')[0] : 'Sin Revisar';
+                survey.updatedDate = survey.updatedAt.split('T')[0];
+                survey.createdAt = survey.createdAt.split('T')[0];
+                return survey;
+            case 22:
+              survey.DPSMotive = survey.DPSMotive ? survey.DPSMotive : 'Sin Revisar';
+              survey.updatedDate = survey.updatedAt.split('T')[0];
+              return survey;
+            case 23:
+              survey.bornDate = survey.bornDate ? survey.bornDate.split('T')[0] : 'Sin Revisar';
+              return survey;
+            case 24:
+              survey.group =  survey?.Group?.name ? survey?.Group?.name : 'Sin Grupo';
+              return survey;
           }
-          survey.name += ' ';
-          survey.name += survey.firstLastName;
-          if (survey.secondLastName) {
-            survey.name += ' ';
-            survey.name += survey.secondLastName;
-          }
-          survey.nameOriginal = survey.firstNameOriginal;
-          if (survey.secondNameOriginal) {
-            survey.nameOriginal += ' ';
-            survey.nameOriginal += survey.secondNameOriginal;
-          } else {
-            survey.secondNameOriginal = '';
-          }
-          survey.nameOriginal += ' ';
-          survey.nameOriginal += survey.firstLastNameOriginal;
-          if (survey.secondLastNameOriginal) {
-            survey.nameOriginal += ' ';
-            survey.nameOriginal += survey.secondLastNameOriginal;
-          } else {
-            survey.secondLastNameOriginal = '';
-          }
-          survey.startProgramDate = survey.createdAt.split('T')[0];
-          survey.group = survey.Group?.name;
-          if (survey.DNPCheckDate) {
-            survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
-          } else {
-            survey.DNPCheckDate = 'Sin Revisar'
-          }
-          if (survey.ARNCheckDate) {
-            survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
-          } else {
-            survey.ARNCheckDate = 'Sin Revisar'
-          }
-          if (survey.DPSCheckDate) {
-            survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
-          } else {
-            survey.DPSCheckDate = 'Sin Revisar'
-          }
-          if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
-            survey.DNPCheck = 'No Validado'
-          }
-          if (survey.DNPCheck === 'si' && survey.DNPCheckDate) {
-            survey.DNPCheck = 'Validado'
-          } else {
-            survey.DNPCheck = 'Sin Revisar'
-          }
-          if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-            survey.ARNCheck = 'No Validado'
-          }
-          if (survey.ARNCheck === 'si' && survey.ARNCheckDate) {
-            survey.ARNCheck = 'Validado'
-          } else {
-            survey.ARNCheck = 'Sin Revisar'
-          }
-          if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-            survey.ARNCheck = 'No Validado'
-          }
-          if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
-            survey.DPSCheck = 'Validado'
+          if (survey.registraduryValidateCheck === 'si' && survey.registraduryValidateDate) {
+            survey.registraduryValidateDate = survey.registraduryValidateDate.split('T')[0];
           } else {
             survey.DPSCheck = 'Sin Revisar'
           }
@@ -213,47 +241,6 @@ export class SurveyService {
             survey.nameOriginal += survey.secondLastNameOriginal;
           } else {
             survey.secondLastNameOriginal = '';
-          }
-          survey.startProgramDate = survey.createdAt.split('T')[0];
-          survey.group = survey.Group?.name;
-          if (survey.DNPCheckDate) {
-            survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
-          } else {
-            survey.DNPCheckDate = 'Sin Revisar'
-          }
-          if (survey.ARNCheckDate) {
-            survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
-          } else {
-            survey.ARNCheckDate = 'Sin Revisar'
-          }
-          if (survey.DPSCheckDate) {
-            survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
-          } else {
-            survey.DPSCheckDate = 'Sin Revisar'
-          }
-          if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
-            survey.DNPCheck = 'No Validado'
-          }
-          if (survey.DNPCheck === 'si' && survey.DNPCheckDate) {
-            survey.DNPCheck = 'Validado'
-          } else {
-            survey.DNPCheck = 'Sin Revisar'
-          }
-          if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-            survey.ARNCheck = 'No Validado'
-          }
-          if (survey.ARNCheck === 'si' && survey.ARNCheckDate) {
-            survey.ARNCheck = 'Validado'
-          } else {
-            survey.ARNCheck = 'Sin Revisar'
-          }
-          if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-            survey.ARNCheck = 'No Validado'
-          }
-          if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
-            survey.DPSCheck = 'Validado'
-          } else {
-            survey.DPSCheck = 'Sin Revisar'
           }
           return survey;
         })

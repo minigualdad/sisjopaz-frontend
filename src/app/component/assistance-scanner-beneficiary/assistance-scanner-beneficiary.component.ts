@@ -76,7 +76,7 @@ checkImage(id: any){
   .subscribe((response: any) => {
     url = this.server + response.beneficiaryAssistance.AssistanceScanner?.urlFileImageProcessed;
     if (url) {
-      window.open(url, '_blank'); // Abre el documento en una nueva pestaña
+      window.open(url, '_blank');
     } else {
       console.error('No se encontró una URL válida para el documento.');
     }

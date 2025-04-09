@@ -129,6 +129,12 @@ export const NAV_ITEMS = [
                 icon: 'svg/circle.svg',
                 role: 'ADMIN'
             },
+            {
+                name: 'Susbanación Asistencias',
+                route: `/app/assistance-error`,
+                icon: 'svg/circle.svg',
+                role: 'ADMIN'
+            },
         ]
     },
     {

@@ -23,6 +23,13 @@
                             <mat-icon class="icon-size-5 text-white">add</mat-icon>
                             <span class="ml-2 text-white font-bold">Asignar</span>
                         </button>
+
+                        <button *ngIf="user && (user.role === 'ENLACE_REGIONAL' || user.role === 'DIRECCION' || user.role === 'ADMIN')"
+                        class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                            (click)="downloadAllAssistanceTemplate(group.id)">
+                            <mat-icon class="icon-size-5 text-white">download</mat-icon>
+                            <span class="ml-2 text-white font-bold">Descargar Asistencias</span>
+                        </button>
                     </div>
                 </div>
 
@@ -63,6 +70,11 @@
                                             mat-menu-item [routerLink]="['/app', 'group-component-dates',transaction.id]">
                                             <mat-icon>calendar_today</mat-icon>
                                                 Horarios por Componente
+                                            </button>
+                                            <button *ngIf="user && (user.role === 'ENLACE_REGIONAL' || user.role === 'COORDINACION' || user.role === 'DIRECCION' || user.role === 'ADMIN')"
+                                            mat-menu-item [routerLink]="['/app', 'attendance-by-month',transaction.id]">
+                                            <mat-icon>date_range</mat-icon>
+                                                Asistencias por Mes
                                             </button>
                                             <button *ngIf="user && (user.role === 'ENLACE_REGIONAL' || user.role === 'COORDINACION' || user.role === 'DIRECCION' || user.role === 'ADMIN')"
                                             mat-menu-item [routerLink]="['/app', 'group-component-date-activity-beneficiary',transaction.id]">
