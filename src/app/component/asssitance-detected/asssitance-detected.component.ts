@@ -29,6 +29,7 @@ export class AsssitanceDetectedComponent implements OnInit, AfterViewInit{
     dataSource: MatTableDataSource<any> = new MatTableDataSource();
     columns: any = {
       actions: 'Acciones',
+      recordType: 'Tipo de Registro',
       identificationType: 'Tipo de documento',
       identification: 'Numero de Documento',
       assistanceSignDate: 'Fechas de Asistencias',

@@ -32,8 +32,8 @@ export class AssistanceScannerService {
         )
   }
 
-  sendReportError(observation: string, assistanceBeneficiariesId:any, scannerId:number){
-    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScanner/mistakeError`, {observation, assistanceBeneficiariesId, scannerId})
+  sendReportError(observation: string, scannerId:number){
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScanner/mistakeError`, {observation, scannerId})
   }
 
   getAllMistakeError(){

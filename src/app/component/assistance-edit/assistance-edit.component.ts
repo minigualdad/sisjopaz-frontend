@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AssistanceScannerBeneficiaryService } from '../../service/assistance-scanner-beneficiary.service';
 import Swal from 'sweetalert2';
 import { AssistanceScannerService } from '../../service/assitance-scanner.service';
+import { environment } from '../../../enviroment/enviroment';
 
 @Component({
   selector: 'app-assistance-edit',
@@ -19,6 +20,7 @@ export class AssistanceEditComponent implements OnInit{
   data:any;
   dataFix:any;
   survey : any = null;
+  enviroment = environment.apiUrl;
 
   constructor(private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -64,7 +66,7 @@ export class AssistanceEditComponent implements OnInit{
           month: response?.assistanceScanner?.AssistanceSheet?.AssistanceGenerate?.month,
           group: response?.assistanceScanner?.AssistanceSheet.AssistanceGenerate?.GroupComponent.Group.name,
           component: response?.assistanceScanner?.AssistanceSheet.AssistanceGenerate?.GroupComponent.Component.name,
-          url: response?.assistanceScanner?.urlFileImageProcessed,
+          url: `${this.enviroment}/${response?.assistanceScanner?.urlFileImageProcessed}`,
           observation: response?.assistanceScanner.observation,
         }
         this.dataFix = {

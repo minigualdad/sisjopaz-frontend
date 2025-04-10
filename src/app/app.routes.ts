@@ -663,10 +663,7 @@ export const routes: Routes = [
             {
                 path: 'assistance-error', component: AssistanceUploadsFixComponent,
                 canActivate: [RoleGuard], data: {
-                    role: [Roles.DIRECCION, Roles.ADMIN,
-                    Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION,
-                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_SOCIOJURIDICO,
-                    Roles.PROFESIONAL_PSICOSOCIAL, Roles.GESTORES_SOCIALES]
+                    role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION]
                 }
             },
             {
@@ -789,7 +786,9 @@ export const routes: Routes = [
             },
             {
                 path: 'attendance-by-month/:id', component: AttendancesByMonthComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.COORDINACION] }
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION, 
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
             },
             {
                 path: 'prueba/:id', component: AsssitanceDetectedComponent,

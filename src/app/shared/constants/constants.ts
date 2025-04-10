@@ -189,6 +189,12 @@ export const NAV_ITEMS = [
                 icon: 'svg/circle.svg',
                 role: 'ADMIN'
             },
+            {
+                name: 'Susbanación Asistencias',
+                route: `/app/assistance-error`,
+                icon: 'svg/circle.svg',
+                role: 'ADMIN'
+            },
         ]
     },
     {
@@ -389,6 +395,10 @@ export const NAV_ITEMS = [
     {
         name: 'Mis Grupos', route: '/app/my-group', icon: 'svg/group.svg',
         role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.GESTORES_SOCIALES]
+    },
+    {
+        name: 'Subsanar Asistencias', route: '/app/assistance-error', icon: 'svg/state.svg',
+        role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION]
     },
 
     {

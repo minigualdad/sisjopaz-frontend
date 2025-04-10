@@ -6,6 +6,9 @@ import { environment } from '../../enviroment/enviroment';
   providedIn: 'root'
 })
 export class GroupComponentDateActivityService {
+  deleteIds(ids: number[]) {
+    return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivity/deleteIds`, {ids})
+  }
 
   constructor(private _httpClient: HttpClient) { }
 

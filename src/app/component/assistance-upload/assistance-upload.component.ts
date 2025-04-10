@@ -45,7 +45,6 @@ export class AssistanceUploadComponent implements OnInit {
   };
   recordsTableColumns: string[] = [];
   user: any;
-  selectedIds: number[] = [39116, 39117, 39115];
 
   imageUrl: string = '';
   displayedColumns: string[] = [];
@@ -72,37 +71,10 @@ export class AssistanceUploadComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getGroupCmponentDateActivityBeneficiary(data: any) {
-    let fromDay = data.response.assistanceScannerBeneficiaries[0]?.AssistanceScanner?.AssistanceSheet?.startDay;
-    let toDay = data.response.assistanceScannerBeneficiaries[0]?.AssistanceScanner?.AssistanceSheet?.endDay;
-    const month = data.response.assistanceScannerBeneficiaries[0]?.AssistanceScanner?.AssistanceSheet?.AssistanceGenerate?.month;
-    const year = data.response.assistanceScannerBeneficiaries[0]?.AssistanceScanner?.AssistanceSheet?.AssistanceGenerate?.year;
-    const formattedMonth = String(month).padStart(2, '0');
-    fromDay = String(fromDay).padStart(2, '0');
-    const fromDate = `${year}-${formattedMonth}-${fromDay}`;
 
-    toDay = String(toDay).padStart(2, '0');
-    const toDate = `${year}-${formattedMonth}-${toDay}`;
-    const groupComponentId = data.response.assistanceScannerBeneficiaries[0]?.AssistanceScanner?.AssistanceSheet?.AssistanceGenerate?.groupComponentId;
-    const serviceData = {
-      groupComponentId: groupComponentId,
-      fromDate: fromDate,
-      toDate: toDate,
-    }
-    this.groupComponentDateActivityBeneficiaryService.getAllByGroupComponentAndDates(serviceData)
-      .subscribe({
-        next: (response: any) => {
-          this.errorDataSource = response.groupComponentDateActivityBeneficiaries;
-          return this.dataSource.data;
-        },
-        error: (error: any) => {
-
-        }
-      })
-  }
 
   formValid(): boolean {
-    const valor = !this.reportForm.invalid && this.selectedIds.length > 0;
+    const valor = !this.reportForm.invalid;
     return !valor;
   }
 
@@ -112,7 +84,7 @@ export class AssistanceUploadComponent implements OnInit {
 
   submitReport() {
     const description = this.reportForm.value.errorDescription;
-    this.assistanceScannerService.sendReportError(description, this.selectedIds, this.assistanceScannerId).subscribe({
+    this.assistanceScannerService.sendReportError(description, this.assistanceScannerId).subscribe({
       next: (response: any) => {
           Swal.fire({
             icon: 'success',
@@ -124,7 +96,6 @@ export class AssistanceUploadComponent implements OnInit {
     
           this.reportForm.reset();
           this.showFormError = false;
-          this.selectedIds = [];
       },
       error: (error: any) => {
         Swal.fire({
@@ -155,29 +126,8 @@ export class AssistanceUploadComponent implements OnInit {
     this.showFormError = !this.showFormError;
   }
 
-  onRowToggle(id: number, event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
-    if (checked) {
-      if (!this.selectedIds.includes(id)) {
-        this.selectedIds.push(id);
-      }
-    } else {
-      this.selectedIds = this.selectedIds.filter(item => item !== id);
-    }
-  }
-
-  onToggleAll(event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
-    if (checked) {
-      this.selectedIds = this.dataSource.data.map(row => row.id);
-    } else {
-      this.selectedIds = [];
-    }
-  }
-
   isAllSelected(): boolean {
-    return this.dataSource && this.dataSource.data.length > 0 &&
-      this.selectedIds.length === this.dataSource.data.length;
+    return this.dataSource && this.dataSource.data.length > 0 
   }
   // Manejar la selección de un archivo
   onFileSelected(event: Event): void {
@@ -312,7 +262,6 @@ export class AssistanceUploadComponent implements OnInit {
         next: (response: any) => {
           this.showTableData = true;
           this.dataSource.data = this.transformDateActivities(response);
-          this.getGroupCmponentDateActivityBeneficiary(response);
           const imageResult = `${environment.apiUrl}/${response?.response?.imageResult}`;
           this.imageUrl = imageResult
           this.imagePreviewResult = this.sanitizer.bypassSecurityTrustResourceUrl(imageResult);

@@ -72,6 +72,7 @@ export class AssistanceScannerBeneficiaryService {
             secondName: survey.Survey.secondName,
             firstLastName: survey.Survey.firstLastName,
             secondLastName: survey.Survey.secondLastName,
+            recordType: survey.recordType,
             // También puedes incluir otros campos si los necesitas
             state: survey.state,
             userId: survey.userId

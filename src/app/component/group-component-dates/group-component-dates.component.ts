@@ -23,6 +23,7 @@ export class GroupComponentDatesComponent {
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   columns: any = {
     actions: 'Acciones',
+    select: 'Selección',
     dateActivity: 'Fecha',
   };
   // En tu componente
@@ -34,6 +35,8 @@ export class GroupComponentDatesComponent {
   component: any = {};
   groupComponentId = localStorage.getItem('componentId');
   backRoute = `app/component-group/${this.groupComponentId}`;
+  displayedColumns: string[] = [];
+  selectedIds: number[] = [];
 
   constructor(
     private titleService: Title,
@@ -41,10 +44,32 @@ export class GroupComponentDatesComponent {
     public dialog: MatDialog,
     private groupComponentDateActivityService: GroupComponentDateActivityService,
   ) {
+    this.recordsTableColumns = Object.keys(this.columns).filter(col => col !== 'actions' && col !== 'select');
+    this.displayedColumns = ['actions', 'select', ...this.recordsTableColumns];    
     this.titleService.setTitle('Horarios por Componente');
     this.groupComponent.id = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
+  toggleSelection(id: number) {
+    const index = this.selectedIds.indexOf(id);
+    if (index === -1) {
+      this.selectedIds.push(id);
+    } else {
+      this.selectedIds.splice(index, 1);
+    }
+  }
+
+  toggleSelectAll(event: any) {
+    if (event.checked) {
+      this.selectedIds = this.dataSource.data.map((item: any) => item.id);
+    } else {
+      this.selectedIds = [];
+    }
+  }
+
+  /**
+   * On init
+   */
   ngOnInit(): void {
     this.getAll();
   }
@@ -101,8 +126,8 @@ export class GroupComponentDatesComponent {
 
   async remove(id: number) {
     const result = await Swal.fire({
-      title: '¿Estás seguro que deseas eliminar el día hábil?',
-      text: '¡No es posible deshacer esta acción! Esta acción no borrará los dís de citación de los jóvenes.',
+      title: 'Se borrarán todas las asistencias y citaciones a beneficiarios.',
+      text: 'Si una asistencia está firmada, también se eliminarán las citaciones firmadas asociadas.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, borrarlo!',
@@ -128,4 +153,41 @@ export class GroupComponentDatesComponent {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+  async removeIds() {
+
+    const result = await Swal.fire({
+      title: 'Se borrarán todas las asistencias y citaciones a beneficiarios.',
+      text: 'Si una asistencia está firmada, también se eliminarán las citaciones firmadas asociadas.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, borrarlo!',
+      cancelButtonText: 'No, conservarlo',
+    });
+    
+    if(result.value){
+
+      this.groupComponentDateActivityService.deleteIds(this.selectedIds).subscribe({
+        next: (response: any) => {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Días eliminados!',
+          text: 'Los días han sido eliminados correctamente.',
+          confirmButtonText: 'Aceptar'
+        }).then((isconfirmed) => {
+          this.selectedIds = [];
+          this.getAll();
+        })
+      },
+      error: (error: any) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un error al eliminar los días. Intenta nuevamente.',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
+  }
+  }
+
 }
