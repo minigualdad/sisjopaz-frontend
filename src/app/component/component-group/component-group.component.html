@@ -71,7 +71,9 @@
                                             <mat-icon>calendar_today</mat-icon>
                                                 Horarios por Componente
                                             </button>
-                                            <button *ngIf="user && (user.role === 'ENLACE_REGIONAL' || user.role === 'COORDINACION' || user.role === 'DIRECCION' || user.role === 'ADMIN')"
+                                            <button *ngIf="(transaction.Component.name === 'Educación' && user.role === 'PROFESIONAL_EDUCACION') || 
+                                            (transaction.Component.name === 'Corresponsabilidad' && user.role === 'PROFESIONAL_CORRESPONSABILIDAD') ||
+                                            user && (user.role === 'ENLACE_REGIONAL' || user.role === 'COORDINACION' || user.role === 'DIRECCION' || user.role === 'ADMIN')"
                                             mat-menu-item [routerLink]="['/app', 'attendance-by-month',transaction.id]">
                                             <mat-icon>date_range</mat-icon>
                                                 Asistencias por Mes
