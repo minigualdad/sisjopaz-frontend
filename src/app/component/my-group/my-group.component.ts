@@ -8,6 +8,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
 import { GroupService } from '../../service/group.service';
+import { FormSelectDateComponent } from '../form-select-date/form-select-date.component';
 
 @Component({
   selector: 'app-my-group',
@@ -34,6 +35,8 @@ columns: any = {
 };
 recordsTableColumns: string[] = [];
 user: any;
+loading = false;
+
 
 constructor(
   private groupService: GroupService,
@@ -74,6 +77,23 @@ async getAll() {
       },
   });
 }
+
+goToAssistanceScanner(id: any) {
+  this.router.navigateByUrl(`/app/assistance-scanner-by-group/${id}`);
+}
+downloadAllAssistance() {
+    const dialogRef = this.dialog.open(FormSelectDateComponent, {
+        hasBackdrop: true,
+        disableClose: true,
+        maxWidth: 'none',
+        width: 'auto',
+        height: 'auto',
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        this.loading = false;
+        this.getAll();
+      });
+    }
 
 create() {
   this.router.navigateByUrl('/app/group-add');

@@ -107,6 +107,38 @@ export class GroupComponentDateActivityBenefiaryService {
       )
   }
 
+  // roleVerify([Roles.ADMIN, Roles.DIRECCION])
+  getAllByUser(groupComponentDateActivityBeneficiary: any) {
+    return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/findByUser`, { groupComponentDateActivityBeneficiary })
+      .pipe(
+        map((response: any) => {
+          response.groupComponentDateActivityBeneficiaries = response.groupComponentDateActivityBeneficiaries.groupComponentDateActivityBeneficiaries.map((groupComponentDateActivityBeneficiary: any) => {
+            groupComponentDateActivityBeneficiary.groupComponent = groupComponentDateActivityBeneficiary.GroupComponent?.Component?.name;
+            groupComponentDateActivityBeneficiary.user = groupComponentDateActivityBeneficiary.UserId?.firstName;
+            if (groupComponentDateActivityBeneficiary.UserId.secondName) {
+              groupComponentDateActivityBeneficiary.user += ' ';
+              groupComponentDateActivityBeneficiary.user += groupComponentDateActivityBeneficiary.UserId?.secondName;
+            } else {
+              groupComponentDateActivityBeneficiary.UserId.secondName = ''
+            }
+            groupComponentDateActivityBeneficiary.user += ' ';
+            groupComponentDateActivityBeneficiary.user += groupComponentDateActivityBeneficiary.UserId?.firstLastName;
+            if (groupComponentDateActivityBeneficiary.UserId?.secondLastName) {
+              groupComponentDateActivityBeneficiary.user += ' ';
+              groupComponentDateActivityBeneficiary.user += groupComponentDateActivityBeneficiary.UserId?.secondLastName;
+            } else {
+              groupComponentDateActivityBeneficiary.UserId.secondLastName = ''
+            }
+            groupComponentDateActivityBeneficiary.userIdentification = groupComponentDateActivityBeneficiary.UserId?.identification;
+            groupComponentDateActivityBeneficiary.userIdentificationType = groupComponentDateActivityBeneficiary.UserId?.identificationType;
+            groupComponentDateActivityBeneficiary.dateActivity = groupComponentDateActivityBeneficiary.dateActivity.split('T')[0];
+            return groupComponentDateActivityBeneficiary;
+          });
+          return response;
+        })
+      )
+  }
+
   getAllByGroupComponentAndDate(groupComponentDateActivityBeneficiary: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/findByGroupComponentAndDate`, { groupComponentDateActivityBeneficiary })
       .pipe(
@@ -177,5 +209,11 @@ export class GroupComponentDateActivityBenefiaryService {
 
   assistanceBenficiariesByGroup(data: any): Observable<Blob> {
     return this._httpClient.post(environment.apiUrl + '/app/groupComponentDateActivityBeneficiary/downloadGroupsAssistantByPeriod', { data }, { responseType: 'blob' });
+  }
+  assistanceBenficiariesAll(data: any): Observable<Blob> {
+    return this._httpClient.post(environment.apiUrl + '/app/groupComponentDateActivityBeneficiary/downloadAllAssistancesByPeriod', { data }, { responseType: 'blob' });
+  }
+  assistanceBenficiariesByRegion(data: any): Observable<Blob> {
+    return this._httpClient.post(environment.apiUrl + '/app/groupComponentDateActivityBeneficiary/downloadAllAssistancesByPeriodAndRegion', { data }, { responseType: 'blob' });
   }
 }

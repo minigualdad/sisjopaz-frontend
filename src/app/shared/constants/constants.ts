@@ -398,7 +398,7 @@ export const NAV_ITEMS = [
     },
     {
         name: 'Subsanar Asistencias', route: '/app/assistance-error', icon: 'svg/state.svg',
-        role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION]
+        role: [Roles.ENLACE_REGIONAL]
     },
 
     {
@@ -408,6 +408,12 @@ export const NAV_ITEMS = [
     {
         name: 'Validación Documental', route: '/app/document-validate-coordinator', icon: 'svg/document.svg',
         role: [Roles.APOYO_A_LA_COORDINACION]
+    },
+    {
+        name: 'Buscar Planilla', route: '/app/find-serial', icon: 'svg/search-by.svg',
+        role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION, 
+            Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
+            Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION]
     },
     {
         name: 'Firmar Acuerdos', route: '/app/agreement-signature', icon: 'svg/signature.svg',

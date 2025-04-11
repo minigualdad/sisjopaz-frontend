@@ -66,6 +66,24 @@ export class AssistanceScannerService {
     );
   }
 
+  getAllByUser(groupId: any){
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScanner/getAllByGroup`, {groupId})
+    .pipe(
+      map((response: any) => {
+        response.assistanceScanners = response.assistanceScanners.map((assistanceScanner: any) => {
+          assistanceScanner.group = assistanceScanner.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Group?.name;
+          assistanceScanner.divipola = assistanceScanner.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Group?.Divipola?.name;
+          assistanceScanner.department = assistanceScanner.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Group?.Divipola?.ListDepartment?.name;
+          assistanceScanner.component = assistanceScanner.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Component?.name;
+          assistanceScanner.date = assistanceScanner.createdAt.split('T')[0];
+
+          return assistanceScanner;
+        })
+        return response
+      })
+    )
+  }
+
   getAllMistakeErrorById(id: number){
     return this._httpClient.get(`${environment.apiUrl}/app/assistanceScanner/${id}/show`)
   }

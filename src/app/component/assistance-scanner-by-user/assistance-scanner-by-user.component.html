@@ -10,22 +10,9 @@
 
                 <div class="flex items-center justify-between w-full">
                     <div>
-                        <h2 class="text-3xl font-semibold tracking-tight leading-8">Grupos</h2>
-                        <div class="font-medium tracking-tight text-secondary">A continuación encontrará la información general de grupos</div>
+                        <h2 class="text-3xl font-semibold tracking-tight leading-8">Mis Asistencias Cargadas del Grupo <strong *ngIf="group"> {{group.name}}</strong></h2>
+                        <div class="font-medium tracking-tight text-secondary">A continuación encontrará las planillas de asistencia cargadas</div>
                     </div>
-                    <div *ngIf="user.role === 'COORDINACION'" class="flex items-center ml-6">
-                        <button  class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
-                        (click)="create()">
-                        <mat-icon class="icon-size-5 text-white">add</mat-icon>
-                        <span class="ml-2 text-white font-bold">Crear</span>
-                    </button>
- 
-                    </div>
-                    <button *ngIf="user.role === 'ENLACE_REGIONAL'" class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
-                    (click)="downloadAllAssistance()">
-                    <mat-icon class="icon-size-5 text-white">download</mat-icon>
-                    <span class="ml-2 text-white font-bold">Descargar Asistencias</span>
-                </button>
                 </div>
 
                 <!-- Recent transactions table -->
@@ -57,33 +44,19 @@
                                         </button>
                                         <mat-menu class="bg-white" #menu="matMenu">
                                             <button
-                                            mat-menu-item [routerLink]="['/app', 'component-group', transaction.id]">
-                                            <mat-icon>assignment</mat-icon>    
-                                            Ver Componentes    
-                                            </button>
-                                            <button mat-menu-item
-                                            (click)="goToAssistanceScanner(transaction.id)">
-                                            <mat-icon>library_books</mat-icon>
-                                            <span >Planillas Cargadas</span>
-                                        </button>
-                                            <button
-                                            mat-menu-item [routerLink]="['/app', 'assistance-upload']">
-                                            <mat-icon>center_focus_strong</mat-icon>    
-                                            Cargar Asistencias    
+                                            mat-menu-item [routerLink]="['/app', 'assistance-scanner-detail', transaction.id]">
+                                            <mat-icon>search</mat-icon>
+                                                Ver Detalle
                                             </button>
                                         </mat-menu>
                                     </td>
                                 </ng-container>
-
                             </ng-container>
-
-
                             <!-- Footer -->
                             <ng-container matColumnDef="recordsTableFooter">
                                 <td class="py-6 px-0 border-0" mat-footer-cell *matFooterCellDef colspan="6">
                                 </td>
                             </ng-container>
-
                             <tr mat-header-row *matHeaderRowDef="recordsTableColumns"></tr>
                             <tr class="order-row h-16" mat-row *matRowDef="let row; columns: recordsTableColumns;">
                             </tr>

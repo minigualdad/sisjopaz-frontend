@@ -20,6 +20,16 @@
                         </mat-form-field>
                     </div>
 
+                    <div class="mb-4">
+                        <label class="block font-medium mb-2">Seleccione los días de la semana de la
+                            programación:</label>
+                        <div *ngFor="let day of daysOfWeek">
+                            <mat-checkbox [checked]="form.get('weekDays')?.value.includes(day.id)"
+                                (change)="onCheckboxChange($event, day.id)">
+                                {{ day.name }}
+                            </mat-checkbox>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

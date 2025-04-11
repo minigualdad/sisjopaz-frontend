@@ -25,6 +25,7 @@ columns: any = {
   actions: 'Acciones',
   id: 'Id',
   name: 'Nombre',
+  weekDays: 'Dias de la Semana',
   state: 'Estado',
 };
 recordsTableColumns: string[] = [];

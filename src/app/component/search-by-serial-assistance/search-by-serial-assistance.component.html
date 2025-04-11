@@ -1,0 +1,165 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="mb-4 w-full p-4">
+    <mat-label for="text" class="text-3xl font-bold">
+      Busqueda de planilla por Serial <b class="text-pink-600">*</b>
+    </mat-label>
+    <div class="space-y-2">
+        <p class="text-gray-600">
+          Encontrará el serial de su planilla en la parte superior, dentro del apartado:
+        </p>
+        
+        <div class="inline-block bg-gray-50 px-3 py-2 rounded-lg">
+          <p class="text-gray-600 inline font-medium">
+            Serial de Seguridad - Planilla de Asistencia: 
+            <span class="text-pink-600 font-mono font-bold ml-1">18e8d1069f03eaec2e69</span>
+          </p>
+        </div>
+      </div>
+    <div
+      class="w-full h-auto rounded-lg shadow-xl bg-slate-200 flex items-center justify-center my-3"
+      [ngClass]="{'border-2 border-red-500': form.get('serial')?.invalid && (form.get('serial')?.touched || serial)}"
+    >
+      <input
+        class="px-4 w-full mx-5 bg-transparent border-none outline-none my-2"
+        type="text"
+        placeholder="18e8d1069f03eaec2e69"
+        id="text"
+        formControlName="serial"
+      />
+    </div>
+    <div *ngIf="form.get('serial')?.hasError('required') && (form.get('serial')?.touched || serial)" class="text-red-500">
+      Este campo es obligatorio.
+    </div>
+    <button 
+    [disabled]="!serial" 
+    [class]="serial ? 'bg-pink-500 hover:bg-pink-600 cursor-pointer' : 'bg-gray-500 hover:bg-gray-700 cursor-not-allowed'"
+    type="submit" class="mt-4 px-4 py-2 text-white rounded-2xl ">   
+      Buscar Planilla
+    </button>
+</form>
+
+<div *ngIf="assistance" class="mt-8 bg-white rounded-xl shadow-md overflow-hidden">
+
+    <div class="flex flex-col justify-center items-center my-4">
+        <div class="flex w-full my-3 justify-end items-center">
+            <div class="h-8 w-8 bg-pink-500 flex justify-center items-center rounded-full" (click)="showImage()">
+                <mat-icon class="invert">{{ showImg ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </div>
+        </div>
+        <div *ngFor="let item of data" class="w-full h-auto flex flex-col justify-end items-center">
+          <div class="border rounded p-2 mb-4 min-w-full min-h-40 bg-slate-400" *ngIf="!showImg">
+            <img [src]="item?.urlFileImageProcessed" [alt]="item?.urlFileImageProcessed" class="w-full h-auto rounded"/>
+          </div>
+        </div>
+    </div>
+    <div class="p-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Información de la Planilla</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="text-sm font-medium text-gray-500">ID de Planilla</h3>
+            <p class="mt-1 text-lg font-semibold text-gray-900">{{assistance.id}}</p>
+          </div>
+          
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="text-sm font-medium text-gray-500">Serial</h3>
+            <p class="mt-1 text-lg font-mono font-semibold text-pink-600">{{assistance.serial}}</p>
+          </div>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="text-sm font-medium text-gray-500">Grupo</h3>
+            <p class="mt-1 text-lg font-semibold text-gray-900">{{assistance.groupName}}</p>
+          </div>
+          
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="text-sm font-medium text-gray-500">Componente</h3>
+            <p class="mt-1 text-lg font-semibold text-gray-900">{{assistance.componentName}}</p>
+          </div>
+        </div>
+      </div>
+
+    <div class="flex flex-col flex-auto min-w-0">
+
+        <!-- Main -->
+        <div class="flex-auto p-6 sm:p-10">
+    
+            <!-- CONTENT GOES HERE -->
+            <div class="h-400 min-h-400 max-h-400">
+    
+                <div class="grid grid-cols-1 xl:grid-cols-1 w-full ">
+    
+                    <div class="flex items-center justify-between w-full">
+                        <div>
+                            <h2 class="text-3xl font-semibold tracking-tight leading-8">Asistencias</h2>
+                            <div class="font-medium tracking-tight text-secondary">A continuación encontrará la información general de las asistencias en la planilla</div>
+                        </div>
+                    </div>
+    
+                    <!-- Recent transactions table -->
+                    <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden mt-4" >
+                        <div class="overflow-x-auto mx-6">
+                            <mat-form-field class="bg-white rounded-md w-full mt-4">
+                                <mat-label>Buscar en todos los campos</mat-label>
+                                <input matInput (keyup)="applyFilter($event)" placeholder="Buscar"
+                                    class="py-2 px-3 rounded-md shadow-sm text-gray-700 leading-5 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+                            </mat-form-field>
+                            Resultados: {{dataSource.data.length}}
+                            <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
+                                [trackBy]="trackByFn" #recordsTable="matSort">
+    
+                                <ng-container *ngFor="let column of recordsTableColumns" [matColumnDef]="column">
+                                    <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ columns[column] }}</th>
+                                    <ng-container *ngIf="!(column == 'actions' || column == 'stateName')">
+                                        <td mat-cell *matCellDef="let rowData">
+                                            <span class="pr-6 font-medium text-sm text-secondary whitespace-nowrap">
+                                                {{ rowData[column] }}
+                                            </span>
+                                        </td>
+                                    </ng-container>
+    
+                                    <ng-container>
+                                        <td mat-cell *matCellDef="let transaction">
+                                            <button mat-icon-button color="primary" [matMenuTriggerFor]="menu">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                            <mat-menu class="bg-white" #menu="matMenu">
+                                                <button
+                                                mat-menu-item [routerLink]="['/app', 'assistance-edit', transaction.id]">
+                                                <mat-icon>edit</mat-icon>
+                                                    Corregir
+                                                </button>
+                                            </mat-menu>
+                                        </td>
+                                    </ng-container>
+    
+                                </ng-container>
+    
+    
+                                <!-- Footer -->
+                                <ng-container matColumnDef="recordsTableFooter">
+                                    <td class="py-6 px-0 border-0" mat-footer-cell *matFooterCellDef colspan="6">
+                                    </td>
+                                </ng-container>
+    
+                                <tr mat-header-row *matHeaderRowDef="recordsTableColumns"></tr>
+                                <tr class="order-row h-16" mat-row *matRowDef="let row; columns: recordsTableColumns;">
+                                </tr>
+                                <tr class="h-16 border-0" mat-footer-row *matFooterRowDef="['recordsTableFooter']"></tr>
+                            </table>
+    
+                            <mat-paginator [length]="dataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <app-modal-report-error-ia *ngIf="showObservation"
+  [assistanceScannerId]="assistanceScannerId" 
+  (modal)="closeModal($event)"></app-modal-report-error-ia>

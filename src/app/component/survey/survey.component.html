@@ -112,6 +112,11 @@
                     <mat-icon>download</mat-icon>
                     Generar PDF Caracterización
                   </button>
+                  <button  mat-menu-item
+                    (click)="goToAssistance(transaction.id)">
+                    <mat-icon>download</mat-icon>
+                    Consultar Asistencias
+                  </button>
                     <button
                     mat-menu-item *ngIf="transaction.state !== 'ACUERDO POR FIRMAR'" disabled="">
                         Sin Acciones Habilitadas

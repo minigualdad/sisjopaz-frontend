@@ -192,6 +192,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AttendancesByMonthComponent } from './component/attendances-by-month/attendances-by-month.component';
 import { MonthYearSelectorComponent } from './component/month-year-selector/month-year-selector.component';
 import { FormSelectDateComponent } from './component/form-select-date/form-select-date.component';
+import { GroupDateActivityBeneficiaryComponent } from './component/group-date-activity-beneficiary/group-date-activity-beneficiary.component';
+import { SearchBySerialAssistanceComponent } from './component/search-by-serial-assistance/search-by-serial-assistance.component';
+import { ModalReportErrorIaComponent } from './component/modal-report-error-ia/modal-report-error-ia.component';
+import { AssistanceScannerByUserComponent } from './component/assistance-scanner-by-user/assistance-scanner-by-user.component';
+import { AssistanceScannerDetailComponent } from './component/assistance-scanner-detail/assistance-scanner-detail.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -632,6 +637,10 @@ export const routes: Routes = [
                 canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
             },
             {
+                path: 'group-date-activity-beneficiary/:id', component: GroupDateActivityBeneficiaryComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
+            },
+            {
                 path: 'group-component-date-activity-beneficiary-add/:id', component: GroupComponentDateActivityBeneficiaryAddComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
             },
@@ -663,16 +672,13 @@ export const routes: Routes = [
             {
                 path: 'assistance-error', component: AssistanceUploadsFixComponent,
                 canActivate: [RoleGuard], data: {
-                    role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION]
+                    role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL]
                 }
             },
             {
                 path: 'assistance-edit/:id', component: AssistanceEditComponent,
                 canActivate: [RoleGuard], data: {
-                    role: [Roles.DIRECCION, Roles.ADMIN,
-                    Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION,
-                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_SOCIOJURIDICO,
-                    Roles.PROFESIONAL_PSICOSOCIAL, Roles.GESTORES_SOCIALES]
+                    role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL]
                 }
             },
             {
@@ -791,11 +797,21 @@ export const routes: Routes = [
                     Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
             },
             {
-                path: 'prueba/:id', component: AsssitanceDetectedComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.COORDINACION] }
+                path: 'find-serial', component: SearchBySerialAssistanceComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, , Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,  
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
             },
-            
-
+            {
+                path: 'assistance-scanner-by-group/:id', component: AssistanceScannerByUserComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, , Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,  
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
+            },
+            {
+                path: 'assistance-scanner-detail/:id', component: AssistanceScannerDetailComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
+            },
         ]
     },
     { path: '**', component: NotFoundComponent },
@@ -965,6 +981,11 @@ export const routes: Routes = [
         AssistanceEditComponent,
         AttendancesByMonthComponent,
         MonthYearSelectorComponent,
+        GroupDateActivityBeneficiaryComponent,
+        SearchBySerialAssistanceComponent,
+        ModalReportErrorIaComponent,
+        AssistanceScannerByUserComponent,
+        AssistanceScannerDetailComponent
     ],
     imports: [
         RouterModule.forRoot(routes),

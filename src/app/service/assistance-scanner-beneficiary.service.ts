@@ -86,4 +86,27 @@ export class AssistanceScannerBeneficiaryService {
   fixMistakeError( assistanceScannerId:number, surveyId:number, assistance:string, observation:string, dateActivity:Date){
     return this._httpClient.post(`${environment.apiUrl}/app/assistanceScannerBeneficiary/fixMistakeError`, { assistanceScannerId, surveyId, assistance, observation, dateActivity});
   }
+
+  findByAssistanceScannerId(assistanceScannerId:number){
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScannerBeneficiary/findByAssistanceScannerId `, {assistanceScannerId}).pipe(
+      map((response:any) =>{
+        return response.assistanceScanner.map((survey: any) => ({
+          id: survey.id,
+          identificationType: survey.Survey.identificationType,
+          identification: survey.Survey.identification,
+          assistanceSignDate: survey.assistanceSignDate,
+          firstName: survey.Survey.firstName,
+          secondName: survey.Survey.secondName,
+          firstLastName: survey.Survey.firstLastName,
+          secondLastName: survey.Survey.secondLastName,
+          recordType: survey.recordType,
+          // También puedes incluir otros campos si los necesitas
+          state: survey.state,
+          userId: survey.userId,
+          urlFileImageOriginal : `${environment.apiUrl}/${survey.AssistanceScanner.urlFileImageOriginal}`,
+          urlFileImageProcessed : `${environment.apiUrl}/${survey.AssistanceScanner.urlFileImageProcessed}`,
+        }));
+      })
+    );
+  }
 }

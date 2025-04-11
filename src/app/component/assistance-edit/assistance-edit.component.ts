@@ -23,7 +23,6 @@ export class AssistanceEditComponent implements OnInit{
   enviroment = environment.apiUrl;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private router: Router,
     private assistanceScannerService: AssistanceScannerService,
     private _assistanceScannerBeneficiary: AssistanceScannerBeneficiaryService,
     private fb: FormBuilder

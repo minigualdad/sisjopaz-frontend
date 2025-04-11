@@ -1,0 +1,44 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div class="bg-white w-full max-w-3xl p-6 rounded-lg shadow-lg relative">
+      <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" (click)="closeModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+  
+      <h2 class="text-2xl font-semibold mb-4">Reportar Errores en Planilla</h2>
+  
+      <div class="bg-blue-50 border border-blue-200 text-blue-900 p-4 rounded-md mb-6">
+        <p class="text-sm font-medium">
+          <strong>Por favor especifica los errores encontrados en la planilla:</strong>
+          Enumera los identificadores (IDs) de las filas con error y asegúrate de seleccionarlos en la tabla inferior para que puedan ser gestionados correctamente.
+        </p>
+      </div>
+  
+      <form [formGroup]="reportForm" (ngSubmit)="submitReport()">
+        <div class="mb-6 w-full">
+          <label for="errorDescription" class="block text-sm font-semibold text-gray-700 mb-2">
+            Descripción del error:
+          </label>
+          <textarea
+            id="errorDescription"
+            formControlName="errorDescription"
+            rows="5"
+            class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            placeholder="Describe aquí los errores encontrados..."></textarea>
+  
+          <div *ngIf="errorDescription?.invalid && errorDescription?.touched" class="text-red-500 text-sm mt-1">
+            La descripción es obligatoria.
+          </div>
+        </div>
+  
+        <div class="flex justify-end">
+          <button
+            type="submit"
+            [disabled]="!errorDescription"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-sm font-medium disabled:opacity-50">
+            Enviar reporte
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

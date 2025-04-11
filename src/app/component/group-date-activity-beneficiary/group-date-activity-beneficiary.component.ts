@@ -5,30 +5,26 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { GroupComponentService } from '../../service/group-component.service';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
 import { PaginatorService } from '../../service/paginator.service';
 import Swal from 'sweetalert2';
 
-
 @Component({
-  selector: 'app-group-component-date-activity-beneficiary',
+  selector: 'app-group-date-activity-beneficiary',
   standalone: false,
-  templateUrl: './group-component-date-activity-beneficiary.component.html',
-  styleUrl: './group-component-date-activity-beneficiary.component.scss'
+  templateUrl: './group-date-activity-beneficiary.component.html',
+  styleUrl: './group-date-activity-beneficiary.component.scss'
 })
-export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, AfterViewInit {
+export class GroupDateActivityBeneficiaryComponent implements OnInit, AfterViewInit {
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
     new MatSort();
-  @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   showAddPeriod = false;
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   columns: any = {
-    actions: 'Acciones',
-    select: 'Selección', // Asegurar que el nombre sea 'select'
     id: 'Id',
     groupComponent: 'Componente',
     dateActivity: 'Fecha Citación',
@@ -45,11 +41,11 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
   
   periods: any;
   isFormVisible = false;
-  groupComponent: any = {};
+  surveyId: any = {};
   user: any = {};
   isData: boolean = false;
   groupComponentId = localStorage.getItem('componentId');
-  backRoute = `app/component-group/${this.groupComponentId}`;
+  backRoute = `app/survey`;
   
   totalItems = 0;
   pageSize = 10;
@@ -63,7 +59,6 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
     private router: Router,
-    private groupComponentService: GroupComponentService,
     public dialog: MatDialog,
     private paginatorService: PaginatorService,
     private _groupComponentDateActivityBeneficiaryServiceService: GroupComponentDateActivityBenefiaryService
@@ -71,36 +66,24 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     this.recordsTableColumns = Object.keys(this.columns).filter(col => col !== 'actions' && col !== 'select');
     this.displayedColumns = ['actions', 'select', ...this.recordsTableColumns]; // Acciones primero, luego checkbox y demás columnas
     this.titleService.setTitle('Actividades');
-    this.groupComponent = { id: this.activatedRoute.snapshot.paramMap.get('id') };
+    this.surveyId = this.activatedRoute.snapshot.paramMap.get('id');
+    
   }
 
   /**
   * On init
   */
   ngOnInit(): void {
-    this.showGroupComponent();
-  }
-
-  toggleSelection(id: number) {
-    const index = this.selectedIds.indexOf(id);
-    if (index === -1) {
-      this.selectedIds.push(id);
-    } else {
-      this.selectedIds.splice(index, 1);
+    this.groupComponentDateActivityBeneficiary = {
+      userId: this.surveyId,
+      pageIndex: 0,
+      pageSize: 10, 
     }
-  }
-  
-  // Manejar selección de todos los elementos
-  toggleSelectAll(event: any) {
-    if (event.checked) {
-      this.selectedIds = this.dataSource.data.map((item: any) => item.id);
-    } else {
-      this.selectedIds = [];
-    }
+    this.getAll()
   }
 
   getAll(){
-    this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndUser(this.groupComponentDateActivityBeneficiary).subscribe({
+    this._groupComponentDateActivityBeneficiaryServiceService.getAllByUser(this.groupComponentDateActivityBeneficiary).subscribe({
       next: (response: any) => {
         console.log(response)
         this.dataSource.data = response.groupComponentDateActivityBeneficiaries;
@@ -116,30 +99,18 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     });
   }
 
-  showGroupComponent() {
-    console.log(this.groupComponent.id)
-    this.groupComponentService.show(this.groupComponent.id)
-      .subscribe((response: any) => {
-        console.log(response)
-        this.groupComponent = response.groupComponent;
-        this.groupComponent.group = response.groupComponent.Group?.name;
-        this.groupComponent.component = response.groupComponent.Component?.name;
-      })
-  }
-
   create() {
-    this.router.navigateByUrl(`/app/group-component-date-activity-beneficiary-add/${this.groupComponent.id}`);
   }
 
   async onPageChange(event: PageEvent) {
     this.loading = true;
       this.groupComponentDateActivityBeneficiary = {
-        userId: this.user.id,
-        groupComponentId: this.groupComponent.id,
+        userId: this.surveyId,
         pageIndex: event.pageIndex,
         pageSize: event.pageSize, 
       }
-      await this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndUser(this.groupComponentDateActivityBeneficiary).subscribe({
+      console.log(this.groupComponentDateActivityBeneficiary);
+      await this._groupComponentDateActivityBeneficiaryServiceService.getAllByUser(this.groupComponentDateActivityBeneficiary).subscribe({
         next: async (response: any) => {
           this.loading = false;
           this.loadData(response);
@@ -171,17 +142,6 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
             dateActivity: `${activity.dateActivity} - ${formattedDay}`
         };
     });
-  }
-
-  async onSelectSurvey(event: any) {
-    this.user.id = event.id;
-    this.groupComponentDateActivityBeneficiary = {
-      userId: this.user.id,
-      groupComponentId: this.groupComponent.id,
-      pageIndex: 0,
-      pageSize: 10, 
-    }
-    await this.getAll();
   }
 
   /**
@@ -224,6 +184,7 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
       console.warn('No se recibieron períodos válidos:', emittedPeriods);
     }
   }
+
   getRowBorderColor(hasAssitence: string | null | undefined): string {
     if (!hasAssitence || hasAssitence.trim().toLowerCase() === '') {
       return '!bg-red-200'; // Fondo rojo cuando el valor es null o vacío

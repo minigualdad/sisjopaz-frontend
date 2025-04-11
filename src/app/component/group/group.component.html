@@ -19,6 +19,12 @@
                             <mat-icon class="icon-size-5 text-white">add</mat-icon>
                             <span class="ml-2 text-white font-bold">Crear</span>
                         </button>
+
+                        <button *ngIf="user && (user.role === 'ENLACE_REGIONAL' || user.role === 'DIRECCION' || user.role === 'ADMIN')" class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                        (click)="downloadAllAssistance()">
+                        <mat-icon class="icon-size-5 text-white">download</mat-icon>
+                        <span class="ml-2 text-white font-bold">Descargar Asistencias</span>
+                    </button>
                     </div>
                 </div>
 
@@ -65,6 +71,11 @@
                                             <mat-icon>assignment</mat-icon>    
                                             Administrar Componentes    
                                             </button>
+                                            <button mat-menu-item
+                                            (click)="goToAssistanceScanner(transaction.id)">
+                                            <mat-icon>library_books</mat-icon>
+                                            <span>Planillas Cargadas</span>
+                                        </button>
                                             <button
                                             mat-menu-item [routerLink]="['/app', 'assistance-scanner-beneficiary']">
                                             <mat-icon>assignment_turned_in</mat-icon>

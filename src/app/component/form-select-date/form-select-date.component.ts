@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder} from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
-import { SurveyService } from '../../service/survey.service';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
+import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-form-select-date',
@@ -17,18 +17,23 @@ export class FormSelectDateComponent {
   monthSelected: any;
   yearSelected: any;
   loading: boolean = false;
+  user: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<FormSelectDateComponent>,
     private groupComponentDateActivityBeneficiaryService: GroupComponentDateActivityBenefiaryService,
+    private userService: UserService
   ) {
 
   }
 
   ngOnInit(): void {
-    this.initializeMonthYearOptions();
+    this.userService.getUser().subscribe((response: any) => {
+      this.user = response.user;
+      this.initializeMonthYearOptions();
+    });
   }
 
   async onSelectYearMonth(event: any) {
@@ -57,12 +62,115 @@ export class FormSelectDateComponent {
     );
   }
 
-    onSubmit(): void {
+  onSubmit(): void {
+    if (this.data) {
+      this.loading = true;
+      const month = this.monthSelected;
+      const year = this.yearSelected;
+      const data = { period: `${year}-${month}`, groupId: this.data.id };
+      this.groupComponentDateActivityBeneficiaryService.assistanceBenficiariesByGroup(data).subscribe({
+        next: (response: Blob) => {
+          const url = window.URL.createObjectURL(response);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `Asistencia-${year}-${month}.xlsx`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Descarga completada',
+            text: 'El archivo se descargó correctamente.',
+            confirmButtonText: 'Continuar',
+          }).then(() => {
+            this.loading = false;
+            this.dialogRef.close();
+          });
+        },
+        error: (error) => {
+          processBlobAndShowSwal(error.error)
+            .then()
+            .catch((error) => {
+              console.log(error);
+              Swal.fire({
+                icon: 'warning',
+                title: 'No se pudo generar el archivo',
+                text: `Ocurrió un problema durante la descarga. No determinado`,
+                confirmButtonText: 'Intentar nuevamente',
+              });
+            });
+          this.loading = false;
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'Este proceso puede tardar',
+        text: 'Dependiendo de la cantidad de datos, la descarga podría demorar. ¿Deseas continuar?',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, continuar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.loading = true;
+          const month = this.monthSelected;
+          const year = this.yearSelected;
+          const data = { period: `${year}-${month}` };
+          this.groupComponentDateActivityBeneficiaryService.assistanceBenficiariesAll(data).subscribe({
+            next: (response: Blob) => {
+              const url = window.URL.createObjectURL(response);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `Asistencia-${year}-${month}.xlsx`;
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              this.loading = false;
+              Swal.fire({
+                icon: 'success',
+                title: 'Descarga completada',
+                text: 'El archivo se descargó correctamente.',
+                confirmButtonText: 'Continuar',
+              }).then(() => {
+                this.dialogRef.close();
+              });
+            },
+            error: (error) => {
+              processBlobAndShowSwal(error.error)
+                .then()
+                .catch((error) => {
+                  console.log(error);
+                  Swal.fire({
+                    icon: 'warning',
+                    title: 'No se pudo generar el archivo',
+                    text: `Ocurrió un problema durante la descarga. No determinado`,
+                    confirmButtonText: 'Intentar nuevamente',
+                  });
+                });
+              this.loading = false;
+            },
+          });
+        }
+      });
+    }
+  }
+
+  onSubmitRegionalLink(): void {
+    Swal.fire({
+      icon: 'info',
+      title: 'Este proceso puede tardar',
+      text: 'Dependiendo de la cantidad de datos, la descarga podría demorar. ¿Deseas continuar?',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, continuar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.loading = true;
         const month = this.monthSelected;
         const year = this.yearSelected;
-        const data = {period: `${year}-${month}`, groupId: this.data.id};
-        this.loading = true;
-        this.groupComponentDateActivityBeneficiaryService.assistanceBenficiariesByGroup(data).subscribe({
+        const data = { period: `${year}-${month}` };
+        this.groupComponentDateActivityBeneficiaryService.assistanceBenficiariesByRegion(data).subscribe({
           next: (response: Blob) => {
             const url = window.URL.createObjectURL(response);
             const a = document.createElement('a');
@@ -71,35 +179,34 @@ export class FormSelectDateComponent {
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
-  
+            this.loading = false;
             Swal.fire({
               icon: 'success',
               title: 'Descarga completada',
               text: 'El archivo se descargó correctamente.',
               confirmButtonText: 'Continuar',
             }).then(() => {
-              this.loading = false;
-  
               this.dialogRef.close();
             });
           },
           error: (error) => {
             processBlobAndShowSwal(error.error)
-            .then()
-            .catch((error) => {
-              console.log(error);
-              Swal.fire({
-                icon: 'warning',
-                title: 'No se pudo generar la planilla',
-                text: `Ocurrió un problema durante la descarga. No determinado`,
-                confirmButtonText: 'Intentar nuevamente',
-              });  
-            });
+              .then()
+              .catch((error) => {
+                console.log(error);
+                Swal.fire({
+                  icon: 'warning',
+                  title: 'No se pudo generar el archivo',
+                  text: `Ocurrió un problema durante la descarga. No determinado`,
+                  confirmButtonText: 'Intentar nuevamente',
+                });
+              });
             this.loading = false;
           },
         });
-    }
-
+      }
+    });
+  }
 
   closeDialog(): void {
     this.dialogRef.close();

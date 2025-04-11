@@ -9,34 +9,37 @@ import { GroupComponentService } from '../../service/group-component.service';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
 import { PaginatorService } from '../../service/paginator.service';
 import Swal from 'sweetalert2';
-
+import { AssistanceScannerBeneficiaryService } from '../../service/assistance-scanner-beneficiary.service';
 
 @Component({
-  selector: 'app-group-component-date-activity-beneficiary',
+  selector: 'app-assistance-scanner-detail',
   standalone: false,
-  templateUrl: './group-component-date-activity-beneficiary.component.html',
-  styleUrl: './group-component-date-activity-beneficiary.component.scss'
+  templateUrl: './assistance-scanner-detail.component.html',
+  styleUrl: './assistance-scanner-detail.component.scss'
 })
-export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, AfterViewInit {
+export class AssistanceScannerDetailComponent implements OnInit, AfterViewInit {
+  
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
     new MatSort();
-  @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   showAddPeriod = false;
+  showImg = false;
+  assistance:any;
+  showFormError =false;
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   columns: any = {
-    actions: 'Acciones',
-    select: 'Selección', // Asegurar que el nombre sea 'select'
     id: 'Id',
-    groupComponent: 'Componente',
-    dateActivity: 'Fecha Citación',
-    hasAssitence: 'Asistencía',
-    user: 'Beneficiario',
-    userIdentification: 'Identificación del Beneficiario',
-    userIdentificationType: 'Tipo de Identificación del Beneficiario',
-    state: 'Estado',
+    assistanceSignDate: 'Fecha Citación',
+    recordType: 'Tipo de Registro',
+    identification: 'Identificación del Beneficiario',
+    identificationType: 'Tipo de Identificación del Beneficiario',
+    firstName: 'Primer Nombre',
+    secondName: 'Segundo Nombre',
+    firstLastName: 'Primer Apellido',
+    secondLastName: 'Segundo Apellido',
   };
   
   selectedIds: number[] = [];
@@ -45,11 +48,12 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
   
   periods: any;
   isFormVisible = false;
-  groupComponent: any = {};
+  surveyId: any = {};
+  assistanceScannerId:number;
   user: any = {};
   isData: boolean = false;
   groupComponentId = localStorage.getItem('componentId');
-  backRoute = `app/component-group/${this.groupComponentId}`;
+  backRoute = `app/survey`;
   
   totalItems = 0;
   pageSize = 10;
@@ -63,47 +67,59 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
     private router: Router,
-    private groupComponentService: GroupComponentService,
     public dialog: MatDialog,
     private paginatorService: PaginatorService,
+    private _assistanceScannerBeneficiaryService : AssistanceScannerBeneficiaryService,
     private _groupComponentDateActivityBeneficiaryServiceService: GroupComponentDateActivityBenefiaryService
   ) {
     this.recordsTableColumns = Object.keys(this.columns).filter(col => col !== 'actions' && col !== 'select');
-    this.displayedColumns = ['actions', 'select', ...this.recordsTableColumns]; // Acciones primero, luego checkbox y demás columnas
+    this.displayedColumns = ['select', ...this.recordsTableColumns]; // Acciones primero, luego checkbox y demás columnas
     this.titleService.setTitle('Actividades');
-    this.groupComponent = { id: this.activatedRoute.snapshot.paramMap.get('id') };
+    this.assistanceScannerId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    
   }
 
   /**
   * On init
   */
   ngOnInit(): void {
-    this.showGroupComponent();
+    this.groupComponentDateActivityBeneficiary = {
+      userId: this.surveyId,
+      pageIndex: 0,
+      pageSize: 10, 
+    }
+    this.getAll()
   }
 
-  toggleSelection(id: number) {
-    const index = this.selectedIds.indexOf(id);
-    if (index === -1) {
-      this.selectedIds.push(id);
-    } else {
-      this.selectedIds.splice(index, 1);
-    }
+  closeModal(event:any){
+    this.showFormError = event;
   }
-  
-  // Manejar selección de todos los elementos
-  toggleSelectAll(event: any) {
-    if (event.checked) {
-      this.selectedIds = this.dataSource.data.map((item: any) => item.id);
-    } else {
-      this.selectedIds = [];
-    }
+
+  report() {
+    Swal.fire({
+      title: '¿Deseas reportar un error?',
+      text: 'Saldrás de esta pantalla para especificar el error encontrado',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Reportar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.showFormError = true;
+      }
+    });
+  }
+
+  showImage(){
+    this.showImg = !this.showImg;
   }
 
   getAll(){
-    this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndUser(this.groupComponentDateActivityBeneficiary).subscribe({
+    this._assistanceScannerBeneficiaryService.findByAssistanceScannerId(this.assistanceScannerId).subscribe({
       next: (response: any) => {
-        console.log(response)
-        this.dataSource.data = response.groupComponentDateActivityBeneficiaries;
+        this.dataSource.data = response;
         this.loadData(response)
         this.loading = false;
         if (this.dataSource.data.length > 0) {
@@ -116,40 +132,7 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     });
   }
 
-  showGroupComponent() {
-    console.log(this.groupComponent.id)
-    this.groupComponentService.show(this.groupComponent.id)
-      .subscribe((response: any) => {
-        console.log(response)
-        this.groupComponent = response.groupComponent;
-        this.groupComponent.group = response.groupComponent.Group?.name;
-        this.groupComponent.component = response.groupComponent.Component?.name;
-      })
-  }
-
   create() {
-    this.router.navigateByUrl(`/app/group-component-date-activity-beneficiary-add/${this.groupComponent.id}`);
-  }
-
-  async onPageChange(event: PageEvent) {
-    this.loading = true;
-      this.groupComponentDateActivityBeneficiary = {
-        userId: this.user.id,
-        groupComponentId: this.groupComponent.id,
-        pageIndex: event.pageIndex,
-        pageSize: event.pageSize, 
-      }
-      await this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndUser(this.groupComponentDateActivityBeneficiary).subscribe({
-        next: async (response: any) => {
-          this.loading = false;
-          this.loadData(response);
-        },
-        error: (err) => {
-          this.loading = false;
-          console.error("Error en la solicitud: ", err);
-        }
-      });
-    // Puedes realizar una acción, como cargar nuevos datos
   }
 
   /**
@@ -173,17 +156,6 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     });
   }
 
-  async onSelectSurvey(event: any) {
-    this.user.id = event.id;
-    this.groupComponentDateActivityBeneficiary = {
-      userId: this.user.id,
-      groupComponentId: this.groupComponent.id,
-      pageIndex: 0,
-      pageSize: 10, 
-    }
-    await this.getAll();
-  }
-
   /**
   * Track by function for ngFor loops
   *
@@ -204,7 +176,6 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
 
   async loadData(response: any) {
     this.dataSource.data = this.transformDateActivities(response);
-    console.log(this.dataSource.data, 'transformed data');
     this.totalSize = response?.total;
     await this.timer(100);
     this.dataSource.sort = this.recordsTableMatSort;
@@ -224,6 +195,7 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
       console.warn('No se recibieron períodos válidos:', emittedPeriods);
     }
   }
+
   getRowBorderColor(hasAssitence: string | null | undefined): string {
     if (!hasAssitence || hasAssitence.trim().toLowerCase() === '') {
       return '!bg-red-200'; // Fondo rojo cuando el valor es null o vacío

@@ -107,7 +107,6 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
-
       },
     });
   }
@@ -132,6 +131,10 @@ export class SurveyComponent implements OnInit, AfterViewInit {
         alert('Hubo un error al descargar el PDF.');
       },
     });
+  }
+
+  goToAssistance(id: number) {
+    this.router.navigateByUrl(`/app/group-date-activity-beneficiary/${id}`);
   }
 
   downloadPDFMonitoring(monitoringId: number) {

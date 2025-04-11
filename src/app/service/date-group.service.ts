@@ -21,12 +21,39 @@ export class DateGroupService {
             } if (dateGroup.state === 'DISABLED') {
               dateGroup.state = 'Inactivo';
             }
+
+            dateGroup.weekDays = this.getWeekDays(dateGroup.weekDays)
             return dateGroup;
           })
           return response;
         })
       )
   }
+
+  getWeekDays(input: string | number[]): string {
+    const days = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+    let numbers: number[] = [];
+
+    if (Array.isArray(input)) {
+        numbers = input;
+    } else if (typeof input === 'string') {
+        const cleanedInput = input.replace(/[\[\]\s]/g, '');
+        numbers = cleanedInput.split(',')
+            .map(num => parseInt(num.trim(), 10))
+            .filter(num => !isNaN(num));
+    } else {
+        console.error("❌ Error: Invalid input. Expected string or number[].");
+        return "";
+    }
+
+    const selectedDays = numbers
+        .filter(num => num >= 1 && num <= 7)
+        .map(num => days[num - 1]);
+
+    return selectedDays.join(', ');
+}
+
+
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   show(id: number) {
