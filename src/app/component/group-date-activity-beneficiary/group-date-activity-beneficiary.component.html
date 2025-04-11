@@ -78,8 +78,7 @@
   
           <!-- Definir las filas usando displayedColumns -->
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
-              [ngClass]="getRowBorderColor(row.hasAssitence)">
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
           </tr>    
   
         </table>

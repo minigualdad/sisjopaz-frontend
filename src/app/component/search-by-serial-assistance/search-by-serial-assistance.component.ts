@@ -152,7 +152,6 @@ export class SearchBySerialAssistanceComponent implements OnInit, AfterViewInit{
   }
 
   closeModal(event:any){
-    console.log("EVENTO: ",event)
     this.showObservation = event;
   }
 

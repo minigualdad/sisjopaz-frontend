@@ -14,6 +14,18 @@
                         <div class="font-medium tracking-tight text-secondary">A continuación encontrará la información general de días hábiles</div>
                     </div>
                     <div class="flex items-center ml-6">
+                        <input type="file" #fileInput hidden (change)="updateProcess($event)" />
+                        <button class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl"
+                                mat-flat-button primary
+                                (click)="fileInput.click()">
+                            <mat-icon class="icon-size-5 text-white">add</mat-icon>
+                            <span class="ml-2 text-white font-bold">Actualizar Proceso</span>
+                        </button>
+                        <button class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                            (click)="generateProcess()">
+                            <mat-icon class="icon-size-5 text-white">add</mat-icon>
+                            <span class="ml-2 text-white font-bold">Generar Proceso</span>
+                        </button>
                         <button class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
                             (click)="create()">
                             <mat-icon class="icon-size-5 text-white">add</mat-icon>

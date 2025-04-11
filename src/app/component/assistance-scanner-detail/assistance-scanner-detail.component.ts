@@ -196,14 +196,8 @@ export class AssistanceScannerDetailComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getRowBorderColor(hasAssitence: string | null | undefined): string {
-    if (!hasAssitence || hasAssitence.trim().toLowerCase() === '') {
-      return '!bg-red-200'; // Fondo rojo cuando el valor es null o vacío
-    } else if (hasAssitence.trim().toLowerCase() === 'si' || hasAssitence.trim().toLowerCase() === 'asistió') {
-      return '!bg-green-200'; // Fondo verde si asistió
-    } else {
-      return '!bg-red-200'; // Si no coincide, también rojo
-    }
+  getRowBorderColor(): string {
+    return '!bg-green-200';
   }
 
     async remove(id: number) {

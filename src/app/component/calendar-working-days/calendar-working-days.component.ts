@@ -8,6 +8,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
 import { CalendarService } from '../../service/calendar.service';
+import { SurveyService } from '../../service/survey.service';
 
 @Component({
   selector: 'app-calendar-working-days',
@@ -39,7 +40,8 @@ constructor(
   private titleService: Title,
   private router: Router,
   public dialog: MatDialog,
-  private userService: UserService
+  private userService: UserService,
+  private surveyService: SurveyService
 ) {
   this.recordsTableColumns = Object.keys(this.columns);
   this.titleService.setTitle('Días Hábiles');
@@ -120,4 +122,39 @@ trackByFn(index: number, item: any): any {
 applyFilter(filterValue: string) {
   this.dataSource.filter = filterValue.trim().toLowerCase();
 }
+
+  async generateProcess() {
+    this.surveyService.generateProcess().subscribe({
+      next: (response: any) => {
+        const blob = new Blob([response], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'proceso.zip';
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error al generar el proceso', err);
+      }
+    });
+  }
+
+  async updateProcess(event: any) {
+    const file = event.target.files[0];
+    this.surveyService.updateProcess(file).subscribe({
+      next: (response: any) => {
+          Swal.fire(
+              'Ok!',
+              response.message,
+              'success'
+          );
+      },
+      error: (err) => {
+        console.error('Error al generar el proceso', err);
+      }
+    });
+  }
 }

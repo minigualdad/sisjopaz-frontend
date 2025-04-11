@@ -92,7 +92,6 @@ export class FormSelectDateComponent {
           processBlobAndShowSwal(error.error)
             .then()
             .catch((error) => {
-              console.log(error);
               Swal.fire({
                 icon: 'warning',
                 title: 'No se pudo generar el archivo',
@@ -140,7 +139,6 @@ export class FormSelectDateComponent {
               processBlobAndShowSwal(error.error)
                 .then()
                 .catch((error) => {
-                  console.log(error);
                   Swal.fire({
                     icon: 'warning',
                     title: 'No se pudo generar el archivo',
@@ -193,7 +191,6 @@ export class FormSelectDateComponent {
             processBlobAndShowSwal(error.error)
               .then()
               .catch((error) => {
-                console.log(error);
                 Swal.fire({
                   icon: 'warning',
                   title: 'No se pudo generar el archivo',

@@ -71,10 +71,13 @@ export class AssistanceScannerService {
     .pipe(
       map((response: any) => {
         response.assistanceScanners = response.assistanceScanners.map((assistanceScanner: any) => {
+          const yearMonth = `${assistanceScanner?.AssistanceSheet?.AssistanceGenerate?.year}-${assistanceScanner?.AssistanceSheet?.AssistanceGenerate?.month}`
           assistanceScanner.group = assistanceScanner.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Group?.name;
           assistanceScanner.divipola = assistanceScanner.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Group?.Divipola?.name;
           assistanceScanner.department = assistanceScanner.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Group?.Divipola?.ListDepartment?.name;
           assistanceScanner.component = assistanceScanner.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Component?.name;
+          assistanceScanner.starDay = `${yearMonth}-${assistanceScanner?.AssistanceSheet?.startDay}`;
+          assistanceScanner.endDay = `${yearMonth}-${assistanceScanner?.AssistanceSheet?.endDay}`;
           assistanceScanner.date = assistanceScanner.createdAt.split('T')[0];
 
           return assistanceScanner;

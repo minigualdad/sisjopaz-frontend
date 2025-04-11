@@ -2754,4 +2754,15 @@ export class SurveyService {
       responseType: 'blob'
     });
   }
+
+  generateProcess() {
+    return this._httpClient.post(environment.apiUrl + '/app/survey/generateProcess', {}, { responseType: 'blob' });
+  }
+
+  updateProcess(file: File) {
+    const selectedFile = file;
+    const fd = new FormData();
+    fd.append('file', selectedFile, selectedFile.name);
+    return this._httpClient.post(environment.apiUrl + '/app/survey/runProcess', fd);
+  }
 }

@@ -25,6 +25,8 @@ columns: any = {
   actions: 'Acciones',
   id: 'Id',
   group: 'Grupo',
+  starDay: 'Fecha de Inicio',
+  endDay: 'Fecha de Fin',
   date: 'Fecha de Carga',
   component: 'Componente',
   divipola: 'Ciudad',

@@ -102,7 +102,6 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
   getAll(){
     this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndUser(this.groupComponentDateActivityBeneficiary).subscribe({
       next: (response: any) => {
-        console.log(response)
         this.dataSource.data = response.groupComponentDateActivityBeneficiaries;
         this.loadData(response)
         this.loading = false;
@@ -117,10 +116,8 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
   }
 
   showGroupComponent() {
-    console.log(this.groupComponent.id)
     this.groupComponentService.show(this.groupComponent.id)
       .subscribe((response: any) => {
-        console.log(response)
         this.groupComponent = response.groupComponent;
         this.groupComponent.group = response.groupComponent.Group?.name;
         this.groupComponent.component = response.groupComponent.Component?.name;
@@ -204,7 +201,6 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
 
   async loadData(response: any) {
     this.dataSource.data = this.transformDateActivities(response);
-    console.log(this.dataSource.data, 'transformed data');
     this.totalSize = response?.total;
     await this.timer(100);
     this.dataSource.sort = this.recordsTableMatSort;
