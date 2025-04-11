@@ -38,6 +38,7 @@ export class AssistanceUploadComponent implements OnInit {
     identificationType: 'Tipo de documento',
     identification: 'Numero de Documento',
     assistanceSignDate: 'Fechas de Asistencias',
+    recordType: "Tipo de Registro",
     firstName: 'Primer Nombre',
     secondName: 'Segundo Nombre',
     firstLastName: 'Primer Apellido',
@@ -286,9 +287,11 @@ export class AssistanceUploadComponent implements OnInit {
       const date = new Date(activity.assistanceSignDate + "T00:00:00Z");
       const day = daysOfWeek[date.getUTCDay()];
       const formattedDay = day.charAt(0).toUpperCase() + day.slice(1);
+
       return {
         ...activity,
-        assistanceSignDate: `${activity.assistanceSignDate} - ${formattedDay}`
+        assistanceSignDate: `${activity.assistanceSignDate} - ${formattedDay}`,
+
       };
     });
   }
