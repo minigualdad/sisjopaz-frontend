@@ -163,6 +163,8 @@ export class GroupComponentDateActivityBenefiaryService {
             groupComponentDateActivityBeneficiary.userIdentification = groupComponentDateActivityBeneficiary.UserId?.identification;
             groupComponentDateActivityBeneficiary.userIdentificationType = groupComponentDateActivityBeneficiary.UserId?.identificationType;
             groupComponentDateActivityBeneficiary.dateActivity = groupComponentDateActivityBeneficiary.dateActivity.split('T')[0];
+
+            groupComponentDateActivityBeneficiary.userId = groupComponentDateActivityBeneficiary.userId;
             return groupComponentDateActivityBeneficiary;
           });
           return response;
@@ -219,5 +221,9 @@ export class GroupComponentDateActivityBenefiaryService {
   }
   assistanceBenficiariesByRegion(data: any): Observable<Blob> {
     return this._httpClient.post(environment.apiUrl + '/app/groupComponentDateActivityBeneficiary/downloadAllAssistancesByPeriodAndRegion', { data }, { responseType: 'blob' });
+  }
+
+  updateAssistance(groupComponentDateActivityBeneficiary: any) {
+    return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/updateAssistance`, { groupComponentDateActivityBeneficiary });
   }
 }

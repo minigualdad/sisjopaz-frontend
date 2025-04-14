@@ -133,7 +133,6 @@ export class SearchBySerialAssistanceComponent implements OnInit, AfterViewInit{
   }
 
   transformDatesToSend(data: any) {
-    console.log(data)
     this.assistanceScannerId = Number(data.assistanceBeneficiaries[0].assistanceScannerId);
     const groupedData: any = {};
     data.assistanceBeneficiaries.forEach((item: any) => {

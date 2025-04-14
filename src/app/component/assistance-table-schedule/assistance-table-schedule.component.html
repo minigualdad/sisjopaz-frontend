@@ -1,11 +1,11 @@
-<div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+<div class="w-full overflow-x-auto max-h-[1500px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
     <table class="min-w-full table-auto border-collapse border border-gray-300">
-      <thead>
+      <thead class="sticky">
         <tr class="bg-white bg-gray-100">
-          <th class="px-4 py-2 border sticky left-0 bg-gray-100 z-10 min-w-[200px]">Nombre del Jóven</th>
-          <th class="px-4 py-2 border bg-gray-100 z-10">Tipo Documento</th>
-          <th class="px-4 py-2 border bg-gray-100 z-10">Documento</th>
-          <th *ngFor="let date of uniqueDates" class="px-4 py-2 border whitespace-nowrap">{{ date }}</th>
+          <th class="px-4 py-2 border sticky top-0 bg-gray-100 z-10">Nombre del Jóven</th>
+          <th class="px-4 py-2 border sticky top-0 bg-gray-100 z-10">Tipo Documento</th>
+          <th class="px-4 py-2 border sticky top-0 bg-gray-100 z-10">Documento</th>
+          <th *ngFor="let date of uniqueDates" class="px-4 sticky top-0  py-2 bg-gray-100 border whitespace-nowrap">{{ date }}</th>
         </tr>
       </thead>
       <tbody>
@@ -27,18 +27,20 @@
           </td>
   
           <td *ngFor="let date of uniqueDates" 
-          class="px-4 py-2 border text-center whitespace-nowrap min-w-[120px]"
+          class="px-4 py-2 border text-center whitespace-nowrap min-w-[120px] "
           [ngClass]="getClassForDate(record, date)">
       
         <ng-container *ngIf="getDateObject(record, date) as matchedDate">
-          <div class="font-semibold">
-            {{ matchedDate.hasAssistance 
-                ? 'CITADO - ASISTIÓ' 
-                : 'FALLA' }}
-          </div>
-      
-          <div *ngIf="record.recordType" class="text-xs text-gray-600 italic">
-            ({{ record.recordType }})
+          <div class="font-semibold flex justify-center items-center gap-1">
+            <ng-container *ngIf="matchedDate.hasAssistance" >
+              <span>ASISTIÓ</span>
+              <button (click)="onRemoveClick(record, date)" class="text-xs font-light text-red-700 hover:text-red-900">➖</button>
+            </ng-container>
+        
+            <ng-container *ngIf="!matchedDate.hasAssistance">
+              <span>FALLA</span>
+              <button (click)="onAddClick(record, date)" class="text-xs font-light text-green-700 hover:text-green-900">➕</button>
+            </ng-container>
           </div>
         </ng-container>
       
@@ -56,4 +58,4 @@
         </tr>
       </tbody>
     </table>
-  </div>
+  </div>  

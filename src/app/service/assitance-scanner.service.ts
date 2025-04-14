@@ -19,6 +19,7 @@ export class AssistanceScannerService {
     .pipe(
           map((response: any) => {
             response.response.assistanceScannerBeneficiaries = response.response.assistanceScannerBeneficiaries.map((assistanceScannerBeneficiary: any) => {
+              
               assistanceScannerBeneficiary.firstName = assistanceScannerBeneficiary.Survey?.firstName
               assistanceScannerBeneficiary.secondName = assistanceScannerBeneficiary.Survey?.secondName
               assistanceScannerBeneficiary.firstLastName = assistanceScannerBeneficiary.Survey?.firstLastName
@@ -94,11 +95,11 @@ export class AssistanceScannerService {
     return this._httpClient.post(`${environment.apiUrl}/app/assistanceScanner/fixMistakeError`, {assistanceScannerBeneficiaryId, assistance, observation, dateActivity})
   }
 
-  getAll() {
-    return this._httpClient.get(`${environment.apiUrl}/app/assistanceScanner/getAll`)
+  getAll(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScanner/getAll`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.assistances = response.assistances.map((assistance: any) => {
+          response.assistances.assistances = response.assistances.assistances.map((assistance: any) => {
             const yearMonth = `${assistance?.AssistanceSheet?.AssistanceGenerate?.year}-${assistance?.AssistanceSheet?.AssistanceGenerate?.month}`
             assistance.group = assistance.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Group?.name;
             assistance.divipola = assistance.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Group?.Divipola?.name;

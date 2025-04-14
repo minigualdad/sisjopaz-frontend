@@ -6,6 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AssistanceScannerService } from '../../service/assitance-scanner.service';
+import { PaginatorService } from '../../service/paginator.service';
 
 @Component({
   selector: 'app-asistance-scanner-all',
@@ -33,12 +34,20 @@ columns: any = {
 };
 recordsTableColumns: string[] = [];
 user: any;
+totalItems = 0;
+pageSize = 10;
+pageIndex = 0;
+
+loading = false;
+totalSize = 0;
 
 constructor(
   private assistanceScannerService: AssistanceScannerService,
   private titleService: Title,
   public dialog: MatDialog,
-  private userService: UserService
+  private userService: UserService,
+  private paginatorService: PaginatorService,
+  
 ) {
   this.recordsTableColumns = Object.keys(this.columns);
   this.titleService.setTitle('Asistencias');
@@ -60,17 +69,40 @@ ngOnInit(): void {
 ngAfterViewInit(): void {
   // Make the data source sortable
   this.dataSource.sort = this.recordsTableMatSort;
-  this.dataSource.paginator = this.paginator;
-}
+  this.paginatorService.onPageChange(this.paginator, (pageIndex, pageSize) => {
+    this.assistanceScannerService.getAll(pageIndex, pageSize).subscribe({
+      next: async (response: any) => {
+        this.loadData(response);
+      },
+      error: (err) => {
+        console.error("Error en la solicitud: ", err);
+      }
+    });
+  });}
 
 ngOnDestroy(): void { }
 
 async getAll() {
-  await this.assistanceScannerService.getAll().subscribe({
+  await this.assistanceScannerService.getAll(0, 10).subscribe({
       next: (response: any) => {
-          this.dataSource.data = response.assistances;
+          this.dataSource.data = response.assistances.assistances;
+          this.loadData(response);
+
       },
   });
+}
+
+async loadData(response: any) {
+  this.dataSource.data = response.assistances.assistances;
+  this.totalSize = response?.assistances.total;
+  await this.timer(100);
+  this.dataSource.sort = this.recordsTableMatSort;
+  this.paginator.length = this.totalSize;
+  this.loading = false;
+}
+
+timer(ms: number) {
+  return new Promise(res => setTimeout(res, ms));
 }
 
 /**

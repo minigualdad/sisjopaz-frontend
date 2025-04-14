@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
+import { AssistanceScannerBeneficiaryService } from '../../service/assistance-scanner-beneficiary.service';
 
 @Component({
   selector: 'app-assistance-upload',
@@ -32,6 +33,7 @@ export class AssistanceUploadComponent implements OnInit {
   loading = false;
   showTableData = false;
   imageLoaded: boolean = false;
+  showTableFix = false;
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   columns: any = {
@@ -53,10 +55,11 @@ export class AssistanceUploadComponent implements OnInit {
   reportForm: FormGroup;
   errorDataSource: any;
   assistanceScannerId:number = 0;
-
+  selectedRecordData: { record: any; date: string; hasAssistance: boolean } | null = null;
+  groupComponentId: any;
   constructor(private assistanceScannerService: AssistanceScannerService,
+    private _assistanceScannerBeneficiaryService: AssistanceScannerBeneficiaryService,
     private sanitizer: DomSanitizer,
-    private groupComponentDateActivityBeneficiaryService: GroupComponentDateActivityBenefiaryService,
     private route: Router,
     public dialog: MatDialog,
     private fb: FormBuilder
@@ -223,21 +226,8 @@ export class AssistanceUploadComponent implements OnInit {
     window.location.reload();
   }
 
-  report() {
-    Swal.fire({
-      title: '¿Deseas reportar un error?',
-      text: 'Saldrás de esta pantalla para especificar el error encontrado',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Reportar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.showFormError = true;
-      }
-    });
+  showTables() {
+    this.showTableFix = !this.showTableFix;
   }
 
   getDisplayedColumns(): string[] {
@@ -263,6 +253,8 @@ export class AssistanceUploadComponent implements OnInit {
         next: async (response: any) => {
           this.showTableData = true;
           this.dataSource.data = this.transformDatesToSend(response);
+          this.groupComponentId = response.response.groupComponent?.id;
+          this.assistanceScannerId = response.response.assistanceScannerId.id;
           const imageResult = `${environment.apiUrl}/${response?.response?.imageResult}`;
           this.imageUrl = imageResult
           this.imagePreviewResult = this.sanitizer.bypassSecurityTrustResourceUrl(imageResult);
@@ -284,36 +276,82 @@ export class AssistanceUploadComponent implements OnInit {
 
   }
 
-  transformDatesToSend(data: any) {
-    if(data.response.assistanceScannerBeneficiaries){
-      this.assistanceScannerId = Number(data.response.assistanceScannerId);
-    }
-    const groupedData: any = {};
-    data.response.assistanceScannerBeneficiaries.forEach((item: any) => {
-      const id = item.identification;
-      if (!groupedData[id]) {
-        groupedData[id] = {
-          ...item,
-          dates: [],
-        };
+  getAll(){
+    this._assistanceScannerBeneficiaryService.findByAssistanceScannerId(Number(this.assistanceScannerId)).subscribe({
+      next: (response:any) => {
+        this.dataSource.data = this.transformDatesToSend(response);
+        
+      },
+      error: (error:any) => {
+
       }
-        const dateParts = item.assistanceSignDate.split('-');
-      const year = Number(dateParts[0]);
-      const month = Number(dateParts[1]) - 1;
-      const day = Number(dateParts[2]);
-  
-      const dateObj = new Date(year, month, day);
-      const dayOfWeek = dateObj.toLocaleDateString('es-ES', { weekday: 'long' });
-      const formattedDate = `${item.assistanceSignDate} (${dayOfWeek})`;
-  
-      groupedData[id].dates.push(formattedDate);
-    });
+    })
+  }
+
+  reciveReload(event: boolean){
+    if(event){
+      this.getAll();
+    }
+  }
+
+  transformDatesToSend(data: any) {
+    const groupedData: any = {};
+    if(data.response){
+      this.assistanceScannerId = Number(data.response.assistanceScannerId);
+      data.response.assistanceScannerBeneficiaries.forEach((item: any) => {
+        const id = item.identification;
+        if (!groupedData[id]) {
+          groupedData[id] = {
+            ...item,
+            dates: [],
+          };
+        } 
+          const dateParts = item.assistanceSignDate.split('-');
+        const year = Number(dateParts[0]);
+        const month = Number(dateParts[1]) - 1;
+        const day = Number(dateParts[2]);
+    
+        const dateObj = new Date(year, month, day);
+        const dayOfWeek = dateObj.toLocaleDateString('es-ES', { weekday: 'long' });
+        const formattedDate = `${item.assistanceSignDate} (${dayOfWeek})`;
+    
+        groupedData[id].dates.push(formattedDate);
+      });
+    }else{
+      data.assistanceBeneficiaries.forEach((item: any) => {
+        const id = item.identification;
+        if (!groupedData[id]) {
+          groupedData[id] = {
+            ...item,
+            dates: [],
+          };
+        } 
+          const dateParts = item.assistanceSignDate.split('-');
+        const year = Number(dateParts[0]);
+        const month = Number(dateParts[1]) - 1;
+        const day = Number(dateParts[2]);
+    
+        const dateObj = new Date(year, month, day);
+        const dayOfWeek = dateObj.toLocaleDateString('es-ES', { weekday: 'long' });
+        const formattedDate = `${item.assistanceSignDate} (${dayOfWeek})`;
+    
+        groupedData[id].dates.push(formattedDate);
+      });
+    }
   
     return Object.values(groupedData);
   }
   
   redirectTo(url: string) {
     this.route.navigateByUrl(url)
+  }
+
+  handleMinus(event: { record: any, date: string }) {
+    this.selectedRecordData = { ...event, hasAssistance: false };
+  }
+
+  handlePlus(event: { record: any, date: string }) {
+    this.selectedRecordData = { ...event, hasAssistance: true };
   }
 
 }

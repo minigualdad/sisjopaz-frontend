@@ -12,8 +12,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AssistanceFixComponent {
   @Input() groupComponentId: any;
+  @Input() assistanceScannerId: any;
   @Output() dataSentListen: EventEmitter<number> = new EventEmitter();
   @Input() recordData: { record: any; date: string; hasAssistance: boolean } | null = null;
+  @Output() reloadTable = new EventEmitter<boolean>();
 
   loading = false;
   form: FormGroup;
@@ -61,7 +63,7 @@ asistencia = null;
       this.form.patchValue({
         userId: record.userId,
         dateActivity: date,
-        hasAssitence: hasAssistance
+        hasAssitence: hasAssistance,
       });
       this.create();
     }
@@ -69,7 +71,12 @@ asistencia = null;
 
   create() {
     this.assistanceScanner.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    this.form.controls['assistanceScannerId'].setValue(this.assistanceScanner.id);
+    if(this.assistanceScanner.id === 0) {
+      this.form.controls['assistanceScannerId'].setValue(this.assistanceScannerId);
+    } else {
+      this.form.controls['assistanceScannerId'].setValue(this.assistanceScanner.id);
+    }  
+
     if (this.form.invalid) return;
     this.groupComponentDateActivityBenefiaryService.createAssistance(this.form.value).subscribe({
       next: (response: any) => {
@@ -94,5 +101,6 @@ asistencia = null;
 
   dataSent() {
     this.dataSentListen.emit();
+    this.reloadTable.emit(true);
   }
 }

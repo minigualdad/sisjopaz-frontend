@@ -63,6 +63,7 @@ export class AttendancesByMonthComponent {
   yearSelected: any;
   server: any = environment.apiUrl + '/app/survey/files/';
   
+  dataForUpdate: any = {}
   
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -99,10 +100,10 @@ export class AttendancesByMonthComponent {
 
 
   async getAll(){
+    this.loading = true;
     await this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndDate(this.groupComponentDateActivityBeneficiary).subscribe({
       next: async (response: any) => {
         this.loading = false;
-
 
         if (!response.groupComponentDateActivityBeneficiaries || response.groupComponentDateActivityBeneficiaries.length === 0) {
           await Swal.fire({
@@ -167,13 +168,14 @@ export class AttendancesByMonthComponent {
 
   transformDatesToSend(data: any) {
     const groupedData: any = {};
-  
-    data.groupComponentDateActivityBeneficiaries.forEach((item: any) => {
+    
+    data.groupComponentDateActivityBeneficiaries?.forEach((item: any) => {
       const user = item.UserId;
       const id = user?.identification;
   
       if (!groupedData[id]) {
         groupedData[id] = {
+          id: user?.id,
           identification: user?.identification,
           identificationType: user?.identificationType,
           firstName: user?.firstName,
@@ -182,7 +184,9 @@ export class AttendancesByMonthComponent {
           secondLastName: user?.secondLastName,
           name: user?.firstName,
           dates: [],
-          recordType: item.recordType || null
+          recordType: item.recordType || null,
+          plainDate: item.dateActivity,
+          hasAssistance: item.hasAssitence == 'ASISTIÓ' ? true : false
         };
       }
   
@@ -198,7 +202,7 @@ export class AttendancesByMonthComponent {
       if (!alreadyExists) {
         groupedData[id].dates.push({
           date: formattedDate,
-          hasAssistance: item.hasAssitence || ''
+          hasAssistance: item.hasAssitence == 'ASISTIÓ' ? true : false,
         });
       }
     });
@@ -285,7 +289,6 @@ export class AttendancesByMonthComponent {
     this.totalSize = response?.total;
     await this.timer(100);
     this.dataSource.sort = this.recordsTableMatSort;
-    this.paginator.length = this.totalSize;
     this.loading = false;
   }
 
@@ -364,6 +367,74 @@ export class AttendancesByMonthComponent {
           text: 'No se encontró una planilla cargada para esta fecha',
           confirmButtonText: 'Aceptar'
         });
+      });
+    }
+
+    handleRemove(event: { record: any, date: string }) {
+      const cleanDate = event.date.split(' ')[0];
+      this.dataForUpdate = { 
+        groupComponentId: this.groupComponent.id,
+        dateActivity: cleanDate, 
+        hasAssistance: true,
+        userId: event.record.id,
+      };
+      Swal.fire({
+        title: 'Confirmación',
+        text: 'Confirmo que deseo cambiar el estado de la asistencia del beneficiario y que ya cuento con la planilla de soporte digitalizada en SISJOPAZ.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.updateAssistance();
+        } else {
+        }
+      });
+    }
+  
+    handleAdd(event: { record: any, date: string }) {
+      const cleanDate = event.date.split(' ')[0];
+      this.dataForUpdate = { 
+        groupComponentId: this.groupComponent.id,
+        dateActivity: cleanDate, 
+        hasAssistance: false,
+        userId: event.record.id,
+      };
+      Swal.fire({
+        title: 'Confirmación',
+        text: 'Confirmo que deseo cambiar el estado de la asistencia del beneficiario y que ya cuento con la planilla de soporte digitalizada en SISJOPAZ.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.updateAssistance();
+        } else {
+        }
+      });
+    }
+
+    async updateAssistance(){
+      // this.loading = true;
+      await this._groupComponentDateActivityBeneficiaryServiceService.updateAssistance(this.dataForUpdate).subscribe({
+        next: async (response: any) => {
+          this.dataSource.data.forEach((item: any) => {
+            if(item.id == this.dataForUpdate.userId){
+              item.dates.forEach((date: any) => {
+                if(date.date.split(' ')[0] == this.dataForUpdate.dateActivity){
+                  date.hasAssistance = !this.dataForUpdate.hasAssistance;
+                }
+              });
+            }
+          });
+          this.loading = false;
+        },
+        error: (err) => {
+          this.loading = false;
+          console.error("Error en la solicitud: ", err);
+        }
       });
     }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-assistance-table-schedule',
@@ -8,8 +8,12 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 })
 export class AssistanceTableScheduleComponent {
   @Input() records: any[] = [];
+  @Output() removeClicked = new EventEmitter<{ record: any, date: string }>();
+  @Output() addClicked = new EventEmitter<{ record: any, date: string }>();
+  @Output() reloadRecords = new EventEmitter<boolean>();
 
   columns: any = {
+    id: 'id',
     identificationType: 'Tipo de documento',
     identification: 'Numero de Documento',
     firstName: 'Primer Nombre',
@@ -19,6 +23,7 @@ export class AssistanceTableScheduleComponent {
     name: 'Nombre',
     assistanceSignDate: 'Fecha Citación',
     recordType: 'Tipo de Registro',
+    plainDate: 'Fecha',
   };
 
   uniqueDates: string[] = [];
@@ -62,5 +67,15 @@ export class AssistanceTableScheduleComponent {
     if (dateObj?.hasAssistance) return 'bg-green-100 text-green-700';
     if (record.dates.some((d: any) => d.date === date)) return 'bg-red-100 text-red-700';
     return 'bg-yellow-100';
+  }
+
+  onRemoveClick(record: any, date: string) {
+    this.removeClicked.emit({ record, date });
+    this.reloadRecords.emit(false);
+  }
+  
+  onAddClick(record: any, date: string) {
+    this.addClicked.emit({ record, date });
+    this.reloadRecords.emit(true);
   }
 }

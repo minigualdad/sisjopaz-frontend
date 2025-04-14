@@ -74,11 +74,11 @@
             </div>
         </div>
 
-        <app-assistance-table 
+        <app-assistance-table-fixed 
             [records]="dataSource.data"
             (minusClicked)="handleMinus($event)"
             (plusClicked)="handlePlus($event)">
-        ></app-assistance-table>
+        ></app-assistance-table-fixed>
         <app-assistance-fix
             [groupComponentId]="groupComponentId"
             [recordData]="selectedRecordData"

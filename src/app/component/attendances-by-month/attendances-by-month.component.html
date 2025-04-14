@@ -18,7 +18,11 @@
         </div>
       </div>
 
-      <app-assistance-table-schedule *ngIf="dataSource.data.length > 0" [records]="dataSource.data"></app-assistance-table-schedule>
+      <app-assistance-table-schedule *ngIf="dataSource.data.length > 0" 
+        [records]="dataSource.data" 
+        (removeClicked)="handleRemove($event)"
+        (addClicked)="handleAdd($event)">
+      </app-assistance-table-schedule>
   
     </div>
   </div>
@@ -27,4 +31,5 @@
   
   </app-group-component-date-activity-beneficiary-add>
   
+<app-loading *ngIf="loading"></app-loading>
   

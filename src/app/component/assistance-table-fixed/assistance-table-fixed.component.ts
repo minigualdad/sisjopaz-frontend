@@ -1,15 +1,18 @@
 import { Component, Input, Output, EventEmitter,  SimpleChanges } from '@angular/core';
+import { AssistanceScannerBeneficiaryService } from '../../service/assistance-scanner-beneficiary.service';
 
 @Component({
-  selector: 'app-assistance-table',
+  selector: 'app-assistance-table-fixed',
   standalone: false,
-  templateUrl: './assistance-table.component.html',
-  styleUrl: './assistance-table.component.scss'
+  templateUrl: './assistance-table-fixed.component.html',
+  styleUrl: './assistance-table-fixed.component.scss'
 })
-export class AssistanceTableComponent {
+export class AssistanceTableFixedComponent {
   @Input() records: any[] = [];
+  // @Input() assistanceScannerId: number;
   @Output() minusClicked = new EventEmitter<{ record: any, date: string }>();
   @Output() plusClicked = new EventEmitter<{ record: any, date: string }>();
+  @Output() reloadRecords = new EventEmitter<boolean>();
 
   columns: any = {
     identificationType: 'Tipo de documento',
@@ -23,12 +26,19 @@ export class AssistanceTableComponent {
 
   uniqueDates: string[] = [];
 
+  constructor(){
+
+  }
+
   ngOnInit(): void {
     this.getDates();
   }
 
     ngOnChanges(changes: SimpleChanges): void {
       if (changes['records']) {
+        // if(this.records.assistanceScannerId === 0) {
+
+        // }
         this.getDates();
       }
     }
@@ -41,10 +51,12 @@ export class AssistanceTableComponent {
 
   onMinusClick(record: any, date: string) {
     this.minusClicked.emit({ record, date });
+    this.reloadRecords.emit(true);
   }
   
   onPlusClick(record: any, date: string) {
     this.plusClicked.emit({ record, date });
+    this.reloadRecords.emit(true);
   }
   
   
