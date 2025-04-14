@@ -79,7 +79,6 @@ export class AssistanceScannerService {
           assistanceScanner.starDay = `${yearMonth}-${assistanceScanner?.AssistanceSheet?.startDay}`;
           assistanceScanner.endDay = `${yearMonth}-${assistanceScanner?.AssistanceSheet?.endDay}`;
           assistanceScanner.date = assistanceScanner.createdAt.split('T')[0];
-
           return assistanceScanner;
         })
         return response
@@ -93,5 +92,26 @@ export class AssistanceScannerService {
 
   sendFixError(assistanceScannerBeneficiaryId:number, assistance:string | null, observation:string, dateActivity: Date){
     return this._httpClient.post(`${environment.apiUrl}/app/assistanceScanner/fixMistakeError`, {assistanceScannerBeneficiaryId, assistance, observation, dateActivity})
+  }
+
+  getAll() {
+    return this._httpClient.get(`${environment.apiUrl}/app/assistanceScanner/getAll`)
+      .pipe(
+        map((response: any) => {
+          response.assistances = response.assistances.map((assistance: any) => {
+            const yearMonth = `${assistance?.AssistanceSheet?.AssistanceGenerate?.year}-${assistance?.AssistanceSheet?.AssistanceGenerate?.month}`
+            assistance.group = assistance.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Group?.name;
+            assistance.divipola = assistance.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Group?.Divipola?.name;
+            assistance.department = assistance.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Group?.Divipola?.ListDepartment?.name;
+            assistance.component = assistance.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Component?.name;
+            assistance.startDay = `${yearMonth}-${assistance?.AssistanceSheet?.startDay}`;
+            assistance.endDay = `${yearMonth}-${assistance?.AssistanceSheet?.endDay}`;
+            assistance.date = assistance.createdAt.split('T')[0];
+
+            return assistance;
+          })
+          return response;
+        })
+      )
   }
 }

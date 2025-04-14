@@ -90,7 +90,8 @@ export class AssistanceScannerBeneficiaryService {
   findByAssistanceScannerId(assistanceScannerId:number){
     return this._httpClient.post(`${environment.apiUrl}/app/assistanceScannerBeneficiary/findByAssistanceScannerId `, {assistanceScannerId}).pipe(
       map((response:any) =>{
-        return response.assistanceScanner.map((survey: any) => ({
+        const assistanceScanner = response.assistanceScanner;
+        const assistanceBeneficiaries = response.assistanceScannerBeneficiaries.map((survey: any) => ({
           id: survey.id,
           identificationType: survey.Survey.identificationType,
           identification: survey.Survey.identification,
@@ -100,12 +101,16 @@ export class AssistanceScannerBeneficiaryService {
           firstLastName: survey.Survey.firstLastName,
           secondLastName: survey.Survey.secondLastName,
           recordType: survey.recordType,
+          groupComponentId: survey.AssistanceScanner?.AssistanceSheet?.AssistanceGenerate?.groupComponentId,
           // También puedes incluir otros campos si los necesitas
           state: survey.state,
           userId: survey.userId,
-          urlFileImageOriginal : `${environment.apiUrl}/${survey.AssistanceScanner.urlFileImageOriginal}`,
-          urlFileImageProcessed : `${environment.apiUrl}/${survey.AssistanceScanner.urlFileImageProcessed}`,
+          urlData: survey.AssistanceScanner
         }));
+        return {
+          assistanceScanner,
+          assistanceBeneficiaries
+        };
       })
     );
   }

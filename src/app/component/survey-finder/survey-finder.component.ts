@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SurveyService } from '../../service/survey.service';
 import Swal from 'sweetalert2';
@@ -15,7 +15,7 @@ export class SurveyFinderComponent {
     @Output() surveyListen: EventEmitter<any> = new EventEmitter();
     @Output() clearListen: EventEmitter<boolean> = new EventEmitter();
     @Input() reset: boolean = false;
-
+    @ViewChild(SurveyFinderComponent) surveyFinder!: SurveyFinderComponent;
     @Input() identification!: number;
     @Input() email!: number;
     survey: any = {};
@@ -93,6 +93,11 @@ export class SurveyFinderComponent {
             }
             );
     }
+
+    clearIdentificationType() {
+        this.form.get('identificationType')?.reset();
+      }
+
 
     setIdentificationType(event: string) {
         this.form.get('identificationType')?.setValue(event);

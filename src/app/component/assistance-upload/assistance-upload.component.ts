@@ -260,16 +260,20 @@ export class AssistanceUploadComponent implements OnInit {
     this.loading = true;
     this.assistanceScannerService.uploadFile(file)
       .subscribe({
-        next: (response: any) => {
+        next: async (response: any) => {
           this.showTableData = true;
-          this.dataSource.data = this.transformDateActivities(response);
+          this.dataSource.data = this.transformDatesToSend(response);
           const imageResult = `${environment.apiUrl}/${response?.response?.imageResult}`;
           this.imageUrl = imageResult
           this.imagePreviewResult = this.sanitizer.bypassSecurityTrustResourceUrl(imageResult);
           this.loading = false;
           this.imageLoaded = true;
           // this.imagePreview = null;
-          Swal.fire('Correcto', 'Las planillas de Asistencia han sido cargadas correctamente', 'success');
+          await Swal.fire('Correcto', 'Las planillas de Asistencia han sido cargadas correctamente', 'success');
+          if(response.response.assistanceScannerBeneficiaries.length == 0){ 
+            await Swal.fire('Advertencia', 'No se pudieron cargar beneficiarios en la planilla, está planilla ha sido marcada para revisión manual', 'warning');
+          }
+    
         },
         error: (error: any) => {
 
@@ -280,22 +284,34 @@ export class AssistanceUploadComponent implements OnInit {
 
   }
 
-  transformDateActivities(data: any) {
-    const daysOfWeek = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-    this.assistanceScannerId = Number(data.response.assistanceScannerBeneficiaries[0].assistanceScannerId);
-    return data.response.assistanceScannerBeneficiaries.map((activity: any) => {
-      const date = new Date(activity.assistanceSignDate + "T00:00:00Z");
-      const day = daysOfWeek[date.getUTCDay()];
-      const formattedDay = day.charAt(0).toUpperCase() + day.slice(1);
-
-      return {
-        ...activity,
-        assistanceSignDate: `${activity.assistanceSignDate} - ${formattedDay}`,
-
-      };
+  transformDatesToSend(data: any) {
+    if(data.response.assistanceScannerBeneficiaries){
+      this.assistanceScannerId = Number(data.response.assistanceScannerId);
+    }
+    const groupedData: any = {};
+    data.response.assistanceScannerBeneficiaries.forEach((item: any) => {
+      const id = item.identification;
+      if (!groupedData[id]) {
+        groupedData[id] = {
+          ...item,
+          dates: [],
+        };
+      }
+        const dateParts = item.assistanceSignDate.split('-');
+      const year = Number(dateParts[0]);
+      const month = Number(dateParts[1]) - 1;
+      const day = Number(dateParts[2]);
+  
+      const dateObj = new Date(year, month, day);
+      const dayOfWeek = dateObj.toLocaleDateString('es-ES', { weekday: 'long' });
+      const formattedDate = `${item.assistanceSignDate} (${dayOfWeek})`;
+  
+      groupedData[id].dates.push(formattedDate);
     });
+  
+    return Object.values(groupedData);
   }
-
+  
   redirectTo(url: string) {
     this.route.navigateByUrl(url)
   }

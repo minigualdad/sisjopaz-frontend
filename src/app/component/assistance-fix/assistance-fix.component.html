@@ -1,0 +1,41 @@
+
+<form [formGroup]="form" class="bg-white p-6 rounded-lg" (ngSubmit)="create()">
+
+    <mat-dialog-content class="mat-typography">
+        <div>
+            <div class="md:grid md:grid-cols-3 md:gap-6">
+                <div class="md:col-span-1">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">AGREGAR ASISTENCIA <strong *ngIf="groupComponent"> {{groupComponent.Group?.name}}</strong> </h3>
+                        <p class="mt-1 text-sm text-gray-600">Busque el joven que debe agregar o quitar la asistencia, seleccione la fecha y si asiste ó no el joven
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-5 md:col-span-2 md:mt-0">
+                    <div class="mb-4">
+                      <app-survey-finder (surveyListen)="onSurveySelect($event)"></app-survey-finder>
+                    </div>
+                  <div class="mb-4">
+                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                        <mat-label>Fecha:</mat-label>
+                        <input type="date" matInput formControlName="dateActivity">
+                        <div
+                        *ngIf="form.controls['dateActivity'].invalid && form.controls['dateActivity'].touched"
+                        class="text-sm text-red-500 mt-1"
+                      >
+                        Fecha es requerida.
+                      </div>
+
+                    </mat-form-field>
+
+                </div>
+            </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button class="bg-primary text-white p-2 rounded-lg hover:bg-primary-200" mat-flat-button primary
+            [disabled]="form.invalid" [type]="form.invalid ? 'button' : 'submit'">Agregar</button>
+    </mat-dialog-actions>
+  </form>
+  <!-- <app-loading *ngIf="loading"></app-loading> -->

@@ -1,15 +1,10 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { AssistanceScannerService } from '../../service/assitance-scanner.service';
-import { environment } from '../../../enviroment/enviroment';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Swal from 'sweetalert2';
-import imageCompression from 'browser-image-compression';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
 import { AssistanceScannerBeneficiaryService } from '../../service/assistance-scanner-beneficiary.service';
 
@@ -44,8 +39,6 @@ export class AsssitanceDetectedComponent implements OnInit, AfterViewInit{
     assistanceSheetId: number;
 
     constructor(private assistanceScannerBenneficiaryService: AssistanceScannerBeneficiaryService,
-      private groupComponentDateActivityBeneficiaryService: GroupComponentDateActivityBenefiaryService,
-      private route: Router,
       public dialog: MatDialog,
         private activatedRoute: ActivatedRoute
     ) {
@@ -106,7 +99,6 @@ async getAll() {
   })
 }
 
-
 /**
 * Track by function for ngFor loops
 *
@@ -120,6 +112,4 @@ trackByFn(index: number, item: any): any {
 applyFilter(filterValue: any) {
   this.dataSource.filter = filterValue.target.value.trim().toLowerCase();
 }
-
-    
 }

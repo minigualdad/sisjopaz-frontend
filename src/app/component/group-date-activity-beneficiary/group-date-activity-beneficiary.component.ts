@@ -77,7 +77,7 @@ export class GroupDateActivityBeneficiaryComponent implements OnInit, AfterViewI
     this.groupComponentDateActivityBeneficiary = {
       userId: this.surveyId,
       pageIndex: 0,
-      pageSize: 10, 
+      pageSize: 1000, 
     }
     this.getAll()
   }
@@ -86,19 +86,33 @@ export class GroupDateActivityBeneficiaryComponent implements OnInit, AfterViewI
     this._groupComponentDateActivityBeneficiaryServiceService.getAllByUser(this.groupComponentDateActivityBeneficiary).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.groupComponentDateActivityBeneficiaries;
-        this.loadData(response)
+        this.loadData(response);
         this.loading = false;
+    
         if (this.dataSource.data.length > 0) {
           this.isData = true;
+        } else {
+          Swal.fire({
+            icon: 'info',
+            title: 'Sin datos',
+            text: 'Aún no se han cargado datos de este joven.',
+            confirmButtonText: 'Aceptar'
+          });
         }
       },
       error: (err: any) => {
+        this.loading = false;
         console.error('Error al obtener los ciclos de grupo:', err);
+    
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de carga',
+          text: 'No se pudieron obtener los datos del joven. Intenta nuevamente.',
+          confirmButtonText: 'Aceptar'
+        });
       }
     });
-  }
-
-  create() {
+    
   }
 
   async onPageChange(event: PageEvent) {
@@ -127,6 +141,46 @@ export class GroupDateActivityBeneficiaryComponent implements OnInit, AfterViewI
   ngAfterViewInit(): void {
     // Make the data source sortable
     this.dataSource.sort = this.recordsTableMatSort;
+  }
+
+  transformDatesToSend(data: any) {
+    const groupedData: any = {};
+  
+    data.groupComponentDateActivityBeneficiaries.forEach((item: any) => {
+      const user = item.UserId;
+      const id = user?.identification;
+  
+      if (!groupedData[id]) {
+        groupedData[id] = {
+          identification: user?.identification,
+          identificationType: user?.identificationType,
+          firstName: user?.firstName,
+          secondName: user?.secondName,
+          firstLastName: user?.firstLastName,
+          secondLastName: user?.secondLastName,
+          name: user?.firstName,
+          dates: [],
+          recordType: item.recordType || null
+        };
+      }
+  
+      const dateParts = item.dateActivity.split('-');
+      const year = Number(dateParts[0]);
+      const month = Number(dateParts[1]) - 1;
+      const day = Number(dateParts[2]);
+      const dateObj = new Date(year, month, day);
+      const dayOfWeek = dateObj.toLocaleDateString('es-ES', { weekday: 'long' });
+      const formattedDate = `${item.dateActivity} (${dayOfWeek})`;
+  
+      const alreadyExists = groupedData[id].dates.some((d: any) => d.date === formattedDate);
+      if (!alreadyExists) {
+        groupedData[id].dates.push({
+          date: formattedDate,
+          hasAssistance: item.hasAssitence || ''
+        });
+      }
+    });
+    return Object.values(groupedData);
   }
 
   transformDateActivities(data: any) {
@@ -161,7 +215,7 @@ export class GroupDateActivityBeneficiaryComponent implements OnInit, AfterViewI
   }
 
   async loadData(response: any) {
-    this.dataSource.data = this.transformDateActivities(response);
+    this.dataSource.data = this.transformDatesToSend(response);
     this.totalSize = response?.total;
     await this.timer(100);
     this.dataSource.sort = this.recordsTableMatSort;

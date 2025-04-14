@@ -1,0 +1,49 @@
+<div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+  <table class="min-w-full table-auto border-collapse border border-gray-300">
+    <thead>
+      <tr class="bg-white bg-gray-100">
+        <th class="px-4 py-2 border sticky left-0 bg-gray-100 z-10 min-w-[200px]">Nombre del Jóven</th>
+        <th class="px-4 py-2 border bg-gray-100 z-10">Tipo Documento</th>
+        <th class="px-4 py-2 border bg-gray-100 z-10">Documento</th>
+        <th *ngFor="let date of uniqueDates" class="px-4 py-2 border whitespace-nowrap">{{ date }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let record of records" class="bg-white hover:bg-gray-50">
+        <td class="sticky left-0 bg-white z-10 border border-l-0 min-w-[200px]">
+          <ng-container *ngIf="record.firstName; else altName">
+            {{ record.firstName }} {{ record.secondName }} {{ record.firstLastName }} {{ record.secondLastName }}
+          </ng-container>
+          <ng-template #altName>
+            {{ record.name }}
+          </ng-template>
+        </td>
+        <td class="bg-white z-10 border border-r-0 text-center">
+          {{ typeMap[record.identificationType] || record.identificationType }}
+        </td>
+        <td class="bg-white z-10 border border-l-0 border-r-0">
+          {{ record.identification }}
+        </td>
+
+        <td *ngFor="let date of uniqueDates"
+          class="px-4 py-2 border text-center whitespace-nowrap min-w-[120px]"
+          [ngClass]="record.dates.includes(date) ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+          <div class="font-semibold flex justify-center items-center gap-1">
+            <ng-container *ngIf="record.dates.includes(date); else notAttended">
+              <span>ASISTIÓ</span>
+              <button (click)="onMinusClick(record, date)" class="text-xs font-light text-red-700 hover:text-red-900">(Eliminar)</button>
+            </ng-container>
+            
+            <ng-template #notAttended>
+              <button (click)="onPlusClick(record, date)" class="text-xs font-light text-green-700 hover:text-green-900">(Agregar)</button>
+            </ng-template>
+          </div>
+
+          <div *ngIf="record.recordType" class="text-xs text-gray-600 italic">
+            ({{ record.recordType }})
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

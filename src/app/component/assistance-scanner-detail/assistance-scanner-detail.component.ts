@@ -1,11 +1,10 @@
-import { AfterViewInit, Component, OnInit, ViewChild, OnChanges } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { GroupComponentService } from '../../service/group-component.service';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
 import { PaginatorService } from '../../service/paginator.service';
 import Swal from 'sweetalert2';
@@ -119,8 +118,26 @@ export class AssistanceScannerDetailComponent implements OnInit, AfterViewInit {
   getAll(){
     this._assistanceScannerBeneficiaryService.findByAssistanceScannerId(this.assistanceScannerId).subscribe({
       next: (response: any) => {
-        this.dataSource.data = response;
-        this.loadData(response)
+
+        // Ordenar por firstLastName y luego por secondLastName
+        response.assistanceBeneficiaries.sort((a: any, b: any) => {
+          const firstNameA = a.firstLastName?.toLowerCase() || '';
+          const firstNameB = b.firstLastName?.toLowerCase() || '';
+
+          if (firstNameA < firstNameB) return -1;
+          if (firstNameA > firstNameB) return 1;
+
+          const secondNameA = a.secondLastName?.toLowerCase() || '';
+          const secondNameB = b.secondLastName?.toLowerCase() || '';
+
+          if (secondNameA < secondNameB) return -1;
+          if (secondNameA > secondNameB) return 1;
+
+          return 0;
+        });
+    
+        this.dataSource.data = response.assistanceBeneficiaries;
+        this.loadData(response.assistanceBeneficiaries);
         this.loading = false;
         if (this.dataSource.data.length > 0) {
           this.isData = true;
@@ -143,6 +160,77 @@ export class AssistanceScannerDetailComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.recordsTableMatSort;
   }
 
+  // transformDatesToSend(data: any) {
+  //   const groupedData: any = {};
+  //   data.forEach((item: any) => {
+  //     const id = item.identification;
+  //     if (!groupedData[id]) {
+  //       groupedData[id] = {
+  //         ...item,
+  //         dates: [],
+  //       };
+  //     }
+  //       const dateParts = item.assistanceSignDate.split('-');
+  //     const year = Number(dateParts[0]);
+  //     const month = Number(dateParts[1]) - 1;
+  //     const day = Number(dateParts[2]);
+  
+  //     const dateObj = new Date(year, month, day);
+  //     const dayOfWeek = dateObj.toLocaleDateString('es-ES', { weekday: 'long' });
+  //     const formattedDate = `${item.assistanceSignDate} (${dayOfWeek})`;
+  
+  //     groupedData[id].dates.push(formattedDate);
+  //   });
+  
+  //   return Object.values(groupedData);
+  // }
+
+  transformDatesToSend(data: any) {
+    const groupedData: any = {};
+  
+    data.forEach((item: any) => {
+      const id = item.identification;
+  
+      if (!groupedData[id]) {
+        groupedData[id] = {
+          ...item,
+          dates: [],
+        };
+      }
+  
+      const dateParts = item.assistanceSignDate.split('-');
+      const year = Number(dateParts[0]);
+      const month = Number(dateParts[1]) - 1;
+      const day = Number(dateParts[2]);
+  
+      const dateObj = new Date(year, month, day);
+      const dayOfWeek = dateObj.toLocaleDateString('es-ES', { weekday: 'long' });
+      const formattedDate = `${item.assistanceSignDate} (${dayOfWeek})`;
+  
+      groupedData[id].dates.push(formattedDate);
+    });
+  
+    const groupedArray = Object.values(groupedData);
+  
+    groupedArray.sort((a: any, b: any) => {
+      const aFirst = a.firstLastName?.toLowerCase() || '';
+      const bFirst = b.firstLastName?.toLowerCase() || '';
+  
+      if (aFirst < bFirst) return -1;
+      if (aFirst > bFirst) return 1;
+  
+      const aSecond = a.secondLastName?.toLowerCase() || '';
+      const bSecond = b.secondLastName?.toLowerCase() || '';
+  
+      if (aSecond < bSecond) return -1;
+      if (aSecond > bSecond) return 1;
+  
+      return 0;
+    });
+  
+    return groupedArray;
+  }
+  
   transformDateActivities(data: any) {
     const daysOfWeek = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
     return data.groupComponentDateActivityBeneficiaries.map((activity: any) => {
@@ -175,7 +263,7 @@ export class AssistanceScannerDetailComponent implements OnInit, AfterViewInit {
   }
 
   async loadData(response: any) {
-    this.dataSource.data = this.transformDateActivities(response);
+    this.dataSource.data = this.transformDatesToSend(response);
     this.totalSize = response?.total;
     await this.timer(100);
     this.dataSource.sort = this.recordsTableMatSort;

@@ -135,6 +135,12 @@ export const NAV_ITEMS = [
                 icon: 'svg/circle.svg',
                 role: 'ADMIN'
             },
+            {
+                name: 'Revisar Asistencias',
+                route: `/app/assistance-scanner-all`,
+                icon: 'svg/circle.svg',
+                role: 'ADMIN'
+            },
         ]
     },
     {
@@ -192,6 +198,12 @@ export const NAV_ITEMS = [
             {
                 name: 'Susbanación Asistencias',
                 route: `/app/assistance-error`,
+                icon: 'svg/circle.svg',
+                role: 'ADMIN'
+            },
+            {
+                name: 'Revisar Asistencias',
+                route: `/app/assistance-scanner-all`,
                 icon: 'svg/circle.svg',
                 role: 'ADMIN'
             },

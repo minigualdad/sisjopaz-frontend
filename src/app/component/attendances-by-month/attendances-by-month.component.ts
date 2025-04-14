@@ -98,18 +98,27 @@ export class AttendancesByMonthComponent {
   // Manejar selección de todos los elementos
 
 
-  getAll(){
-    this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndDate(this.groupComponentDateActivityBeneficiary).subscribe({
-      next: (response: any) => {
-        this.dataSource.data = response.groupComponentDateActivityBeneficiaries;
-        this.loadData(response)
+  async getAll(){
+    await this._groupComponentDateActivityBeneficiaryServiceService.getAllByGroupComponentAndDate(this.groupComponentDateActivityBeneficiary).subscribe({
+      next: async (response: any) => {
         this.loading = false;
-        if (this.dataSource.data.length > 0) {
-          this.isData = true;
+
+
+        if (!response.groupComponentDateActivityBeneficiaries || response.groupComponentDateActivityBeneficiaries.length === 0) {
+          await Swal.fire({
+            title: 'No hay datos',
+            text: 'No hay datos de la fecha seleccionada, por favor seleccione otra e intente de nuevo.',
+            icon: 'warning',
+            confirmButtonText: 'Entendido'
+          });
+          return; // Detiene aquí si no hay datos
         }
+        this.dataSource.data = this.transformDatesToSend(response)
+        this.loadData(response);
       },
-      error: (err: any) => {
-        console.error('Error al obtener los ciclos de grupo:', err);
+      error: (err) => {
+        this.loading = false;
+        console.error("Error en la solicitud: ", err);
       }
     });
   }
@@ -146,7 +155,6 @@ export class AttendancesByMonthComponent {
           console.error("Error en la solicitud: ", err);
         }
       });
-    // Puedes realizar una acción, como cargar nuevos datos
   }
 
   /**
@@ -156,6 +164,75 @@ export class AttendancesByMonthComponent {
     // Make the data source sortable
     this.dataSource.sort = this.recordsTableMatSort;
   }
+
+  transformDatesToSend(data: any) {
+    const groupedData: any = {};
+  
+    data.groupComponentDateActivityBeneficiaries.forEach((item: any) => {
+      const user = item.UserId;
+      const id = user?.identification;
+  
+      if (!groupedData[id]) {
+        groupedData[id] = {
+          identification: user?.identification,
+          identificationType: user?.identificationType,
+          firstName: user?.firstName,
+          secondName: user?.secondName,
+          firstLastName: user?.firstLastName,
+          secondLastName: user?.secondLastName,
+          name: user?.firstName,
+          dates: [],
+          recordType: item.recordType || null
+        };
+      }
+  
+      const dateParts = item.dateActivity.split('-');
+      const year = Number(dateParts[0]);
+      const month = Number(dateParts[1]) - 1;
+      const day = Number(dateParts[2]);
+      const dateObj = new Date(year, month, day);
+      const dayOfWeek = dateObj.toLocaleDateString('es-ES', { weekday: 'long' });
+      const formattedDate = `${item.dateActivity} (${dayOfWeek})`;
+  
+      const alreadyExists = groupedData[id].dates.some((d: any) => d.date === formattedDate);
+      if (!alreadyExists) {
+        groupedData[id].dates.push({
+          date: formattedDate,
+          hasAssistance: item.hasAssitence || ''
+        });
+      }
+    });
+  
+    const groupedArray = Object.values(groupedData);
+  
+    groupedArray.forEach((item: any) => {
+      item.dates.sort((a: any, b: any) => {
+        const dateA = new Date(a.date.split(' ')[0]);
+        const dateB = new Date(b.date.split(' ')[0]);
+        return dateA.getTime() - dateB.getTime();
+      });
+    });
+  
+    groupedArray.sort((a: any, b: any) => {
+      const aFirst = a.firstLastName?.toLowerCase() || '';
+      const bFirst = b.firstLastName?.toLowerCase() || '';
+  
+      if (aFirst < bFirst) return -1;
+      if (aFirst > bFirst) return 1;
+  
+      const aSecond = a.secondLastName?.toLowerCase() || '';
+      const bSecond = b.secondLastName?.toLowerCase() || '';
+  
+      if (aSecond < bSecond) return -1;
+      if (aSecond > bSecond) return 1;
+  
+      return 0;
+    });
+  
+    return groupedArray;
+  }
+  
+  
 
   transformDateActivities(data: any) {
     const daysOfWeek = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
@@ -179,7 +256,7 @@ export class AttendancesByMonthComponent {
         month: this.monthSelected,
         year: this.yearSelected,
         pageIndex: 0,
-        pageSize: 10, 
+        pageSize: 100000, 
       }
       await this.getAll();
     }
@@ -204,7 +281,7 @@ export class AttendancesByMonthComponent {
   }
 
   async loadData(response: any) {
-    this.dataSource.data = this.transformDateActivities(response);
+    this.dataSource.data = this.transformDatesToSend(response);
     this.totalSize = response?.total;
     await this.timer(100);
     this.dataSource.sort = this.recordsTableMatSort;

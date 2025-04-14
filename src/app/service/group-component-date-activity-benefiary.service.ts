@@ -193,6 +193,10 @@ export class GroupComponentDateActivityBenefiaryService {
     return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/create`, { groupComponentDateActivityBeneficiary });
   }
 
+  createAssistance(groupComponentDateActivityBeneficiary: any) {
+    return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/addAssistance`, { groupComponentDateActivityBeneficiary });
+  }
+
   // No se usa
   edit(id: number, groupComponentDateActivityBeneficiary: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/${id}/update`, { groupComponentDateActivityBeneficiary });

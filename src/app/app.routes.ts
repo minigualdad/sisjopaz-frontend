@@ -197,6 +197,11 @@ import { SearchBySerialAssistanceComponent } from './component/search-by-serial-
 import { ModalReportErrorIaComponent } from './component/modal-report-error-ia/modal-report-error-ia.component';
 import { AssistanceScannerByUserComponent } from './component/assistance-scanner-by-user/assistance-scanner-by-user.component';
 import { AssistanceScannerDetailComponent } from './component/assistance-scanner-detail/assistance-scanner-detail.component';
+import { AssistanceTableComponent } from './component/assistance-table/assistance-table.component';
+import { AssistanceTableScheduleComponent } from './component/assistance-table-schedule/assistance-table-schedule.component';
+import { AsistanceScannerAllComponent } from './component/asistance-scanner-all/asistance-scanner-all.component';
+import { AssistanceScannerDetailAdminComponent } from './component/assistance-scanner-detail-admin/assistance-scanner-detail-admin.component';
+import { AssistanceFixComponent } from './component/assistance-fix/assistance-fix.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -812,6 +817,14 @@ export const routes: Routes = [
                 path: 'assistance-scanner-detail/:id', component: AssistanceScannerDetailComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
             },
+            {
+                path: 'assistance-scanner-all', component: AsistanceScannerAllComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
+            },
+            {
+                path: 'assistance-scanner-detail-admin/:id', component: AssistanceScannerDetailAdminComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
+            },
         ]
     },
     { path: '**', component: NotFoundComponent },
@@ -985,7 +998,12 @@ export const routes: Routes = [
         SearchBySerialAssistanceComponent,
         ModalReportErrorIaComponent,
         AssistanceScannerByUserComponent,
-        AssistanceScannerDetailComponent
+        AssistanceScannerDetailComponent,
+        AssistanceTableComponent,
+        AssistanceTableScheduleComponent,
+        AsistanceScannerAllComponent,
+        AssistanceScannerDetailAdminComponent,
+        AssistanceFixComponent,
     ],
     imports: [
         RouterModule.forRoot(routes),

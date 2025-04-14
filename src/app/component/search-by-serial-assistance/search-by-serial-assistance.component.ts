@@ -66,25 +66,6 @@ export class SearchBySerialAssistanceComponent implements OnInit, AfterViewInit{
     this.showImg = !this.showImg;
   }
 
-    report(assistanceScannerId: number) {
-      this.assistanceScannerId = assistanceScannerId
-      Swal.fire({
-        title: '¿Deseas reportar un error?',
-        text: 'Saldrás de esta pantalla para especificar el error encontrado',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Reportar',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.showObservation = true;
-        }
-      });
-    }
-  
-
   get serial(){
     return this.form.get('serial')?.value;
   }
@@ -129,7 +110,7 @@ export class SearchBySerialAssistanceComponent implements OnInit, AfterViewInit{
     this._assistanceSheets.findBySerial(serial).subscribe({
       next: (response : any) => {
         this.assistance = response.assistanceSheet;
-        this.dataSource.data = response.assistanceBeneficiaries;
+        this.dataSource.data = this.transformDatesToSend(response);
         this.data = this.getRepeatedUrlsWithScannerId(response.assistanceBeneficiaries);
         if(response.assistanceBeneficiaries.length == 0){
           Swal.fire({
@@ -149,6 +130,33 @@ export class SearchBySerialAssistanceComponent implements OnInit, AfterViewInit{
         });
       }
     })
+  }
+
+  transformDatesToSend(data: any) {
+    console.log(data)
+    this.assistanceScannerId = Number(data.assistanceBeneficiaries[0].assistanceScannerId);
+    const groupedData: any = {};
+    data.assistanceBeneficiaries.forEach((item: any) => {
+      const id = item.identification;
+      if (!groupedData[id]) {
+        groupedData[id] = {
+          ...item,
+          dates: [],
+        };
+      }
+        const dateParts = item.assistanceSignDate.split('-');
+      const year = Number(dateParts[0]);
+      const month = Number(dateParts[1]) - 1;
+      const day = Number(dateParts[2]);
+  
+      const dateObj = new Date(year, month, day);
+      const dayOfWeek = dateObj.toLocaleDateString('es-ES', { weekday: 'long' });
+      const formattedDate = `${item.assistanceSignDate} (${dayOfWeek})`;
+  
+      groupedData[id].dates.push(formattedDate);
+    });
+  
+    return Object.values(groupedData);
   }
 
   closeModal(event:any){
