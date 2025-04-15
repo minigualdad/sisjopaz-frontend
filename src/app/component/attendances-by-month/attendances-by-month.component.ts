@@ -64,6 +64,8 @@ export class AttendancesByMonthComponent {
   server: any = environment.apiUrl + '/app/survey/files/';
   
   dataForUpdate: any = {}
+
+  message = 'Certifico que he verificado las planillas de asistencia firmadas y cuento con el soporte físico correspondiente de las asistencias del beneficiario. Dicho soporte ha sido digitalizado o intentado cargar previamente en la plataforma SISJOPAZ o, en su defecto, enviado al Ministerio. En consecuencia de lo anterior, procedo a realizar el ajuste de la planilla de asistencia.';
   
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -379,16 +381,30 @@ export class AttendancesByMonthComponent {
         userId: event.record.id,
       };
       Swal.fire({
-        title: 'Confirmación',
-        text: 'Confirmo que deseo cambiar el estado de la asistencia del beneficiario y que ya cuento con la planilla de soporte digitalizada en SISJOPAZ.',
+        title: 'Certificación',
+        text: this.message,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Confirmar',
+        confirmButtonText: 'Certificar Asistencia',
         cancelButtonText: 'Cancelar',
       }).then((result) => {
         if (result.isConfirmed) {
-          this.updateAssistance();
+          Swal.fire({
+            title: 'Confirmación',
+            text: '¿Está seguro de que desea modificar la asistencia? Esta operación quedará certificada.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, modificar',
+            cancelButtonText: 'No, cancelar',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.updateAssistance();
+            } else {
+              Swal.fire('Cancelado', 'No se ha modificado la asistencia', 'info');
+            }
+          });
         } else {
+          Swal.fire('Cancelado', 'No se ha modificado la asistencia', 'info');
         }
       });
     }
@@ -402,16 +418,30 @@ export class AttendancesByMonthComponent {
         userId: event.record.id,
       };
       Swal.fire({
-        title: 'Confirmación',
-        text: 'Confirmo que deseo cambiar el estado de la asistencia del beneficiario y que ya cuento con la planilla de soporte digitalizada en SISJOPAZ.',
+        title: 'Certificación',
+        text: this.message,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Confirmar',
+        confirmButtonText: 'Certificar Asistencia',
         cancelButtonText: 'Cancelar',
       }).then((result) => {
         if (result.isConfirmed) {
-          this.updateAssistance();
+          Swal.fire({
+            title: 'Confirmación',
+            text: '¿Está seguro de que desea modificar la asistencia? Esta operación quedará certificada.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, modificar',
+            cancelButtonText: 'No, cancelar',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.updateAssistance();
+            } else {
+              Swal.fire('Cancelado', 'No se ha modificado la asistencia', 'info');
+            }
+          });
         } else {
+          Swal.fire('Cancelado', 'No se ha modificado la asistencia', 'info');
         }
       });
     }
@@ -433,6 +463,12 @@ export class AttendancesByMonthComponent {
         },
         error: (err) => {
           this.loading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo modificar la asistencia, por favor intente de nuevo.',
+            confirmButtonText: 'Aceptar'
+          });
           console.error("Error en la solicitud: ", err);
         }
       });
