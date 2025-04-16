@@ -1,0 +1,55 @@
+<div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+  <table class="min-w-full table-auto border-collapse border border-gray-300">
+    <thead>
+      <tr class= "bg-gray-100">
+        <th class="px-4 py-2 border sticky left-0 bg-gray-100 z-10 min-w-[200px]">Nombre del Jóven</th>
+        <th class="px-4 py-2 border bg-gray-100 z-10">Tipo Documento</th>
+        <th class="px-4 py-2 border bg-gray-100 z-10">Documento</th>
+        <th class="px-4 py-2 border bg-gray-100 z-10">Agregar Asistencia</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let record of paginatedRecords" class="bg-white hover:bg-gray-50">
+        <td class="sticky left-0 bg-white z-10 border border-l-0 min-w-[200px]">
+          <ng-container *ngIf="record.firstName; else altName">
+            {{ record.firstName }} {{ record.secondName }} {{ record.firstLastName }} {{ record.secondLastName }}
+          </ng-container>
+          <ng-template #altName>
+            {{ record.name }}
+          </ng-template>
+        </td>
+        <td class="bg-white z-10 border border-r-0 text-center">
+          {{ typeMap[record.identificationType] || record.identificationType }}
+        </td>
+        <td class="bg-white z-10 border border-r-0 text-center">
+          {{ record.identification }}
+        </td>
+        <td class="bg-white z-10 border border-r-0 text-center">
+          <button (click)="onAddClick(record)" class="text-xs font-light text-green-700 hover:text-green-900">Agregar Asistencia</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="flex justify-center items-center gap-4 mt-6">
+  <button
+    (click)="currentPage = currentPage - 1"
+    [disabled]="currentPage === 1"
+    class="px-4 py-2 border bg-pink-500 hover:bg-pink-600 text-white rounded-full transition-colors duration-200  shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    ← Anterior
+  </button>
+
+  <span class="px-4 py-2 bg-gray-100 text-gray-800 rounded-full shadow text-sm font-medium">
+    Página {{ currentPage }} de {{ totalPages }}
+  </span>
+
+  <button
+    (click)="currentPage = currentPage + 1"
+    [disabled]="currentPage === totalPages"
+    class="px-4 py-2 border bg-pink-500 hover:bg-pink-600 text-white rounded-full transition-colors duration-200  shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    Siguiente →
+  </button>
+</div>
+

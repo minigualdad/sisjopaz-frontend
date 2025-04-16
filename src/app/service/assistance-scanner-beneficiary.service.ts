@@ -91,6 +91,15 @@ export class AssistanceScannerBeneficiaryService {
     return this._httpClient.post(`${environment.apiUrl}/app/assistanceScannerBeneficiary/findByAssistanceScannerId `, {assistanceScannerId}).pipe(
       map((response:any) =>{
         const assistanceScanner = response.assistanceScanner;
+        const assistanceBeneficiariesList = response.assistanceBeneficiaries.map((survey: any) => ({
+          id: survey.Survey.id,
+          firstName: survey.Survey.firstName,
+          secondName: survey.Survey.secondName,
+          firstLastName: survey.Survey.firstLastName,
+          secondLastName: survey.Survey.secondLastName,
+          identificationType: survey.Survey.identificationType,
+          identification: survey.Survey.identification,
+        }));
         const assistanceBeneficiaries = response.assistanceScannerBeneficiaries.map((survey: any) => ({
           id: survey.id,
           identificationType: survey.Survey.identificationType,
@@ -107,9 +116,14 @@ export class AssistanceScannerBeneficiaryService {
           userId: survey.userId,
           urlData: survey.AssistanceScanner
         }));
+        const assistanceDateStart = response.assistanceDateStart;
+        const assistanceDateEnd = response.assistanceDateEnd; 
         return {
           assistanceScanner,
-          assistanceBeneficiaries
+          assistanceBeneficiaries,
+          assistanceBeneficiariesList,
+          assistanceDateStart,
+          assistanceDateEnd,
         };
       })
     );

@@ -203,6 +203,8 @@ import { AsistanceScannerAllComponent } from './component/asistance-scanner-all/
 import { AssistanceScannerDetailAdminComponent } from './component/assistance-scanner-detail-admin/assistance-scanner-detail-admin.component';
 import { AssistanceFixComponent } from './component/assistance-fix/assistance-fix.component';
 import { AssistanceTableFixedComponent } from './component/assistance-table-fixed/assistance-table-fixed.component';
+import { AssistanceBeneficiariesComponent } from './component/assistance-beneficiaries/assistance-beneficiaries.component';
+import { AssistanceBeneficiariesDateSelectorComponent } from './component/assistance-beneficiaries-date-selector/assistance-beneficiaries-date-selector.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -1006,6 +1008,8 @@ export const routes: Routes = [
         AssistanceScannerDetailAdminComponent,
         AssistanceFixComponent,
         AssistanceTableFixedComponent,
+        AssistanceBeneficiariesComponent,
+        AssistanceBeneficiariesDateSelectorComponent,
     ],
     imports: [
         RouterModule.forRoot(routes),

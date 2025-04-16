@@ -39,37 +39,35 @@
                 </div>
 
                <!-- Contenedor de imágenes -->
-                <div *ngIf="!showImg && urlData" class="flex flex-row justify-center items-start gap-4 flex-wrap mb-6">
-                    <!-- Imagen original -->
-                    <div
-                    class="w-full md:w-[48%] border border-gray-200 rounded-lg overflow-hidden shadow-lg bg-white transition-transform duration-300 hover:scale-[1.02]">
-                    <div class="p-3 bg-gray-50 border-b border-gray-200">
-                        <h3 class="font-medium text-gray-700">Imagen Original</h3>
-                    </div>
-                    <div class="p-4 text-center">
-                        <h3 class="text-lg font-semibold mb-2">{{ urlData.state }}</h3>
-                        <img
-                        [src]="apiUrl + '/' + urlData.urlFileImageOriginal"
-                        [alt]="'Imagen original - ' + apiUrl + '/' + (urlData.urlFileImageOriginal || '')"
-                        class="h-auto rounded-md object-contain max-h-96 w-full shadow-md" />
-                    </div>
-                    </div>
-                
-                    <!-- Imagen procesada -->
-                    <div
-                    class="w-full md:w-[48%] border border-gray-200 rounded-lg overflow-hidden shadow-lg bg-white transition-transform duration-300 hover:scale-[1.02]">
-                    <div class="p-3 bg-gray-50 border-b border-gray-200">
-                        <h3 class="font-medium text-gray-700">Imagen Procesada</h3>
-                    </div>
-                    <div class="p-4 text-center">
-                        <h3 class="text-lg font-semibold mb-2">{{ urlData.state }}</h3>
-                        <img
-                        [src]="apiUrl + '/' + urlData.urlFileImageProcessed"
-                        [alt]="'Imagen procesada - ' + apiUrl + '/' + (urlData.urlFileImageProcessed || '')"
-                        class="h-auto rounded-md object-contain max-h-96 w-full shadow-md" />
-                    </div>
-                    </div>
+               <div *ngIf="!showImg && urlData" class="flex flex-col gap-6 mb-6">
+                <!-- Imagen original -->
+                <div class="w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg">
+                  <div class="p-3 bg-gray-50 border-b border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-700">Imagen Original - {{ urlData.state }}</h3>
+                  </div>
+                  <div class="text-center">
+                    <img
+                      [src]="apiUrl + '/' + urlData.urlFileImageOriginal"
+                      [alt]="'Imagen original - ' + apiUrl + '/' + (urlData.urlFileImageOriginal || '')"
+                      class="w-full h-auto object-contain rounded-b-lg" />
+                  </div>
                 </div>
+              
+                <!-- Imagen procesada -->
+                <div class="w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg">
+                  <div class="p-3 bg-gray-50 border-b border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-700">Imagen Procesada - {{ urlData.state }}</h3>
+                  </div>
+                  <div class="text-center">
+                    <img
+                      [src]="apiUrl + '/' + urlData.urlFileImageProcessed"
+                      [alt]="'Imagen procesada - ' + apiUrl + '/' + (urlData.urlFileImageProcessed || '')"
+                      class="w-full h-auto object-contain rounded-b-lg" />
+                  </div>
+                </div>
+              </div>
+              
+              
                 
             </div>
         </div>
@@ -79,12 +77,18 @@
             (minusClicked)="handleMinus($event)"
             (plusClicked)="handlePlus($event)">
         ></app-assistance-table-fixed>
-        <app-assistance-fix
+        <app-assistance-beneficiaries
+            [records]="assistanceBeneficiariesList"
+            (addClicked)="handleAdd($event)">
+        </app-assistance-beneficiaries>
+        <app-assistance-beneficiaries-date-selector
+            *ngIf="dateSelector"
             [groupComponentId]="groupComponentId"
-            [recordData]="selectedRecordData"
-            (dataSentListen)="fixAttendance($event)">
-        </app-assistance-fix>
-
+            [assistanceDateStart]="assistanceDateStart"
+            [assistanceDateEnd]="assistanceDateEnd"
+            (closeClicked)="handleClose()"
+            (createClicked)="handleCreate($event)">
+        </app-assistance-beneficiaries-date-selector>
     </div>
 </div>
 

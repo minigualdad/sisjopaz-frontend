@@ -12,6 +12,7 @@ import { AssistanceScannerBeneficiaryService } from '../../service/assistance-sc
 import { AssistanceScannerService } from '../../service/assitance-scanner.service';
 import { GroupComponent } from '../group/group.component';
 import { environment } from '../../../enviroment/enviroment';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-assistance-scanner-detail-admin',
@@ -23,7 +24,6 @@ export class AssistanceScannerDetailAdminComponent {
  
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
     new MatSort();
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   showAddPeriod = false;
@@ -69,7 +69,13 @@ export class AssistanceScannerDetailAdminComponent {
   apiUrl = environment.apiUrl;
   urlData: any;
 
-  selectedRecordData: { record: any; date: string; hasAssistance: boolean } | null = null;
+  assistanceDateStart: any;
+  assistanceDateEnd: any;
+  assistanceBeneficiariesList: any;
+  dateSelector = false;
+  form: FormGroup;
+
+  selectedRecordData: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -78,11 +84,20 @@ export class AssistanceScannerDetailAdminComponent {
     public dialog: MatDialog,
     private assistanceScannerService: AssistanceScannerService,
     private _assistanceScannerBeneficiaryService : AssistanceScannerBeneficiaryService,
+    private groupComponentDateActivityBenefiaryService: GroupComponentDateActivityBenefiaryService,
   ) {
     this.recordsTableColumns = Object.keys(this.columns).filter(col => col !== 'actions' && col !== 'select');
     this.displayedColumns = ['select', ...this.recordsTableColumns]; // Acciones primero, luego checkbox y demás columnas
     this.titleService.setTitle('Actividades');
     this.assistanceScannerId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    this.form = new FormGroup({
+          userId: new FormControl('', Validators.required),
+          dateActivity: new FormControl('', Validators.required),
+          groupComponentId: new FormControl('', Validators.required),
+          hasAssitence: new FormControl(false),
+          assistanceScannerId: new FormControl(''),
+        });
+        
   }
 
   /**
@@ -99,6 +114,7 @@ export class AssistanceScannerDetailAdminComponent {
       pageIndex: 0,
       pageSize: 10, 
     }
+    this.form.controls['assistanceScannerId'].setValue(this.assistanceScannerId);
   }
 
   closeModal(event:any){
@@ -114,6 +130,9 @@ export class AssistanceScannerDetailAdminComponent {
       next: (response: any) => {
         this.groupComponentId = response.assistanceScanner.AssistanceSheet.AssistanceGenerate.groupComponentId; 
         this.dataSource.data = response.assistanceBeneficiaries;
+        this.assistanceBeneficiariesList = response.assistanceBeneficiariesList;
+        this.assistanceDateStart = response.assistanceDateStart;
+        this.assistanceDateEnd = response.assistanceDateEnd;
         this.urlData = response.assistanceScanner;
         this.loadData(response.assistanceBeneficiaries);
         this.loading = false;
@@ -219,7 +238,6 @@ export class AssistanceScannerDetailAdminComponent {
     this.totalSize = response?.total;
     await this.timer(100);
     this.dataSource.sort = this.recordsTableMatSort;
-    this.paginator.length = this.totalSize;
     this.loading = false;
   }
 
@@ -227,15 +245,66 @@ export class AssistanceScannerDetailAdminComponent {
     return new Promise(res => setTimeout(res, ms));
   }
 
-  fixAttendance($event: any){
+  fixAttendance(){
     this.ngOnInit();
   }
 
   handleMinus(event: { record: any, date: string }) {
-    this.selectedRecordData = { ...event, hasAssistance: false };
+    const cleanDate = event.date.split(' ')[0];
+    this.form.patchValue({
+      userId: event.record.userId,
+      dateActivity: cleanDate,
+      hasAssitence: false,
+    });
+    this.create();
   }
 
   handlePlus(event: { record: any, date: string }) {
-    this.selectedRecordData = { ...event, hasAssistance: true };
+    const cleanDate = event.date.split(' ')[0];
+    this.form.patchValue({
+      userId: event.record.userId,
+      dateActivity: cleanDate,
+      hasAssitence: true,
+    });
+    this.create();
   }
+
+  handleAdd(record: any) {
+    this.selectedRecordData = record;
+    this.dateSelector = true;
+  }
+
+  handleCreate(date: any) {
+    this.form.patchValue({
+      dateActivity: date,
+      userId: this.selectedRecordData?.id,
+      hasAssitence: true,
+    });
+    this.create();
+    this.handleClose();
+  }
+
+  handleClose() {
+    this.dateSelector = false;
+  }
+
+  create() {
+      this.form.controls['assistanceScannerId'].setValue(this.assistanceScannerId);
+      this.form.controls['groupComponentId'].setValue(this.groupComponentId);
+      if (this.form.invalid) return;
+      this.groupComponentDateActivityBenefiaryService.createAssistance(this.form.value).subscribe({
+        next: (response: any) => {
+          Swal.fire('Operación correcta', 'Asistencia corregida', 'success').then(() => {
+            this.ngOnInit();
+            this.fixAttendance();
+          });
+        },
+        error: (error) => {
+          console.error(error);
+          Swal.fire('Operación incorrecta', 'No se ha podido corregir la asistencia', 'error').then(() => {
+            this.ngOnInit();
+          });
+        }
+      });
+  } 
 }

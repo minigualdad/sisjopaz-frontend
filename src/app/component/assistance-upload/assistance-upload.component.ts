@@ -9,7 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
 import { AssistanceScannerBeneficiaryService } from '../../service/assistance-scanner-beneficiary.service';
 
@@ -55,14 +55,22 @@ export class AssistanceUploadComponent implements OnInit {
   reportForm: FormGroup;
   errorDataSource: any;
   assistanceScannerId:number = 0;
-  selectedRecordData: { record: any; date: string; hasAssistance: boolean } | null = null;
+  selectedRecordData: any;
   groupComponentId: any;
+
+  assistanceDateStart: any;
+  assistanceDateEnd: any;
+  assistanceBeneficiariesList: any;
+  dateSelector = false;
+  form: FormGroup;
+
   constructor(private assistanceScannerService: AssistanceScannerService,
     private _assistanceScannerBeneficiaryService: AssistanceScannerBeneficiaryService,
     private sanitizer: DomSanitizer,
     private route: Router,
     public dialog: MatDialog,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private groupComponentDateActivityBenefiaryService: GroupComponentDateActivityBenefiaryService,
   ) {
     this.recordsTableColumns = Object.keys(this.columns);
     this.displayedColumns = ['select', ...this.recordsTableColumns, 'actions'];
@@ -70,7 +78,13 @@ export class AssistanceUploadComponent implements OnInit {
     this.reportForm = this.fb.group({
       errorDescription: ['', Validators.required],
     });
-
+    this.form = new FormGroup({
+              userId: new FormControl('', Validators.required),
+              dateActivity: new FormControl('', Validators.required),
+              groupComponentId: new FormControl('', Validators.required),
+              hasAssitence: new FormControl(false),
+              assistanceScannerId: new FormControl(''),
+            });
   }
   ngOnInit(): void {
   }
@@ -262,6 +276,7 @@ export class AssistanceUploadComponent implements OnInit {
           this.imageLoaded = true;
           // this.imagePreview = null;
           await Swal.fire('Correcto', 'Las planillas de Asistencia han sido cargadas correctamente', 'success');
+          this.getAll();
           if(response.response.assistanceScannerBeneficiaries.length == 0){ 
             await Swal.fire('Advertencia', 'No se pudieron cargar beneficiarios en la planilla, está planilla ha sido marcada para revisión manual', 'warning');
           }
@@ -280,7 +295,9 @@ export class AssistanceUploadComponent implements OnInit {
     this._assistanceScannerBeneficiaryService.findByAssistanceScannerId(Number(this.assistanceScannerId)).subscribe({
       next: (response:any) => {
         this.dataSource.data = this.transformDatesToSend(response);
-        
+        this.assistanceBeneficiariesList = response.assistanceBeneficiariesList;
+        this.assistanceDateStart = response.assistanceDateStart;
+        this.assistanceDateEnd = response.assistanceDateEnd;
       },
       error: (error:any) => {
 
@@ -353,5 +370,48 @@ export class AssistanceUploadComponent implements OnInit {
   handlePlus(event: { record: any, date: string }) {
     this.selectedRecordData = { ...event, hasAssistance: true };
   }
+
+  handleAdd(record: any) {
+    this.selectedRecordData = record;
+    this.dateSelector = true;
+  }
+
+  handleCreate(date: any) {
+    this.form.patchValue({
+      dateActivity: date,
+      userId: this.selectedRecordData?.id,
+      hasAssitence: true,
+    });
+    this.create();
+    this.handleClose();
+  }
+
+  handleClose() {
+    this.dateSelector = false;
+  }
+
+  create() {
+      this.form.controls['assistanceScannerId'].setValue(this.assistanceScannerId);
+      this.form.controls['groupComponentId'].setValue(this.groupComponentId);
+      if (this.form.invalid) return;
+      this.groupComponentDateActivityBenefiaryService.createAssistance(this.form.value).subscribe({
+        next: (response: any) => {
+          Swal.fire('Operación correcta', 'Asistencia corregida', 'success').then(() => {
+            this.ngOnInit();
+            this.fixAttendance();
+          });
+        },
+        error: (error) => {
+          console.error(error);
+          Swal.fire('Operación incorrecta', 'No se ha podido corregir la asistencia', 'error').then(() => {
+            this.ngOnInit();
+          });
+        }
+      });
+  }
+
+  fixAttendance(){
+    this.getAll();
+  } 
 
 }

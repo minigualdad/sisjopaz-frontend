@@ -47,13 +47,14 @@
           </button>
         </div>
 
-        <app-image-viewer
-        [imageUrl]="imageUrl"></app-image-viewer>  
         <img
           [src]="imagePreview"
           alt="Previsualización de la imagen"
           class="rounded-md border shadow-md w-full"
         />
+        <app-image-viewer
+        [imageUrl]="imageUrl"></app-image-viewer>  
+        
         <div *ngIf="imagePreviewResult" class="mt-4 flex justify-center">
           <a target="_blank"
             [href]="imagePreviewResult" 
@@ -109,11 +110,18 @@
             >
   </app-assistance-table-fixed>
 
-<app-assistance-fix *ngIf="showTableFix && showTableData"
-   [groupComponentId]="groupComponentId"
-   [recordData]="selectedRecordData"
-   [assistanceScannerId]="assistanceScannerId"
-   (reloadTable)="reciveReload($event)">
-</app-assistance-fix> 
+  <app-assistance-beneficiaries
+    *ngIf="showTableFix"
+    [records]="assistanceBeneficiariesList"
+    (addClicked)="handleAdd($event)">
+  </app-assistance-beneficiaries>
+  <app-assistance-beneficiaries-date-selector
+    *ngIf="dateSelector"
+    [groupComponentId]="groupComponentId"
+    [assistanceDateStart]="assistanceDateStart"
+    [assistanceDateEnd]="assistanceDateEnd"
+    (closeClicked)="handleClose()"
+    (createClicked)="handleCreate($event)">
+  </app-assistance-beneficiaries-date-selector>
 
   <app-loading *ngIf="loading"></app-loading>

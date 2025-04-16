@@ -1,0 +1,51 @@
+<div class="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6 z-50">
+      <form [formGroup]="form" (ngSubmit)="create()">
+        <div class="mb-4">
+          <h3 class="text-2xl font-semibold text-gray-800">
+            AGREGAR ASISTENCIA
+            <strong *ngIf="groupComponent">{{ groupComponent.Group?.name }}</strong>
+          </h3>
+          <p class="mt-1 text-sm text-gray-600">
+            Busque el joven que debe agregar o quitar la asistencia, seleccione la fecha y si asiste ó no el joven
+          </p>
+        </div>
+        <div class="mb-4">
+          <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Fecha:</mat-label>
+            <input
+                type="date"
+                matInput
+                formControlName="dateActivity"
+                [min]="minDate"
+                [max]="maxDate"
+            />
+            <div
+              *ngIf="form.controls['dateActivity'].invalid && form.controls['dateActivity'].touched"
+              class="text-sm text-red-500 mt-1"
+            >
+              Fecha es requerida.
+            </div>
+          </mat-form-field>
+        </div>
+        <div class="flex justify-end space-x-2 mt-6">
+          <button
+            class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition"
+            type="button"
+            (click)="onClose()"
+          >
+            Cancelar
+          </button>
+          <button
+            class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-600 transition"
+            mat-flat-button
+            [disabled]="form.invalid"
+            [type]="form.invalid ? 'button' : 'submit'"
+          >
+            Agregar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
