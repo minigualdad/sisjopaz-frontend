@@ -3,14 +3,53 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../service/user.service';
 import { NAV_ITEMS, Roles } from '../../shared/constants/constants';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-layout',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
+  standalone: false,
   templateUrl: './layout.component.html',
-  styleUrl: './layout.component.scss'
+  styleUrl: './layout.component.scss',
+  animations: [
+    // Animación para el menú principal
+    trigger('slideCollapse', [
+      state('open', style({ 
+        width: '20rem',
+        opacity: 1,
+        overflow: 'hidden'
+      })),
+      state('closed', style({ 
+        width: '5rem',
+        opacity: 0,
+        overflow: 'hidden'
+      })),
+      transition('open => closed', [
+        animate('300ms ease-in', style({ width: '5rem', opacity: 0 }))
+      ]),
+      transition('closed => open', [
+        animate('300ms ease-out', style({ width: '20rem', opacity: 1 }))
+      ])
+    ]),
+    trigger('tagAnimation', [
+      state('visible', style({
+        opacity: 1,
+        transform: 'translateY(0)'
+      })),
+      state('hidden', style({
+        opacity: 0,
+        transform: 'translateY(-20px)'
+      })),
+      transition('visible => hidden', [
+        animate('0.5s ease-out')
+      ]),
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-20px)' }),
+        animate('0.3s ease-in', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ])
+  ]
 })
+
 export class LayoutComponent implements OnInit {
   isMenuOpen = false;
   activeSection: string = 'Inicio';
@@ -24,11 +63,74 @@ export class LayoutComponent implements OnInit {
   isProfessionalTeam: boolean = false;
   navItems: any[] = [];
   userRole: string = '';
+  showMenu = true;
+  isAnimating = false;
+
+  children : any[] = [];
+  showSubMenuParams = false;
+  showSubMenuAdmDir = false;
+  sectionMenu = '';
+  showTooltip: string | null = null;
+
+  dragPosition = {x: 0, y: 0};
+  isDragging = false;
+  startPosition = {x: 0, y: 0};
 
   get isMobileView(): boolean {
     return window.innerWidth < 768; // md breakpoint de Tailwind es 768px
   }
 
+  hideTooltipAfterDelay(tooltipName: string) {
+    if (this.showTooltip === tooltipName) {
+      setTimeout(() => {
+        this.showTooltip = null;
+      }, 3000); // 3 segundos
+    }
+  }
+
+  startDrag(event: MouseEvent) {
+    this.isDragging = true;
+    this.startPosition = {
+      x: event.clientX - this.dragPosition.x,
+      y: event.clientY - this.dragPosition.y
+    };
+    event.preventDefault();
+  }
+
+  onDrag(event: MouseEvent) {
+    if (!this.isDragging) return;
+    
+    this.dragPosition = {
+      x: event.clientX - this.startPosition.x,
+      y: event.clientY - this.startPosition.y
+    };
+  }
+
+  endDrag() {
+    this.isDragging = false;
+  }
+
+  toggleMenu() {
+    this.hiddenMinMenu();
+    if (this.isAnimating) return;
+    
+    this.isAnimating = true;
+    this.showMenu = !this.showMenu;
+    
+    setTimeout(() => {
+      this.isAnimating = false;
+    }, 100);
+  }
+
+  hiddenMinMenu(){
+    this.showSubMenuParams = false;
+    this.showSubMenuAdmDir = false;
+  }
+
+  navigateTo(route:string){
+    this.hiddenMinMenu();
+    this.router.navigateByUrl(route);
+  }
 
   constructor(private router: Router,
     private userService: UserService
@@ -51,6 +153,10 @@ export class LayoutComponent implements OnInit {
 
   async initializeNavItems() {
     this.navItems = await this.getNavItems();
+  }
+
+  showOrHiddenMenu(){
+    this.showMenu = !this.showMenu;
   }
 
   async getNavItems() {
@@ -193,6 +299,36 @@ export class LayoutComponent implements OnInit {
     if (this.isMobileView) {
       this.isMenuOpen = false;
     }
+  }
+
+  redirectToMinMenu(route: string, name: string, event: MouseEvent) {
+    event.stopPropagation(); // Evita que el clic se propague
+    
+    if (name === 'Parámetros Administrativos') {
+      this.sectionMenu = name;
+      this.children = [];
+      this.showSubMenuParams = !this.showSubMenuParams; // Alternar visibilidad
+      this.showSubMenuAdmDir = false; // Cerrar el otro menú si está abierto
+      
+      const data = this.navItems.find((item: any) => item.name === 'Parámetros Administrativos');
+      this.children = data?.children || [];
+      
+      return;
+    }
+    
+    if (name === 'Administración Dirección') {
+      this.sectionMenu = name;
+      this.children = [];
+      this.showSubMenuAdmDir = !this.showSubMenuAdmDir; // Alternar visibilidad
+      this.showSubMenuParams = false; // Cerrar el otro menú si está abierto
+      
+      const data = this.navItems.find((item: any) => item.name === 'Administración Dirección');
+      this.children = data?.children || [];
+      
+      return;
+    }
+    
+    this.router.navigateByUrl(route);
   }
 
   toggleMobileMenu() {

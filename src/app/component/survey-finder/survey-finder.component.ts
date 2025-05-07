@@ -21,28 +21,11 @@ export class SurveyFinderComponent {
     survey: any = {};
     loading = false;
     isIdentification: boolean = false;
-    document = [
-        { key: "registro-civil", value: "Registro Civil" },
-        { key: "tarjeta-de-identidad", value: "Tarjeta de Identidad" },
-        { key: "cedula-de-ciudadania", value: "Cedula de Ciudadania" },
-        { key: "cedula-extranjeria", value: "Cedula Extranjeria" },
-        { key: "pasaporte", value: "Pasaporte" },
-        { key: "menor-sin-id", value: "Menor sin Id" },
-        { key: "adulto-sin-id", value: "Adulto sin Id" },
-        { key: "permiso-especial-de-permanencia", value: "Permiso Especial de Permanencia" },
-        { key: "certificado-de-nacido-vivo", value: "Certificado de Nacido Vivo" },
-        { key: "carne-diplomatico", value: "Carne Diplomatico" },
-        { key: "salvoconducto", value: "Salvoconducto" },
-        { key: "documento-extranjero", value: "Documento Extranjero" },
-        { key: "permiso-por-proteccion-temporal", value: "Permiso por proteccion temporal" },
-        { key: "no-especificado", value: "No Especificado" }
-    ]
-
 
     constructor(private surveyService: SurveyService) {
         this.form = new FormGroup({
             identification: new FormControl('', Validators.required),
-            identificationType: new FormControl('', Validators.required),
+            identificationTypeId: new FormControl('', Validators.required),
         });
         this.checkValue();
     }
@@ -99,8 +82,8 @@ export class SurveyFinderComponent {
       }
 
 
-    setIdentificationType(event: string) {
-        this.form.get('identificationType')?.setValue(event);
+    setIdentificationType(event: any) {
+        this.form.get('identificationTypeId')?.setValue(event);
     }
     async clear() {
         this.clearListen.emit(true);

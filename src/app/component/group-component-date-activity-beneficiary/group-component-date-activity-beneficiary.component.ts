@@ -9,6 +9,7 @@ import { GroupComponentService } from '../../service/group-component.service';
 import { GroupComponentDateActivityBenefiaryService } from '../../service/group-component-date-activity-benefiary.service';
 import { PaginatorService } from '../../service/paginator.service';
 import Swal from 'sweetalert2';
+import { AssistanceScannerBeneficiaryService } from '../../service/assistance-scanner-beneficiary.service';
 
 
 @Component({
@@ -38,7 +39,12 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     userIdentificationType: 'Tipo de Identificación del Beneficiario',
     state: 'Estado',
   };
-  
+
+  originalImages = [];
+  processedImages = [];
+  isModalOpen = false;
+  typeImage = '';
+
   selectedIds: number[] = [];
   recordsTableColumns: string[] = [];
   displayedColumns: string[] = [];
@@ -66,7 +72,8 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
     private groupComponentService: GroupComponentService,
     public dialog: MatDialog,
     private paginatorService: PaginatorService,
-    private _groupComponentDateActivityBeneficiaryServiceService: GroupComponentDateActivityBenefiaryService
+    private _groupComponentDateActivityBeneficiaryServiceService: GroupComponentDateActivityBenefiaryService,
+    private _assistanceScannerBenneficiaryService: AssistanceScannerBeneficiaryService, 
   ) {
     this.recordsTableColumns = Object.keys(this.columns).filter(col => col !== 'actions' && col !== 'select');
     this.displayedColumns = ['actions', 'select', ...this.recordsTableColumns]; // Acciones primero, luego checkbox y demás columnas
@@ -263,10 +270,14 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
       });
       if (result.value) {
         this._groupComponentDateActivityBeneficiaryServiceService.deleteIds(this.selectedIds).subscribe({
-          next: () => {
+          next: (response: any) => {
             this.ngOnInit();
             this.getAll();
-            Swal.fire('¡Borrado!', 'Los días de asistencia han sido eliminado.', 'success');
+            if(response.skippedIds.length > 0){
+              Swal.fire('¡Borrado!', 'Algunos dias no se lograron borrar debido a que ya contaban con asistencias.', 'success');
+            } else {
+              Swal.fire('¡Borrado!', 'Los días de asistencia han sido eliminado.', 'success');
+            }
           },
           error: (error: any) =>{
             Swal.fire('Cancelado', 'No se han eliminado los días de asistencia', 'error');
@@ -290,5 +301,26 @@ export class GroupComponentDateActivityBeneficiaryComponent implements OnInit, A
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire('Cancelado', 'No se ha eliminado el día de asistencia', 'error');
       }
+    }
+
+    show(item:any, typeImage:string){
+      this._assistanceScannerBenneficiaryService.getByUserAndDate(item.userId, item.dateActivity).subscribe({
+        next: (response:any) => {
+          this.typeImage = typeImage; 
+          this.originalImages = [];
+          this.processedImages = [];
+          this.isModalOpen = true
+          if(typeImage == 'process'){
+            this.processedImages = response.filter((img:any) => img.urlFileImageProcessed).map((img:any) => img.urlFileImageProcessed);
+          }else{
+            this.originalImages = response.filter((img: any) => img.urlFileImageOriginal).map((img:any) => img.urlFileImageOriginal);
+            
+          }
+
+        },
+        error: (error:any) => {
+
+        }
+      })
     }
 }

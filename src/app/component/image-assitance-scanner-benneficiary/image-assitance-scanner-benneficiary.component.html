@@ -1,0 +1,53 @@
+<div class="flex flex-col items-center p-4 space-y-8 w-full">
+  <!-- Controles del carrusel -->
+  <div class="flex items-center justify-center space-x-4 w-full mb-4">
+    <button (click)="prevImage()" class="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+    
+    <span class="text-gray-600 font-medium">
+      Imagen {{currentIndex + 1}} de {{maxLength}}
+    </span>
+    
+    <button (click)="nextImage()" class="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Contenedor de imágenes en vertical -->
+  <div class="w-full  space-y-8">
+    <!-- Imagen Original -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg">
+      <h2 class="text-xl font-semibold p-4 bg-gray-50 text-gray-800 border-b">Imagen Original</h2>
+      <div class="relative aspect-video">
+        <img 
+          [src]="currentOriginalImage" 
+          alt="Imagen Original" 
+          class="w-full h-full object-contain bg-gray-100 p-4"
+          *ngIf="currentOriginalImage">
+        <div class="absolute inset-0 flex items-center justify-center bg-gray-100" *ngIf="!currentOriginalImage">
+          <p class="text-gray-500 italic">No hay imagen disponible</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Imagen Procesada -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg">
+      <h2 class="text-xl font-semibold p-4 bg-blue-50 text-blue-800 border-b">Imagen Procesada</h2>
+      <div class="relative aspect-video">
+        <img 
+          [src]="currentProcessedImage" 
+          alt="Imagen Procesada" 
+          class="w-full h-full object-contain bg-blue-50 p-4"
+          *ngIf="currentProcessedImage">
+        <div class="absolute inset-0 flex items-center justify-center bg-blue-50" *ngIf="!currentProcessedImage">
+          <p class="text-blue-500 italic">No hay imagen disponible</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

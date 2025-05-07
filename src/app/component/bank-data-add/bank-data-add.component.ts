@@ -13,6 +13,7 @@ import { SurveyService } from '../../service/survey.service';
 export class BankDataAddComponent {
   survey: any = {};
   form: FormGroup;
+  backRoute = "app/account-certification";
 
   constructor(private surveyService: SurveyService,
               private router: Router,

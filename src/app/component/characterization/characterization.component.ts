@@ -3,7 +3,6 @@ import { QuestionGroupService } from '../../service/question-group.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CharacterizationService } from '../../service/characterization.service';
 import Swal from 'sweetalert2';
-import { SurveyService } from '../../service/survey.service';
 import { IndexedDbService } from '../../service/indexed-db.service';
 
 @Component({

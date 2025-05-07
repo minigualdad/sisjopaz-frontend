@@ -15,6 +15,11 @@ export class GroupComponentDateActivityBenefiaryService {
     return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/addActivities`, { groupComponentId, periodId });
   }
 
+  // roleVerify([Roles.ADMIN, Roles.DIRECCION])
+  addActivitiesAllGroups(periodId: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/addActivitiesAllGroups`, { periodId });
+  }
+
   // No se usa
   getAllByGroupComponent(id: number) {
     return this._httpClient.get(`${environment.apiUrl}/app/groupComponentDateActivityBeneficiary/${id}/getAllByGroupComponent`)

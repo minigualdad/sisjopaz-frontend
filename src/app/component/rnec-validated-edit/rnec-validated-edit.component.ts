@@ -15,6 +15,7 @@ export class RnecValidatedEditComponent {
   form: FormGroup;
   reset = false;
   errorMessage: string = '';
+  backRoute = "app/rnec-validated";
 
 
   constructor(private surveyService: SurveyService,

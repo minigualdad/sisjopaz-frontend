@@ -21,6 +21,7 @@ export class AssistanceEditComponent implements OnInit{
   dataFix:any;
   survey : any = null;
   enviroment = environment.apiUrl;
+  backRoute = "app/assistance-error";
 
   constructor(private activatedRoute: ActivatedRoute,
     private assistanceScannerService: AssistanceScannerService,

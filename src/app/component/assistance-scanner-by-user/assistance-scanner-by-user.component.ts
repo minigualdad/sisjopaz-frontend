@@ -37,6 +37,7 @@ columns: any = {
 recordsTableColumns: string[] = [];
 user: any;
 group: any = {};
+backRoute = "app/group";
 
 
 constructor(

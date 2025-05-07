@@ -19,6 +19,7 @@ export class BankCertificationValidateVerifyComponent {
   motive = '';
   decision: 'accept' | 'reject' | null = null;
   accountCert: string | null = null;
+  dataBank:any;
 
   @ViewChild('popoverContainer', { static: true }) popoverContainer!: ElementRef;
   showImageOptions = false;
@@ -42,6 +43,7 @@ export class BankCertificationValidateVerifyComponent {
 
   ngOnInit(): void {
     this.showSurvey();
+    this.getDataBank();
   }
 
   showSurvey(){
@@ -61,6 +63,17 @@ export class BankCertificationValidateVerifyComponent {
       this.survey.name = response.survey.firstName + ' ' +  response.survey.secondName + ' ' + response.survey.firstLastName + ' ' + response.survey.secondLastName;
 
       this.accountCert = this.url + this.survey.accountCertificationUrl;
+    })
+  }
+
+  getDataBank(){
+    this.surveyService.findDataBankBySurveyId(Number(this.survey.id)).subscribe({
+      next: (response:any) => {
+        this.dataBank = response.data[0];
+      },
+      error: (error:any) => {
+
+      }
     })
   }
 

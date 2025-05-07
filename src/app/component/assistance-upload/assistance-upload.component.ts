@@ -34,6 +34,7 @@ export class AssistanceUploadComponent implements OnInit {
   showTableData = false;
   imageLoaded: boolean = false;
   showTableFix = false;
+  backRoute = "app/group";
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   columns: any = {
@@ -240,10 +241,6 @@ export class AssistanceUploadComponent implements OnInit {
     window.location.reload();
   }
 
-  showTables() {
-    this.showTableFix = !this.showTableFix;
-  }
-
   getDisplayedColumns(): string[] {
     return this.showFormError
       ? ['select', ...this.recordsTableColumns, 'actions']
@@ -305,12 +302,6 @@ export class AssistanceUploadComponent implements OnInit {
     })
   }
 
-  reciveReload(event: boolean){
-    if(event){
-      this.getAll();
-    }
-  }
-
   transformDatesToSend(data: any) {
     const groupedData: any = {};
     if(data.response){
@@ -364,11 +355,23 @@ export class AssistanceUploadComponent implements OnInit {
   }
 
   handleMinus(event: { record: any, date: string }) {
-    this.selectedRecordData = { ...event, hasAssistance: false };
+    const cleanDate = event.date.split(' ')[0];
+    this.form.patchValue({
+      userId: event.record.userId,
+      dateActivity: cleanDate,
+      hasAssitence: false,
+    });
+    this.create();
   }
 
   handlePlus(event: { record: any, date: string }) {
-    this.selectedRecordData = { ...event, hasAssistance: true };
+    const cleanDate = event.date.split(' ')[0];
+    this.form.patchValue({
+      userId: event.record.userId,
+      dateActivity: cleanDate,
+      hasAssitence: true,
+    });
+    this.create();
   }
 
   handleAdd(record: any) {

@@ -1,6 +1,6 @@
-<div class="relative bg-white p-6 rounded-lg w-full overflow-visible">
+<div class="relative bg-white p-6 rounded-lg w-full max-h-[90vh] overflow-y-auto" >
     <button
-      class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+      class="absolute m-2 top-2 right-2 text-gray-500 hover:text-gray-700"
       mat-icon-button
       (click)="closeDialog()"
     >
@@ -66,14 +66,73 @@
         </div>
       </div>
     </div>
+    <form [formGroup]="form" class="bg-white p-6 rounded-lg" (ngSubmit)="create()">
   
-    <button
-      mat-raised-button
-      color="accent"
-      class="text-white"
-      (click)="confirmValidate()"
-    >
-      Actualizar
-    </button>
+      <mat-dialog-content class="mat-typography">
+          <div>
+              <div class="md:grid md:grid-cols-1 md:gap-6">
+                  <div class="md:col-span-1">
+                      <div class="px-4 sm:px-0">
+                          <h3 class="text-lg font-medium leading-6 text-gray-900">Agregar Información Bancaria al Joven</h3>
+                          <p class="mt-1 text-sm text-gray-600">Esta será información bancaria que se agregará al joven.
+                          </p>
+                      </div>
+                  </div>
+                  <div class="mt-5 md:col-span-2 md:mt-0">
+  
+                      <app-bank-selector (bankIdListen)="onBankSelect($event)"></app-bank-selector>
+                     
+                      <div class="mb-4">
+                          <span class="text-blue-600 text-lg font-semibold">*</span>
+                          <label for="options" class="text-sm font-semibold text-gray-700 mb-4">Tipo de Cuenta</label>
+                          <br>
+                          <select formControlName="accountType" class="w-full h-10 p-2">
+                              <option class="w-40 h-10" value="CUENTA DE AHORROS(NEQUI)">Cuenta de Ahorros(Nequi)</option>
+                              <option class="w-40 h-10" value="CUENTA CORRIENTE">Cuenta Corriente</option>
+                              <option class="w-40 h-10" value="DAVIPLATA">Daviplata</option>
+                          </select>
+                      </div>
+                      <div class="mb-4">
+                          <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                              <mat-label>Número de Cuenta:</mat-label>
+                              <input type="number" matInput formControlName="accountNumber">
+                          </mat-form-field>
+                      </div>
+                      <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Direccion de Correo:</mat-label>
+                            <input type="text" matInput formControlName="email">
+                        </mat-form-field>
+                    </div>
+                    <div class="mb-4">
+                      <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                        <mat-label>Fecha de expedición del documento:</mat-label>
+                        <input type="date" matInput formControlName="expeditionDate">
+                        <mat-error *ngIf="form.get('expeditionDate')?.errors?.['futureDate']">
+                          La fecha no puede ser superior a la actual.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('expeditionDate')?.errors?.['required'] && form.get('expeditionDate')?.touched">
+                          La fecha de expedición es requerida.
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+              </div>
+  
+          </div>
+      </mat-dialog-content>
+      <mat-dialog-actions align="end">
+        <button 
+        class="bg-primary rounded-2xl" 
+        mat-flat-button 
+        primary
+        [disabled]="form.invalid || !hasFileLoaded" 
+        [type]="(form.invalid || !hasFileLoaded) ? 'button' : 'submit'"
+      >
+        Agregar Información Bancaria
+      </button>
+      </mat-dialog-actions>
+  </form>
+  
   </div>
   

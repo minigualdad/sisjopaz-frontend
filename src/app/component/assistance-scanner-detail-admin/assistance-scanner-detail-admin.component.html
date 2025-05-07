@@ -28,18 +28,10 @@
 
 
             <div class="flex flex-col gap-4 mt-4">
-                <!-- Botón de toggle -->
-                <div class="flex w-full justify-end">
-                    <button
-                        class="flex items-center gap-2 px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-full transition-colors duration-200 shadow-md"
-                        (click)="showImage()">
-                        <mat-icon class="">{{ showImg ? 'visibility_off' : 'visibility' }}</mat-icon>
-                        <span>{{ showImg ? 'Ocultar imágenes' : 'Mostrar imágenes' }}</span>
-                    </button>
-                </div>
+
 
                <!-- Contenedor de imágenes -->
-               <div *ngIf="!showImg && urlData" class="flex flex-col gap-6 mb-6">
+               <div *ngIf="urlData" class="flex flex-col gap-6 mb-6">
                 <!-- Imagen original -->
                 <div class="w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg">
                   <div class="p-3 bg-gray-50 border-b border-gray-200">
@@ -75,7 +67,8 @@
         <app-assistance-table-fixed 
             [records]="dataSource.data"
             (minusClicked)="handleMinus($event)"
-            (plusClicked)="handlePlus($event)">
+            (plusClicked)="handlePlus($event)"
+            (addClicked)="handleAdd($event)">
         ></app-assistance-table-fixed>
         <app-assistance-beneficiaries
             [records]="assistanceBeneficiariesList"

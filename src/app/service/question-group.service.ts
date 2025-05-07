@@ -41,6 +41,26 @@ export class QuestionGroupService {
     }
   }
 
+  getAllPreregister() {
+    this.connectionStatusCheck();
+    if(this.connectionStatus){
+      return this.show(3);
+    } else {
+      return from(this.indexedDbService.getQuestionsCharacterization()).pipe(
+        switchMap((questions: any) => {
+          if(questions && questions.length > 0){
+            const objetct = {questionGroup: {questions: []}};
+            objetct.questionGroup.questions = questions
+            return of(objetct)
+          } else {
+            const fallbackQuestions = {questionGroup: {questions: []}};
+            return of(fallbackQuestions);
+          }
+        })
+      )
+    }
+  }
+
   getAllMonitoreo() {
     this.connectionStatusCheck();
     if(this.connectionStatus){

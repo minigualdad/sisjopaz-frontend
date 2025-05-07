@@ -13,6 +13,11 @@ export class AssistanceTableFixedComponent {
   @Output() minusClicked = new EventEmitter<{ record: any, date: string }>();
   @Output() plusClicked = new EventEmitter<{ record: any, date: string }>();
   @Output() reloadRecords = new EventEmitter<boolean>();
+  @Output() addClicked = new EventEmitter<any>();
+
+
+  dateSelector = false;
+  selectedRecordData: any;
 
   columns: any = {
     identificationType: 'Tipo de documento',
@@ -67,5 +72,11 @@ export class AssistanceTableFixedComponent {
       const dateB = new Date(b.split(' ')[0]);
       return dateA.getTime() - dateB.getTime();
     });
+  }
+
+  handleAdd(record: any) {
+    this.selectedRecordData = record;
+    this.selectedRecordData.id = record.userId;
+    this.addClicked.emit(this.selectedRecordData);
   }
 }

@@ -57,7 +57,7 @@ constructor(
 * On init
 */
 ngOnInit(): void {
-      this.getAll();
+  this.getAll();
 }
 
 /**

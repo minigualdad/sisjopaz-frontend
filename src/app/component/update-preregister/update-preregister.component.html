@@ -1,4 +1,5 @@
 <form [formGroup]="form" class="bg-white p-6 rounded-lg" (ngSubmit)="edit()">
+    <app-button-back [routeBack]="backRoute" class="mb-2"></app-button-back>
 
     <mat-dialog-content class="mat-typography">
         <div>
@@ -12,15 +13,7 @@
                     </div>
                 </div>
                 <div class="mt-5 md:col-span-2 md:mt-0">
-                    <div class="mb-4">
-                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                            <mat-label>Tipo de Documento</mat-label>
-                            <mat-select formControlName="identificationType" required>
-                                <mat-option *ngFor="let documentSelected of document" [value]="documentSelected.key"> {{
-                                    documentSelected.value }} </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
+                    <app-identification-type-selector [identificationType]="survey?.identificationTypeId" (identificationTypeIdListen)="onSelectIdentificationType($event)"></app-identification-type-selector>
                     <div class="mb-4">
                         <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                             <mat-label>Número de Documento:</mat-label>

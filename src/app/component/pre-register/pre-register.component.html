@@ -65,15 +65,8 @@
 
                     <div class="w-full space-y-4">
                         <!-- Selector de tipo de documento -->
-                        <app-selected
-                          *ngIf="conditionsAccepted"
-                          [reset]="reset"
-                          (submit)="onDocumentTypeChange($event)"
-                          class="w-full"
-                          [title]="'Tipo de documento de identificación'"
-                          [array]="document"
-                        ></app-selected>
-                      
+                         <app-identification-type-selector *ngIf="conditionsAccepted" (identificationTypeIdListen)="onDocumentTypeChange($event)">
+                         </app-identification-type-selector>
                         <!-- Campo de número de documento -->
                         <div *ngIf="conditionsAccepted" class="w-full flex flex-col space-y-2">
                           <app-input
@@ -130,17 +123,6 @@
                 </div>
 
                 <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-unique-option [reset]="reset" (submit)="setHasBankAccount($event)" class="w-full"
-                        [title]="'¿Tiene cuenta bancaria o alguna billetera digital?'"
-                        [subtitle]="'Algunos ejemplos de billeteras digitales son Daviplata, Nequi, Movi, Coink, puede mencionar otros de uso común en el territorio'"
-                        [options]="[
-                                    {key: 'si', value: 'Sí'},
-                                    {key: 'no', value: 'No'},
-                                ]">
-                    </app-unique-option>
-                </div>
-
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
                     <app-input [reset]="reset" (submit)="setEmail($event)" type="email" class="w-full"
                         [title]="'Si tiene correo electrónico ¿Cuál es?'"
                         [subtitle]="'Si no tiene continuar a la siguiente pregunta'" [placeholder]="''"></app-input>
@@ -157,28 +139,32 @@
                 <app-selected *ngIf="conditionsAccepted" [reset]="reset" (submit)="setMunicipality($event)" class="w-full "
                     [title]="'¿En qué municipio vive?'" [array]="municipalities">
                 </app-selected>
-
-
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-unique-option [reset]="reset" (submit)="setZone($event)" class="w-full"
-                        [title]="'¿En cuál de las siguientes zonas vive?'" [options]="[
-                                    {key: 'cabecera-municipal', value: 'Cabecera Municipal'},
-                                    {key: 'centro-poblado', value: 'Centro Poblado'},
-                                    {key: 'rural-disperso', value: 'Rural disperso'},
-                                ]">
-                    </app-unique-option>
+                <div *ngIf="conditionsAccepted" class="w-full flex">
+                <div *ngFor="let subgroup of subgroups" class="w-full">
+                    <h2 class="text-2xl mt-8">{{ subgroup.name }}</h2>
+                    <div class="w-full" *ngFor="let question of questions">
+                        <div class="w-full" *ngIf="question.questionSubgroupId == subgroup.id">
+                            <app-unique-option class="w-full" *ngIf="question.typeAnswer == 'select_one'"
+                                        (submit)="addUserResponse($event, question.id)"
+                                        [title]="question.question" 
+                                        [required]="question.isMandatory == 'si'"
+                                        [options]="question.answerObj">
+                            </app-unique-option>
+                            <app-input class="w-full" [title]="question.question" *ngIf="question.typeAnswer == 'text'"
+                                (submit)="addUserResponse($event, question.id)"
+                                [required]="question.isMandatory == 'si'"
+                                [subtitle]="question.questionObservations"
+                                placeholder=""></app-input>
+                            <app-input class="w-full" [title]="question.question" 
+                                (submit)="addUserResponse($event, question.id)"
+                                *ngIf="question.typeAnswer == 'integer'"
+                                type="number" 
+                                [required]="question.isMandatory == 'si'"
+                                [subtitle]="question.questionObservations" placeholder=""></app-input>
+                
+                        </div>
+                    </div>
                 </div>
-
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-input [reset]="reset" (submit)="setLocality($event)" class="w-full"
-                        [title]="'¿En qué localidad, comuna, centro poblado o vereda vive?'"
-                        [subtitle]="'Si no sabe o no aplica poner NA'"></app-input>
-
-                </div>
-
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-input [reset]="reset" (submit)="setNeighborhood($event)" class="w-full"
-                        [title]="'¿En qué barrio vive?'" [subtitle]="'Si no sabe o no aplica poner NA'"></app-input>
 
                 </div>
 
@@ -203,18 +189,6 @@
                     <app-input [reset]="reset" (submit)="setWhatsappNumber($event)" class="w-full" [type]="'tel'"
                         [title]="'Número de WhatsApp'" [required]="false" [placeholder]="''">
                     </app-input>
-                </div>
-
-
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-unique-option [reset]="reset" (submit)="setWhereBorn($event)" class="w-full"
-                        [title]="'¿Dónde nació?'" [options]="[
-                                    {key: 'este-municipio', value: 'En este municipio'},
-                                    {key: 'otro-municipio', value: 'En otro municipio'},
-                                    {key: 'otro-pais', value: 'En otro país'},
-                                ]">
-                    </app-unique-option>
-
                 </div>
 
                 <label *ngIf="conditionsAccepted" class="font-bold text-2xl text-blue my-8">CIERRE</label>

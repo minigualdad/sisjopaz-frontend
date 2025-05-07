@@ -1,7 +1,9 @@
 <form [formGroup]="form">
     <div class="mb-4">
-        <app-selected class="w-full " [title]="'Tipo de documento de identificación'" (submit)="setIdentificationType($event)" [array]="document">
-        </app-selected>
+        <app-identification-type-selector (identificationTypeIdListen)="setIdentificationType($event)">
+
+        </app-identification-type-selector>
+
         <mat-form-field class="w-full" subscriptSizing="dynamic">
             <br><mat-label>Número de Identificación:</mat-label>
             <input type="number" matInput formControlName="identification" (keydown.enter)="checkSurveyByIdentification()">

@@ -31,6 +31,7 @@ columns: any = {
 recordsTableColumns: string[] = [];
 user: any;
 regional : any = {};
+backRoute = "app/region";
 
 constructor(
   private regionalLinkService: RegionalLinkService,

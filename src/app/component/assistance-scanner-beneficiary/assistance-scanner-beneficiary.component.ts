@@ -32,6 +32,7 @@ recordsTableColumns: string[] = [];
 user: any;
 server: any = environment.apiUrl + '/app/survey/files/';
 survey: any = {};
+backRoute = "app/group";
 constructor(
   private assistanceScannerBeneficiaryService: AssistanceScannerBeneficiaryService,
   private titleService: Title,

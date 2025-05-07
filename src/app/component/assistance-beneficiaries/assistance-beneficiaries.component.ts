@@ -24,36 +24,10 @@ export class AssistanceBeneficiariesComponent {
     name: 'Nombre'
   };
 
-  currentPage: number = 1;
-  pageSize: number = 11;
-
   constructor(){}
 
   ngOnInit(): void {
     this.dataSource.data = this.records;
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.records.length / this.pageSize);
-  }
-  
-  get paginatedRecords(): any[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.records.slice(start, start + this.pageSize);
-  }
-  
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['records']) {
-      const prev = changes['records'].previousValue;
-      const current = changes['records'].currentValue;
-  
-      const sameLength = prev?.length === current.length;
-      const sameData = JSON.stringify(prev) === JSON.stringify(current);
-
-      if (!sameLength || !sameData) {
-        this.currentPage = 1;
-      }
-    }
   }
 
   typeMap: { [key: string]: string } = {

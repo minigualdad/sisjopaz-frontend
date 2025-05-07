@@ -78,6 +78,13 @@
                                             <mat-icon>date_range</mat-icon>
                                                 Asistencias por Mes
                                             </button>
+                                            <button *ngIf="(transaction.Component.name === 'Educación' && user.role === 'PROFESIONAL_EDUCACION') || 
+                                            (transaction.Component.name === 'Corresponsabilidad' && user.role === 'PROFESIONAL_CORRESPONSABILIDAD') ||
+                                            user && (user.role === 'ENLACE_REGIONAL' || user.role === 'COORDINACION' || user.role === 'DIRECCION' || user.role === 'ADMIN')"
+                                            mat-menu-item [routerLink]="['/app', 'attendance-by-month-assistance',transaction.id]">
+                                            <mat-icon>visibility</mat-icon>
+                                                Ver Planillas por Mes
+                                            </button>
                                             <button *ngIf="user && (user.role === 'ENLACE_REGIONAL' || user.role === 'COORDINACION' || user.role === 'DIRECCION' || user.role === 'ADMIN')"
                                             mat-menu-item [routerLink]="['/app', 'group-component-date-activity-beneficiary',transaction.id]">
                                             <mat-icon>how_to_vote</mat-icon>

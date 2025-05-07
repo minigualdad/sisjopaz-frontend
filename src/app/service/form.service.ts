@@ -26,7 +26,6 @@ export class FormService {
     return this._http.post(`${environment.apiUrl}/app/survey/createPreregister`, fd)
   }
 
-  // roleVerify([Roles.ADMIN, Roles.DIRECCION, Roles.COORDINACION, Roles.ENLACE_REGIONAL])
   agreement(form:any){
     const fd = new FormData();
     if(form.accountFile) {

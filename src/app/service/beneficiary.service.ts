@@ -582,8 +582,6 @@ export class BeneficiaryService {
       .pipe(
         map((response: any) => {
           response.beneficiaries = response.beneficiaries.beneficiaries.map((beneficiary: any) => {
-            beneficiary.updatedDate = beneficiary.updatedAt.split('T')[0];            
-            beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
             beneficiary.name = beneficiary.firstName;
             if (beneficiary.secondName) {
               beneficiary.name += ' ';
@@ -600,10 +598,7 @@ export class BeneficiaryService {
               beneficiary.secondLastName = '';
             }    
             beneficiary.stateAgreement = beneficiary?.state;
-            beneficiary.identification = beneficiary?.identification;
-            beneficiary.identificationType = beneficiary?.identificationType;
-            beneficiary.email = beneficiary?.email;
-            beneficiary.group = beneficiary.Group?.name;
+            beneficiary.identificationType = beneficiary?.IdentificationType?.alias;
             return beneficiary;
           })
           return response;

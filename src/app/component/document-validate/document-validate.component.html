@@ -52,13 +52,13 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu class="bg-white" #menu="matMenu">
-                  <button *ngIf="transaction.documentIdentificationCheck === 'Pendiente'" mat-menu-item
+                  <button *ngIf="transaction.documentIdentificationCheck === 'Pendiente' || transaction.documentIdentificationCheck === null" mat-menu-item
                     (click)="showDocument(transaction.id)">
                     <mat-icon>remove_red_eye</mat-icon>
                     Revisar Documento
                   </button>
                   <button
-                    *ngIf="transaction.documentIdentificationCheck === 'No Validado' || transaction.documentIdentificationCheck === 'Sin Cargar' "
+                    *ngIf="transaction.documentIdentificationCheck === 'No Validado' || transaction.documentIdentificationCheck === 'Sin Cargar' || transaction.documentIdentificationCheck === null "
                     mat-menu-item (click)="updateDocument(transaction.id)">
                     <mat-icon>update</mat-icon>
                     Actualizar Documento

@@ -11,6 +11,7 @@ import { UserService } from '../../service/user.service';
 import { DivipolService } from '../../service/divipol.service';
 import { DepartmentService } from '../../service/department.service';
 import { Router } from '@angular/router';
+import { QuestionGroupService } from '../../service/question-group.service';
 
 @Component({
   selector: 'app-pre-register',
@@ -21,12 +22,6 @@ import { Router } from '@angular/router';
 export class PreRegisterComponent implements OnChanges {
   showModal = false;
   form: FormGroup;
-  options = [
-    'Pre - inscripción',
-    'Acuerdo de Participación y Corresponsabilidad',
-    'Caracterización',
-    'Monitoreo',
-  ];
   document = [
     { key: "registro-civil", value: "Registro Civil" },
     { key: "tarjeta-de-identidad", value: "Tarjeta de Identidad" },
@@ -50,14 +45,11 @@ export class PreRegisterComponent implements OnChanges {
   age = 0;
   departments = [];
   municipalities = [];
-  frontImageFile: any;
-  backImageFile: any;
   qty = 0;
   syncStatus = '';
   reset = false;
   user: any;
   conditionsAccepted: boolean = false;
-  extemporaryRegister: any;
   date: any = new Date();
   todayDate: any;
   divipola: any
@@ -65,22 +57,26 @@ export class PreRegisterComponent implements OnChanges {
   userDepartment: any;
   role: any;
   departmentName: any;
+  questions: any[] = [];
+  subgroups: any[] = [];
+  completedAllQuestions = false;
+  questionData: any = [];
 
   documentRestrictions:any = {
-    "registro-civil": { min: 8, max: 11, exact: null },
-    "tarjeta-de-identidad": { min: 10, max: 11, exact: null },
-    "cedula-de-ciudadania": { min: 8, max: 10, exact: null },
-    "cedula-extranjeria": { min: null, max: 14, exact: null },
-    "pasaporte": { min: null, max: 22, exact: null },
-    "menor-sin-id": { min: null, max: null, exact: null }, // Validación especial
-    "adulto-sin-id": { min: null, max: null, exact: null }, // Validación especial
-    "permiso-especial-de-permanencia": { min: null, max: 21, exact: null },
-    "certificado-de-nacido-vivo": { min: null, max: 20, exact: null },
-    "carne-diplomatico": { min: 14, max: 14, exact: 14 },
-    "salvoconducto": { min: 12, max: 12, exact: 12 },
-    "documento-extranjero": { min: null, max: 22, exact: null },
-    "permiso-por-proteccion-temporal": { min: 10, max: 10, exact: 10 },
-    "no-especificado": { min: null, max: null, exact: null }
+    4: { min: 8, max: 11, exact: null },
+    2: { min: 10, max: 11, exact: null },
+    1: { min: 8, max: 10, exact: null },
+    5: { min: null, max: 14, exact: null },
+    6: { min: null, max: 22, exact: null },
+    7: { min: null, max: null, exact: null }, // Validación especial
+    8: { min: null, max: null, exact: null }, // Validación especial
+    9: { min: null, max: 21, exact: null },
+    10: { min: null, max: 20, exact: null },
+    11: { min: 14, max: 14, exact: 14 },
+    12: { min: 12, max: 12, exact: 12 },
+    13: { min: null, max: 22, exact: null },
+    3: { min: 10, max: 10, exact: 10 },
+    14: { min: null, max: null, exact: null }
   };
   
   selectedDocumentType: string = '';
@@ -93,7 +89,8 @@ export class PreRegisterComponent implements OnChanges {
     private userService: UserService,
     private divipolService: DivipolService,
     private router: Router,
-    private departmentService: DepartmentService
+    private departmentService: DepartmentService,
+    private questionGroupService: QuestionGroupService,
   ) {
     this.form = new FormGroup({
       //cabecera JeP
@@ -103,11 +100,8 @@ export class PreRegisterComponent implements OnChanges {
       registryFrom: new FormControl('', [Validators.required]),
       autorizationMinistery: new FormControl('', [Validators.required]),
       autorizationData: new FormControl('', [Validators.required]),
-
       //Pre-Registro
-      frontIdentificationtUrl: new FormControl(''),
-      backIdentificationUrl: new FormControl(''),
-      identificationType: new FormControl('', [Validators.required]),
+      identificationTypeId: new FormControl('', [Validators.required]),
       identification: new FormControl('', [Validators.required]),
       identificationExpeditionOriginal: new FormControl('', [Validators.required]),
       firstNameOriginal: new FormControl('', [Validators.required]),
@@ -117,19 +111,14 @@ export class PreRegisterComponent implements OnChanges {
       bornDateOriginal: new FormControl('', [Validators.required]),
       hasCorrectAgeRange: new FormControl(true, []),
       calculatedAge: new FormControl('', [Validators.required, Validators.min(14), Validators.max(28)]),
-      hasBankAccount: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       department: new FormControl('', [Validators.required]),
       municipality: new FormControl('', [Validators.required]),
-      zone: new FormControl('', [Validators.required]),
-      locality: new FormControl('', [Validators.required]),
-      neighborhood: new FormControl('', [Validators.required]),
       phone: new FormControl('', [Validators.required]),
       hasWhatsapp: new FormControl('', [Validators.required]),
       whatsappNumber: new FormControl(''),
       sex: new FormControl('', []),
-      whereBorn: new FormControl('', [Validators.required]),
-      extemporaryRegister: new FormControl(''),
+      questionData: new FormControl('', [Validators.required]),
     });
     this.userDepartment = Number(localStorage.getItem('departmentId'));
     this.role = localStorage.getItem('role');
@@ -137,6 +126,7 @@ export class PreRegisterComponent implements OnChanges {
   }
 
   async ngOnInit() {
+    this.setQuestions();
     if(this.role === 'ADMIN' || this.role === 'DIRECCION'){
     this.departmentService.getAll().subscribe({
       next: (response: any) => {
@@ -190,9 +180,9 @@ export class PreRegisterComponent implements OnChanges {
     });
   }
 
-  onDocumentTypeChange(documentType: string) {
-    this.selectedDocumentType = documentType;
-    this.form.controls['identificationType'].setValue(this.selectedDocumentType);
+  onDocumentTypeChange(event: any) {
+    this.selectedDocumentType = event;
+    this.form.controls['identificationTypeId'].setValue(this.selectedDocumentType);
     this.validateIdentificationNumber();
   }
   
@@ -277,21 +267,6 @@ export class PreRegisterComponent implements OnChanges {
 
     this.form.get('autorizationData')?.setValue(event);
     this.isRequiredCompletes()
-
-
-  }
-
-  onFileSelected(event: Event, side: 'front' | 'back'): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      if (side === 'front') {
-        this.frontImageFile = file;
-        this.form.get('frontIdentificationtUrl')?.setValue('uploaded');
-      } else {
-        this.backImageFile = file;
-        this.form.get('backIdentificationUrl')?.setValue('uploaded');
-      }
-    }
   }
 
   setFirstName(event: any) {
@@ -320,40 +295,14 @@ export class PreRegisterComponent implements OnChanges {
 
   async setMunicipality(event: any) {
     this.form.get('municipality')?.setValue(event);
-}
+  }
 
   setSignDate(event: Date) {
     this.form.get('signDate')?.setValue(event);
   }
 
-  setDigitalSign(event: string) {
-    this.form.get('digitalSign')?.setValue(event);
-  }
-
   setIdentificationType(event: string) {
-    this.form.get('identificationType')?.setValue(event);
-  }
-
-  setBornSex(event: string) {
-    this.form.get('bornSex')?.setValue(event);
-  }
-
-  setGender(event: string) {
-    this.form.get('gender')?.setValue(event);
-  }
-
-  setSexualOrientation(event: string) {
-    this.form.get('sexualOrientation')?.setValue(event);
-  }
-
-  setEducationalLevel(event: string) {
-    this.form.get('educationalLevel')?.setValue(event);
-  }
-  setDisability(event: string) {
-    this.form.get('disability')?.setValue(event);
-  }
-  setCulturalRecognition(event: string) {
-    this.form.get('culturalRecognition')?.setValue(event);
+    this.form.get('identificationTypeId')?.setValue(event);
   }
 
   setIdentification(event: any) {
@@ -365,50 +314,6 @@ export class PreRegisterComponent implements OnChanges {
 
   setIsMinor(event: boolean) {
     this.form.get('isMinor')?.setValue(event);
-  }
-
-  setLegalRepresentativeDocumentUrl(event: string) {
-    this.form.get('legalRepresentativeDocumentUrl')?.setValue(event);
-  }
-
-  setLegalRepresentativeFirstName(event: string) {
-    this.form.get('legalRepresentativeFirstName')?.setValue(event);
-  }
-
-  setLegalRepresentativeSecondName(event: string) {
-    this.form.get('legalRepresentativeSecondName')?.setValue(event);
-  }
-
-  setLegalRepresentativeFirstLastName(event: string) {
-    this.form.get('legalRepresentativeFirstLastName')?.setValue(event);
-  }
-
-  setLegalRepresentativeSecondLastName(event: string) {
-    this.form.get('legalRepresentativeSecondLastName')?.setValue(event);
-  }
-
-  setLegalRepresentativeIdentificationType(event: string) {
-    this.form.get('legalRepresentativeIdentificationType')?.setValue(event);
-  }
-
-  setLegalRepresentativeIdentification(event: string) {
-    this.form.get('legalRepresentativeIdentification')?.setValue(event);
-  }
-
-  setLegalRepresentativePhone(event: string) {
-    this.form.get('legalRepresentativePhone')?.setValue(event);
-  }
-
-  setLegalRepresentativeDigitalSign(event: string) {
-    this.form.get('legalRepresentativeDigitalSign')?.setValue(event);
-  }
-
-  setFrontIdentificationtUrl(event: string) {
-    this.form.get('frontIdentificationtUrl')?.setValue(event);
-  }
-
-  setBackIdentificationUrl(event: string) {
-    this.form.get('backIdentificationUrl')?.setValue(event);
   }
 
   setIdentificationExpedition(event: any) {
@@ -437,24 +342,8 @@ export class PreRegisterComponent implements OnChanges {
     this.form.get('calculatedAgeVerify')?.setValue(event);
   }
 
-  setHasBankAccount(event: any) {
-    this.form.get('hasBankAccount')?.setValue(event);
-  }
-
   setEmail(event: string) {
     this.form.get('email')?.setValue(event);
-  }
-
-  setZone(event: string) {
-    this.form.get('zone')?.setValue(event);
-  }
-
-  setLocality(event: string) {
-    this.form.get('locality')?.setValue(event);
-  }
-
-  setNeighborhood(event: string) {
-    this.form.get('neighborhood')?.setValue(event);
   }
 
   setPhone(event: string) {
@@ -474,11 +363,6 @@ export class PreRegisterComponent implements OnChanges {
     this.form.get('whatsappNumber')?.setValue(event);
   }
 
-  setWhereBorn(event: string) {
-    this.form.get('whereBorn')?.setValue(event);
-  }
-
-
   setDepartment(event: any) {
     this.divipolService.getByDepartmentId(event)
       .subscribe((response: any) => {
@@ -490,19 +374,16 @@ export class PreRegisterComponent implements OnChanges {
     this.form.get('municipality')?.setValue(undefined);
   }
 
-  setSex(event: string) {
-    this.form.get('sex')?.setValue(event);
-  }
-
   async onSubmit() {
+    const dataQuestion =JSON.stringify(this.questionData);
+    this.form.get('questionData')?.setValue(dataQuestion); 
+
     const formData = this.form.value;
 
     // Agregar las imágenes como Blob directamente al registro
     const record = {
       ...formData,
       sync: false,
-      documentFront: this.frontImageFile, // Archivo original
-      documentBack: this.backImageFile, // Archivo original
       synced: false, // Para saber si ya fue sincronizado
       timestamp: new Date().toISOString(), // Para identificar el momento de creación
     };
@@ -570,5 +451,79 @@ export class PreRegisterComponent implements OnChanges {
       this.reset = false;
     }, 100);
     this.router.navigateByUrl(`/app/home`);
+  }
+
+  addUserResponse(userResponse: any, questionId: number) {
+    let checkingCompleted = true;
+    for (const question of this.questions) {
+        if (question.id == questionId) {
+            question.userResponse = userResponse;
+        }
+        if (question.isMandatory == 'si') {
+            if (!question.userResponse) {
+                checkingCompleted = false;
+            }
+        }
+    }
+    this.completedAllQuestions = checkingCompleted;
+    if (this.completedAllQuestions) {
+        this.transformData();
+    }
+}
+
+transformData() {
+  this.questionData = [];
+  for (const question of this.questions) {
+    let questionAnswerId: any = null;
+    let answer: any = null;
+    if (typeof question.userResponse === 'number') {
+      questionAnswerId = question.userResponse;
+      const found = question.answers.find((a: any) => a.id === questionAnswerId);
+      if (found) {
+        answer = found.answer;
+      }
+    } else {
+      answer = question.userResponse;
+    }
+    const questionInfo = {
+      questionId: question.id,
+      question: question.question,
+      questionAnswerId: questionAnswerId,
+      answer: answer,
+    };
+    this.questionData.push(questionInfo);
+  }
+
+  // Una sola vez, después del bucle
+  this.form.get('questionData')?.setValue(this.questionData);
+}
+
+
+  setQuestions(){
+    this.questionGroupService.getAllPreregister()
+            .subscribe((response: any) => {
+                this.subgroups = response.questionGroup.questions.map((question: any) => {
+                    return question.QuestionSubgroup;
+                })
+                    .filter((value: any, index: number, self: any[]) =>
+                        index === self.findIndex((obj) => obj.id === value.id)
+                    );
+                this.questions = response.questionGroup.questions.map((question: any) => {
+                    question.userResponse = undefined;
+                    question.answerObj = question.answers.map((answer: any) => {
+                        return { key: answer.id, value: answer.answer };
+                    });
+                    return question;
+                })
+                    .sort((a: any, b: any) => {
+                        if (a.orderQuestion > b.orderQuestion) {
+                            return 1;
+                        }
+                        if (a.orderQuestion < b.orderQuestion) {
+                            return -1;
+                        }
+                        return 0;
+                    });
+            });
   }
 }

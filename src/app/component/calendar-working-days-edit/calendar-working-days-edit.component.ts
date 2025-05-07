@@ -13,6 +13,7 @@ import { CalendarService } from '../../service/calendar.service';
 export class CalendarWorkingDaysEditComponent {
   calendar: any;
   form: FormGroup;
+  backRoute = "app/calendar-working-days";
 
   constructor(private calendarService: CalendarService,  
     private router: Router,  

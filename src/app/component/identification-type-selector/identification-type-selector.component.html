@@ -1,0 +1,10 @@
+<form [formGroup]="form" >
+    <div class="mb-4">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+            <mat-label>Tipo de Identificación</mat-label>
+            <mat-select formControlName="identificationTypeId" required (selectionChange)="selectIdentificationTypeId($event)">
+                <mat-option *ngFor="let identificationType of identificationTypes" [value]="identificationType.id">{{ identificationType.alias }} / {{identificationType.abbreviation}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

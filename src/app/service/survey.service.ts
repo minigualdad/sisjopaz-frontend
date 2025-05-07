@@ -20,13 +20,30 @@ export class SurveyService {
     }
   }
 
+  updateSurveyDocumentsAndDocumentType(form:any){
+    const fd = new FormData();
+    if (form.frontImage) {
+      fd.append('fileFront', form.frontImage, form.frontImage?.name || 'image.png');
+      delete (form.frontImage);
+    }
+    if (form.backImage) {
+      fd.append('fileBack', form.backImage, form.backImage?.name || 'image.png');
+      delete (form.backImage);
+    }
+    for (const key in form) {
+      fd.append(key, form[key]);
+    }
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/updateSurveyDocumentsAndDocumentType`, fd)
+  }
+
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   getAll(currentPage: number, pageSize: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/getAll`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
-            survey.dateSlplitted = survey.date?.split('T')[0];
+            survey.registraduryValidateDate = survey.registraduryValidateDate?.split('T')[0];
+            survey.identificationType = survey.IdentificationType?.alias;
             survey.name = survey.firstName;
             if (survey.secondName) {
               survey.name += ' ';
@@ -214,7 +231,7 @@ export class SurveyService {
     .pipe(
       map((response: any) => {
         response.surveys = response.surveys.surveys.map((survey: any) => {
-          survey.dateSlplitted = survey.date?.split('T')[0];
+          survey.identificationType = survey.IdentificationType?.alias
           survey.divipola = survey.Divipola?.name;
           survey.name = survey.firstName;
           if (survey.secondName) {
@@ -226,21 +243,6 @@ export class SurveyService {
           if (survey.secondLastName) {
             survey.name += ' ';
             survey.name += survey.secondLastName;
-          }
-          survey.nameOriginal = survey.firstNameOriginal;
-          if (survey.secondNameOriginal) {
-            survey.nameOriginal += ' ';
-            survey.nameOriginal += survey.secondNameOriginal;
-          } else {
-            survey.secondNameOriginal = '';
-          }
-          survey.nameOriginal += ' ';
-          survey.nameOriginal += survey.firstLastNameOriginal;
-          if (survey.secondLastNameOriginal) {
-            survey.nameOriginal += ' ';
-            survey.nameOriginal += survey.secondLastNameOriginal;
-          } else {
-            survey.secondLastNameOriginal = '';
           }
           return survey;
         })
@@ -255,8 +257,8 @@ export class SurveyService {
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
-            survey.dateSlplitted = survey.date?.split('T')[0];
             survey.divipola = survey.Divipola?.name;
+            survey.identificationType = survey.IdentificationType?.alias;
             survey.name = survey.firstName;
             if (survey.secondName) {
               survey.name += ' ';
@@ -267,62 +269,6 @@ export class SurveyService {
             if (survey.secondLastName) {
               survey.name += ' ';
               survey.name += survey.secondLastName;
-            }
-            survey.nameOriginal = survey.firstNameOriginal;
-            if (survey.secondNameOriginal) {
-              survey.nameOriginal += ' ';
-              survey.nameOriginal += survey.secondNameOriginal;
-            } else {
-              survey.secondNameOriginal = '';
-            }
-            survey.nameOriginal += ' ';
-            survey.nameOriginal += survey.firstLastNameOriginal;
-            if (survey.secondLastNameOriginal) {
-              survey.nameOriginal += ' ';
-              survey.nameOriginal += survey.secondLastNameOriginal;
-            } else {
-              survey.secondLastNameOriginal = '';
-            }
-            survey.startProgramDate = survey.createdAt.split('T')[0];
-            survey.group = survey.Group?.name;
-            if (survey.DNPCheckDate) {
-              survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
-            } else {
-              survey.DNPCheckDate = 'Sin Revisar'
-            }
-            if (survey.ARNCheckDate) {
-              survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
-            } else {
-              survey.ARNCheckDate = 'Sin Revisar'
-            }
-            if (survey.DPSCheckDate) {
-              survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
-            } else {
-              survey.DPSCheckDate = 'Sin Revisar'
-            }
-            if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'No Validado'
-            }
-            if (survey.DNPCheck === 'si' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'Validado'
-            } else {
-              survey.DNPCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.ARNCheck === 'si' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'Validado'
-            } else {
-              survey.ARNCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
-              survey.DPSCheck = 'Validado'
-            } else {
-              survey.DPSCheck = 'Sin Revisar'
             }
             return survey;
           })
@@ -339,7 +285,6 @@ export class SurveyService {
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
-            survey.dateSlplitted = survey.date?.split('T')[0];
             survey.name = survey.firstName;
             if (survey.secondName) {
               survey.name += ' ';
@@ -355,47 +300,8 @@ export class SurveyService {
             } else {
               survey.secondLastName = ''
             }
-            survey.startProgramDate = survey.createdAt.split('T')[0];
-            survey.group = survey.Group?.name;
-            if (survey.DNPCheckDate) {
-              survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
-            } else {
-              survey.DNPCheckDate = 'Sin Revisar'
-            }
-            if (survey.ARNCheckDate) {
-              survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
-            } else {
-              survey.ARNCheckDate = 'Sin Revisar'
-            }
-            if (survey.DPSCheckDate) {
-              survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
-            } else {
-              survey.DPSCheckDate = 'Sin Revisar'
-            }
-            if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'No Validado'
-            }
-            if (survey.DNPCheck === 'si' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'Validado'
-            } else {
-              survey.DNPCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.ARNCheck === 'si' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'Validado'
-            } else {
-              survey.ARNCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
-              survey.DPSCheck = 'Validado'
-            } else {
-              survey.DPSCheck = 'Sin Revisar'
-            }
+            survey.startProgramDate = survey.signDate?.split('T')[0];
+            survey.identificationType = survey.IdentificationType?.alias;
             return survey;
           })
           return response;
@@ -559,13 +465,12 @@ export class SurveyService {
       )
   }
 
-  // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   getAllByAccountCert(currentPage: number, pageSize: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByHasBankAccount`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
-            survey.dateSlplitted = survey.date?.split('T')[0];
+            survey.identificationType = survey.IdentificationType?.alias;
             survey.name = survey.firstName;
             if (survey.secondName) {
               survey.name += ' ';
@@ -577,47 +482,6 @@ export class SurveyService {
               survey.name += ' ';
               survey.name += survey.secondLastName;
             }
-            survey.startProgramDate = survey.createdAt.split('T')[0];
-            survey.group = survey.Group?.name;
-            if (survey.DNPCheckDate) {
-              survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
-            } else {
-              survey.DNPCheckDate = 'Sin Revisar'
-            }
-            if (survey.ARNCheckDate) {
-              survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
-            } else {
-              survey.ARNCheckDate = 'Sin Revisar'
-            }
-            if (survey.DPSCheckDate) {
-              survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
-            } else {
-              survey.DPSCheckDate = 'Sin Revisar'
-            }
-            if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'No Validado'
-            }
-            if (survey.DNPCheck === 'si' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'Validado'
-            } else {
-              survey.DNPCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.ARNCheck === 'si' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'Validado'
-            } else {
-              survey.ARNCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
-              survey.DPSCheck = 'Validado'
-            } else {
-              survey.DPSCheck = 'Sin Revisar'
-            }
             return survey;
           })
           return response;
@@ -625,13 +489,14 @@ export class SurveyService {
       )
   }
 
-  // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   getAllNoValidates(currentPage: number, pageSize: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/getNoRegistraduryValidate`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
+            survey.identificationType = survey.IdentificationType?.alias;
             survey.dateSlplitted = survey.date?.split('T')[0];
+            survey.identificationExpedition = survey.identificationExpeditionOriginal?.split('T')[0];
             survey.name = survey.firstName;
             if (survey.secondName) {
               survey.name += ' ';
@@ -662,49 +527,7 @@ export class SurveyService {
             } else {
               survey.secondLastNameOriginal = '';
             }
-            if (survey.createdAt) {
-              survey.startProgramDate = survey.createdAt?.split('T')[0];
-            }
-            survey.group = survey.Group?.name;
-            if (survey.DNPCheckDate) {
-              survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
-            } else {
-              survey.DNPCheckDate = 'Sin Revisar'
-            }
-            if (survey.ARNCheckDate) {
-              survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
-            } else {
-              survey.ARNCheckDate = 'Sin Revisar'
-            }
-            if (survey.DPSCheckDate) {
-              survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
-            } else {
-              survey.DPSCheckDate = 'Sin Revisar'
-            }
-            if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'No Validado'
-            }
-            if (survey.DNPCheck === 'si' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'Validado'
-            } else {
-              survey.DNPCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.ARNCheck === 'si' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'Validado'
-            } else {
-              survey.ARNCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
-              survey.DPSCheck = 'Validado'
-            } else {
-              survey.DPSCheck = 'Sin Revisar'
-            }
+            
             return survey;
           })
           return response;
@@ -795,7 +618,6 @@ export class SurveyService {
       )
   }
 
-  // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   getAllNoValidatesDocuments() {
     return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllByNoValidatesDocuments`)
       .pipe(
@@ -878,6 +700,54 @@ export class SurveyService {
               survey.DPSCheck = 'Validado'
             } else {
               survey.DPSCheck = 'Sin Revisar'
+            }
+            return survey;
+          })
+          return response;
+        })
+      )
+  }
+
+  getAllNoValidatesDocumentsPaginated(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByNoValidatesDocumentsPag`, {currentPage, pageSize})
+      .pipe(
+        map((response: any) => {
+          response.surveys.surveys = response.surveys.surveys.map((survey: any) => {
+            survey.identificationType = survey.IdentificationType?.alias;
+            if (!survey.documentIdentificationDate) {
+              survey.documentIdentificationDate = 'Sin Verificar'
+            }
+            if (!survey.documentIdentificationMotive) {
+              survey.documentIdentificationMotive = 'Sin Verificar'
+            }
+            if (!survey.documentIdentificationCheck) {
+              survey.documentIdentificationCheck = 'Sin Verificar'
+            }
+            survey.name = survey.firstName;
+            if (survey.secondName) {
+              survey.name += ' ';
+              survey.name += survey.secondName;
+            }
+            survey.name += ' ';
+            survey.name += survey.firstLastName;
+            if (survey.secondLastName) {
+              survey.name += ' ';
+              survey.name += survey.secondLastName;
+            }
+            survey.nameOriginal = survey.firstNameOriginal;
+            if (survey.secondNameOriginal) {
+              survey.nameOriginal += ' ';
+              survey.nameOriginal += survey.secondNameOriginal;
+            } else {
+              survey.secondNameOriginal = '';
+            }
+            survey.nameOriginal += ' ';
+            survey.nameOriginal += survey.firstLastNameOriginal;
+            if (survey.secondLastNameOriginal) {
+              survey.nameOriginal += ' ';
+              survey.nameOriginal += survey.secondLastNameOriginal;
+            } else {
+              survey.secondLastNameOriginal = '';
             }
             return survey;
           })
@@ -977,12 +847,12 @@ export class SurveyService {
       )
   }
 
-  // roleVerify([Roles.DIRECCION, Roles.ADMIN])
-  getAllNoValidatesBankCertification(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByNoValidatesBankCetification`, {currentPage, pageSize})
+  getAllNoValidatesBankCertificationByGroupId(groupId:number, currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/${groupId}/getAllByNoValidatesBankCetificationPrioridadSIIF`, {currentPage, pageSize})
       .pipe(
         map((response: any) => {
-          response.surveys = response.surveys.surveys.map((survey: any) => {
+          response.surveys = response.surveys.map((survey: any) => {
+            survey.identificationType = survey.IdentificationType?.alias;
             if (!survey.accountCertificationDate) {
               survey.accountCertificationDate = 'Sin Verificar'
             }
@@ -1018,48 +888,54 @@ export class SurveyService {
             } else {
               survey.secondLastNameOriginal = '';
             }
-            if (survey.createdAt) {
-              survey.startProgramDate = survey.createdAt?.split('T')[0];
+            return survey;
+          })
+          return response;
+        })
+      )
+  }
+
+  // roleVerify([Roles.DIRECCION, Roles.ADMIN])
+  getAllNoValidatesBankCertification(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByNoValidatesBankCetification`, {currentPage, pageSize})
+      .pipe(
+        map((response: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
+            survey.identificationType = survey.IdentificationType?.alias;
+            if (!survey.accountCertificationDate) {
+              survey.accountCertificationDate = 'Sin Verificar'
             }
-            survey.group = survey.Group?.name;
-            if (survey.DNPCheckDate) {
-              survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
+            if (!survey.accountCertificationMotive) {
+              survey.accountCertificationMotive = 'Sin Verificar'
+            }
+            if (!survey.accountCertificationCheck) {
+              survey.accountCertificationCheck = 'Sin Verificar'
+            }
+            survey.name = survey.firstName;
+            if (survey.secondName) {
+              survey.name += ' ';
+              survey.name += survey.secondName;
+            }
+            survey.name += ' ';
+            survey.name += survey.firstLastName;
+            if (survey.secondLastName) {
+              survey.name += ' ';
+              survey.name += survey.secondLastName;
+            }
+            survey.nameOriginal = survey.firstNameOriginal;
+            if (survey.secondNameOriginal) {
+              survey.nameOriginal += ' ';
+              survey.nameOriginal += survey.secondNameOriginal;
             } else {
-              survey.DNPCheckDate = 'Sin Revisar'
+              survey.secondNameOriginal = '';
             }
-            if (survey.ARNCheckDate) {
-              survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
+            survey.nameOriginal += ' ';
+            survey.nameOriginal += survey.firstLastNameOriginal;
+            if (survey.secondLastNameOriginal) {
+              survey.nameOriginal += ' ';
+              survey.nameOriginal += survey.secondLastNameOriginal;
             } else {
-              survey.ARNCheckDate = 'Sin Revisar'
-            }
-            if (survey.DPSCheckDate) {
-              survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
-            } else {
-              survey.DPSCheckDate = 'Sin Revisar'
-            }
-            if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'No Validado'
-            }
-            if (survey.DNPCheck === 'si' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'Validado'
-            } else {
-              survey.DNPCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.ARNCheck === 'si' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'Validado'
-            } else {
-              survey.ARNCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
-              survey.DPSCheck = 'Validado'
-            } else {
-              survey.DPSCheck = 'Sin Revisar'
+              survey.secondLastNameOriginal = '';
             }
             return survey;
           })
@@ -1115,6 +991,7 @@ export class SurveyService {
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
+            survey.identificationType = survey.IdentificationType?.alias;
             survey.name = survey.firstName;
             if (survey.secondName) {
               survey.name += ' ';
@@ -1240,6 +1117,10 @@ export class SurveyService {
   // No existe en Back y no se usa
   create(survey: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/create`, { survey });
+  }
+
+  findDataBankBySurveyId(id: number) {
+    return this._httpClient.get(`${environment.apiUrl}/app/survey/${id}/findDataBank`);
   }
 
   // No se usa
@@ -1469,7 +1350,6 @@ export class SurveyService {
       );
     }
   }
-//RUTA NUEVA
   getAllByAcceptedPaginated(currentPage: number, pageSize: number) {
     this.connectionStatusCheck();
     if(this.connectionStatus){
@@ -1498,6 +1378,7 @@ export class SurveyService {
 
   private transformSurvey(survey: any): any {
     survey.updatedDate = survey.updatedAt.split('T')[0];
+    survey.identificationType = survey.IdentificationType?.alias;
     survey.secondName = survey.secondName || '';
     survey.name = `${survey.firstName} ${survey.secondName} ${survey.firstLastName} ${survey.secondLastName || ''}`;
     survey.stateAgreement = survey.state;
@@ -2274,12 +2155,6 @@ export class SurveyService {
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
-            survey.updatedDate = survey.updatedAt.split('T')[0];
-            if (!survey.createdAt) {
-              survey.createdAt = 'Sin Fecha Para Mostrar'
-            } else {
-              survey.createdAt = survey.createdAt.split('T')[0];
-            }
             if (survey.secondName) {
               survey.name += ' ';
               survey.name += survey.secondName;
@@ -2294,39 +2169,10 @@ export class SurveyService {
             } else {
               survey.secondLastName = '';
             }
-            if (survey.DNPCheckDate) {
-              survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
-            } else {
-              survey.DNPCheckDate = 'Sin Revisar'
-            }
-            if (survey.ARNCheckDate) {
-              survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
-            } else {
-              survey.ARNCheckDate = 'Sin Revisar'
-            }
             if (survey.DPSCheckDate) {
               survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
             } else {
               survey.DPSCheckDate = 'Sin Revisar'
-            }
-            if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'No Validado'
-            }
-            if (survey.DNPCheck === 'si' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'Validado'
-            } else {
-              survey.DNPCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.ARNCheck === 'si' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'Validado'
-            } else {
-              survey.ARNCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
             }
             if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
               survey.DPSCheck = 'Validado'
@@ -2353,9 +2199,7 @@ export class SurveyService {
             survey.name = survey?.firstName + ' ' + survey.secondName + ' ' + survey?.firstLastName + ' ' + survey.secondLastName;
             survey.stateAgreement = survey?.state;
             survey.identification = survey?.identification;
-            survey.identificationType = survey?.identificationType;
-            survey.email = survey?.email;
-            survey.group = survey.Group?.name;
+            survey.identificationType = survey?.IdentificationType?.alias;
             return survey;
           })
           return response;
@@ -2369,12 +2213,7 @@ export class SurveyService {
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
-            survey.updatedDate = survey.updatedAt.split('T')[0];
-            if (!survey.createdAt) {
-              survey.createdAt = 'Sin Fecha Para Mostrar'
-            } else {
-              survey.createdAt = survey.createdAt.split('T')[0];
-            }
+            survey.identificationType = survey.IdentificationType?.alias;
             if (survey.secondName) {
               survey.name += ' ';
               survey.name += survey.secondName;
@@ -2394,16 +2233,6 @@ export class SurveyService {
             } else {
               survey.DNPCheckDate = 'Sin Revisar'
             }
-            if (survey.ARNCheckDate) {
-              survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
-            } else {
-              survey.ARNCheckDate = 'Sin Revisar'
-            }
-            if (survey.DPSCheckDate) {
-              survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
-            } else {
-              survey.DPSCheckDate = 'Sin Revisar'
-            }
             if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
               survey.DNPCheck = 'No Validado'
             }
@@ -2411,22 +2240,6 @@ export class SurveyService {
               survey.DNPCheck = 'Validado'
             } else {
               survey.DNPCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.ARNCheck === 'si' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'Validado'
-            } else {
-              survey.ARNCheck = 'Sin Revisar'
-            }
-            if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
-              survey.ARNCheck = 'No Validado'
-            }
-            if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
-              survey.DPSCheck = 'Validado'
-            } else {
-              survey.DPSCheck = 'Sin Revisar'
             }
             survey.nameOriginal = survey.firstNameOriginal;
             if (survey.secondNameOriginal) {
@@ -2448,9 +2261,6 @@ export class SurveyService {
             survey.name = survey?.firstName + ' ' + survey.secondName + ' ' + survey?.firstLastName + ' ' + survey.secondLastName;
             survey.stateAgreement = survey?.state;
             survey.identification = survey?.identification;
-            survey.identificationType = survey?.identificationType;
-            survey.email = survey?.email;
-            survey.group = survey.Group?.name;
             return survey;
           })
           return response;
@@ -2464,12 +2274,6 @@ export class SurveyService {
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
-            survey.updatedDate = survey.updatedAt.split('T')[0];
-            if (!survey.createdAt) {
-              survey.createdAt = 'Sin Fecha Para Mostrar'
-            } else {
-              survey.createdAt = survey.createdAt.split('T')[0];
-            }
             if (survey.secondName) {
               survey.name += ' ';
               survey.name += survey.secondName;
@@ -2484,28 +2288,10 @@ export class SurveyService {
             } else {
               survey.secondLastName = '';
             }
-            if (survey.DNPCheckDate) {
-              survey.DNPCheckDate = survey.DNPCheckDate.split('T')[0];
-            } else {
-              survey.DNPCheckDate = 'Sin Revisar'
-            }
             if (survey.ARNCheckDate) {
               survey.ARNCheckDate = survey.ARNCheckDate.split('T')[0];
             } else {
               survey.ARNCheckDate = 'Sin Revisar'
-            }
-            if (survey.DPSCheckDate) {
-              survey.DPSCheckDate = survey.DPSCheckDate.split('T')[0];
-            } else {
-              survey.DPSCheckDate = 'Sin Revisar'
-            }
-            if (survey.DNPCheck === 'no' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'No Validado'
-            }
-            if (survey.DNPCheck === 'si' && survey.DNPCheckDate) {
-              survey.DNPCheck = 'Validado'
-            } else {
-              survey.DNPCheck = 'Sin Revisar'
             }
             if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
               survey.ARNCheck = 'No Validado'
@@ -2517,11 +2303,6 @@ export class SurveyService {
             }
             if (survey.ARNCheck === 'no' && survey.ARNCheckDate) {
               survey.ARNCheck = 'No Validado'
-            }
-            if (survey.DPSCheck === 'si' && survey.DPSCheckDate) {
-              survey.DPSCheck = 'Validado'
-            } else {
-              survey.DPSCheck = 'Sin Revisar'
             }
             survey.nameOriginal = survey.firstNameOriginal;
             if (survey.secondNameOriginal) {
@@ -2543,9 +2324,7 @@ export class SurveyService {
             survey.name = survey?.firstName + ' ' + survey.secondName + ' ' + survey?.firstLastName + ' ' + survey.secondLastName;
             survey.stateAgreement = survey?.state;
             survey.identification = survey?.identification;
-            survey.identificationType = survey?.identificationType;
-            survey.email = survey?.email;
-            survey.group = survey.Group?.name;
+            survey.identificationType = survey?.IdentificationType?.alias;
             return survey;
           })
           return response;

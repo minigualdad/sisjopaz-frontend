@@ -55,6 +55,10 @@ module.exports = {
           marginBottom: '0.5rem', // equivalente a my-2
           marginLeft: '1.5rem', // equivalente a ml-6
         },
+        '.custom-min-menu': {
+          display: 'fixed',
+          top: '400px'
+        },
         '.btn-aceptar': {
           display: 'inline-block',
           padding: '0.5rem 1rem',

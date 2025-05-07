@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../enviroment/enviroment';
 import { map } from 'rxjs';
+import { group } from '@angular/animations';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +20,11 @@ export class AssistanceScannerService {
     .pipe(
           map((response: any) => {
             response.response.assistanceScannerBeneficiaries = response.response.assistanceScannerBeneficiaries.map((assistanceScannerBeneficiary: any) => {
-              
               assistanceScannerBeneficiary.firstName = assistanceScannerBeneficiary.Survey?.firstName
               assistanceScannerBeneficiary.secondName = assistanceScannerBeneficiary.Survey?.secondName
               assistanceScannerBeneficiary.firstLastName = assistanceScannerBeneficiary.Survey?.firstLastName
               assistanceScannerBeneficiary.secondLastName = assistanceScannerBeneficiary.Survey?.secondLastName
-              assistanceScannerBeneficiary.identificationType = assistanceScannerBeneficiary.Survey?.identificationType
+              assistanceScannerBeneficiary.identificationType = assistanceScannerBeneficiary.Survey?.IdentificationType?.name;
               assistanceScannerBeneficiary.identification = assistanceScannerBeneficiary.Survey?.identification
               return assistanceScannerBeneficiary;
             })
@@ -35,6 +35,61 @@ export class AssistanceScannerService {
 
   sendReportError(observation: string, scannerId:number){
     return this._httpClient.post(`${environment.apiUrl}/app/assistanceScanner/mistakeError`, {observation, scannerId})
+  }
+
+  getAllAssistanceScannerByMonthAndYear(month: number, year: number, groupComponentId: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScanner/${groupComponentId}/getAllAssistanceScannerByMonthAndYear`, { month, year }).pipe(
+      map((response: any) => {
+        if (response.ok && response.groupedUrls) {
+          // Procesamos los URLs para agregar la base URL
+          const processedUrls = {
+            urlFileImageOriginal: response.groupedUrls.urlFileImageOriginal.map(
+              (url:any) => `${environment.apiUrl}/${url}`
+            ),
+            urlFileImageProcessed: response.groupedUrls.urlFileImageProcessed.map(
+              (url:any) => `${environment.apiUrl}/${url}`
+            )
+          };
+          
+          return {
+            ...response, // Mantenemos todas las propiedades originales
+            groupedUrls: processedUrls // Sobreescribimos groupedUrls con las URLs procesadas
+          };
+        }
+        return response; // Si no hay groupedUrls, devolvemos la respuesta tal cual
+      })
+    );
+  }
+
+  getAllAssistanceScannerByMonthYearAndGroup(month: number, year: number, groupId: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScanner/${groupId}/getAllAssistanceScannerByMonthYearAndGroup`, { month, year }).pipe(
+      map((response: any) => {
+        if (response.ok && response.groupedUrls) {
+          // Procesamos cada grupo de URLs para agregar la base URL
+          const processedGroupedUrls = response.groupedUrls.map((group: any) => {
+            const componentName = Object.keys(group)[0];
+            const componentData = group[componentName];
+            
+            return {
+              [componentName]: {
+                urlFileImageOriginal: componentData.urlFileImageOriginal.map(
+                  (url: string) => `${environment.apiUrl}/${url}`
+                ),
+                urlFileImageProcessed: componentData.urlFileImageProcessed.map(
+                  (url: string) => `${environment.apiUrl}/${url}`
+                )
+              }
+            };
+          });
+          
+          return {
+            ...response,
+            groupedUrls: processedGroupedUrls
+          };
+        }
+        return response;
+      })
+    );
   }
 
   getAllMistakeError(){
@@ -107,7 +162,7 @@ export class AssistanceScannerService {
             assistance.component = assistance.AssistanceSheet?.AssistanceGenerate?.GroupComponent?.Component?.name;
             assistance.startDay = `${yearMonth}-${assistance?.AssistanceSheet?.startDay}`;
             assistance.endDay = `${yearMonth}-${assistance?.AssistanceSheet?.endDay}`;
-            assistance.date = assistance.createdAt.split('T')[0];
+            assistance.date = assistance.createdAt?.split('T')[0];
 
             return assistance;
           })

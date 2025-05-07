@@ -205,6 +205,14 @@ import { AssistanceFixComponent } from './component/assistance-fix/assistance-fi
 import { AssistanceTableFixedComponent } from './component/assistance-table-fixed/assistance-table-fixed.component';
 import { AssistanceBeneficiariesComponent } from './component/assistance-beneficiaries/assistance-beneficiaries.component';
 import { AssistanceBeneficiariesDateSelectorComponent } from './component/assistance-beneficiaries-date-selector/assistance-beneficiaries-date-selector.component';
+import { ImageAssitanceScannerBenneficiaryComponent } from './component/image-assitance-scanner-benneficiary/image-assitance-scanner-benneficiary.component';
+import { AssistanceByMonthComponent } from './component/assistance-by-month/assistance-by-month.component';
+import { AssitanceComponentByMonthComponent } from './component/assitance-component-by-month/assitance-component-by-month.component';
+import { ImagesAssistanceScannerComponentsComponent } from './component/images-assistance-scanner-components/images-assistance-scanner-components.component';
+import { IdentificationTypeSelectorComponent } from './component/identification-type-selector/identification-type-selector.component';
+import { BankInfoComponent } from './component/bank-info/bank-info.component';
+import { UpdateDocumentComponent } from './component/update-document/update-document.component';
+import { GroupAddMassiveActivityComponent } from './component/group-add-massive-activity/group-add-massive-activity.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -619,11 +627,11 @@ export const routes: Routes = [
             },
             {
                 path: 'beneficiary-add-group/:id', component: BeneficiaryAddGroupComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
             },
             {
                 path: 'beneficiary-group/:id', component: BeneficiaryGroupComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
             },
             {
                 path: 'bank-certification-no-validate', component: BankCertificationNoValidateComponent,
@@ -755,7 +763,7 @@ export const routes: Routes = [
             },
             {
                 path: 'group-change/:id', component: GroupChangeComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION] }
             },
             {
                 path: 'user-massive', component: MassiveUserComponent,
@@ -796,10 +804,22 @@ export const routes: Routes = [
             },
             {
                 path: 'calendar-working-days-edit/:id', component: CalendarWorkingDaysEditComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.COORDINACION] }
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
             },
             {
                 path: 'attendance-by-month/:id', component: AttendancesByMonthComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION, 
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
+            },
+            {
+                path: 'attendance-by-month-assistance/:id', component: AssistanceByMonthComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION, 
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
+            },
+            {
+                path: 'assitance-component-by-month/:id', component: AssitanceComponentByMonthComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION, 
                     Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
                     Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
@@ -826,6 +846,16 @@ export const routes: Routes = [
             },
             {
                 path: 'assistance-scanner-detail-admin/:id', component: AssistanceScannerDetailAdminComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
+            },
+            {
+                path: 'bank-info/:id', component: BankInfoComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION,  
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
+            },
+            {
+                path: 'add-massive-activity', component: GroupAddMassiveActivityComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
             },
         ]
@@ -1008,8 +1038,17 @@ export const routes: Routes = [
         AssistanceScannerDetailAdminComponent,
         AssistanceFixComponent,
         AssistanceTableFixedComponent,
+        LayoutComponent,
         AssistanceBeneficiariesComponent,
         AssistanceBeneficiariesDateSelectorComponent,
+        ImageAssitanceScannerBenneficiaryComponent,
+        AssistanceByMonthComponent,
+        AssitanceComponentByMonthComponent,
+        ImagesAssistanceScannerComponentsComponent,
+        IdentificationTypeSelectorComponent,
+        BankInfoComponent,
+        GroupAddMassiveActivityComponent,
+        UpdateDocumentComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
@@ -1029,7 +1068,8 @@ export const routes: Routes = [
     CommonModule,
     LoadingComponent,
     ButtonBackComponent,
-    MatCheckboxModule
+    MatCheckboxModule,
+    BrowserAnimationsModule
     
 ],
     exports: [RouterModule, SharedModule, MatTableModule,

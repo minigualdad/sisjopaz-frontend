@@ -54,7 +54,6 @@ export class DocumentValidateUpdateComponent {
         response.survey.secondLastName = '';
       }
       this.survey.name = response.survey.firstName + ' ' +  response.survey.secondName + ' ' + response.survey.firstLastName + ' ' + response.survey.secondLastName;
-
       this.frontImage = this.url + this.survey.frontIdentificationtUrl;
       this.backImage =this.url + this.survey.backIdentificationUrl;
     })

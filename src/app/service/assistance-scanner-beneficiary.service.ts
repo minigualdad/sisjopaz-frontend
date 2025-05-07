@@ -128,4 +128,16 @@ export class AssistanceScannerBeneficiaryService {
       })
     );
   }
+
+  getByUserAndDate(userId:number, dateActivity: Date){
+    return this._httpClient.post(`${environment.apiUrl}/app/assistanceScannerBeneficiary/findByUserAndDate`, { userId, dateActivity }).pipe(
+      map((response:any) => {
+        return response.assistanceScannerBeneficiaries = response.surveys.map((item:any) => ({
+          id: item.id,
+          urlFileImageProcessed : `${environment.apiUrl}/${item?.AssistanceScanner?.urlFileImageProcessed}`,
+          urlFileImageOriginal : `${environment.apiUrl}/${item?.AssistanceScanner?.urlFileImageOriginal}`,
+        }))
+      })
+    );
+  }
 }

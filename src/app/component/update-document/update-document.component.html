@@ -1,0 +1,129 @@
+<div class="relative bg-white p-6 rounded-lg w-full max-h-[90vh] overflow-y-auto">
+    <button
+      class="absolute m-2 top-2 right-2 text-gray-500 hover:text-gray-700"
+      mat-icon-button
+      (click)="closeDialog()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  
+    <h2 class="text-xl font-semibold text-center mb-4">Actualizar Documento de: <strong *ngIf="survey">{{survey.name | titlecase}}</strong></h2>
+  
+    <!-- Sección de imágenes -->
+    <div class="flex flex-col md:flex-row md:justify-between gap-4 mb-6">
+      <!-- Imagen frontal -->
+      <div class="flex-1 flex flex-col items-center">
+        <h3 class="text-lg font-medium mb-2">Frente del Documento</h3>
+        
+        <div class="w-full h-52 border border-gray-300 flex items-center justify-center overflow-hidden">
+          <ng-container *ngIf="frontImageUrl; else noFrontImageTemplate">
+            <img
+              [src]="frontImageUrl"
+              alt="Frente del documento"
+              class="object-contain h-full cursor-pointer"
+              (click)="openImageInNewTab(frontImageUrl)"
+            />
+          </ng-container>
+          
+          <ng-template #noFrontImageTemplate>
+            <p>No hay imagen frontal</p>
+          </ng-template>
+        </div>
+  
+        <button
+          mat-flat-button
+          class="mt-2 text-blue-600 hover:text-blue-800 font-medium"
+          (click)="frontInput.click()"
+        >
+          Subir Frente
+        </button>
+        <input
+          #frontInput
+          type="file"
+          (change)="onFrontFileSelected($event)"
+          accept="image/*"
+          class="hidden"
+        />
+      </div>
+  
+      <!-- Imagen posterior -->
+      <div class="flex-1 flex flex-col items-center">
+        <h3 class="text-lg font-medium mb-2">Reverso del Documento</h3>
+        
+        <div class="w-full h-52 border border-gray-300 flex items-center justify-center overflow-hidden">
+          <ng-container *ngIf="backImageUrl; else noBackImageTemplate">
+            <img
+              [src]="backImageUrl"
+              alt="Reverso del documento"
+              class="object-contain h-full cursor-pointer"
+              (click)="openImageInNewTab(backImageUrl)"
+            />
+          </ng-container>
+          
+          <ng-template #noBackImageTemplate>
+            <p>No hay imagen posterior</p>
+          </ng-template>
+        </div>
+  
+        <button
+          mat-flat-button
+          class="mt-2 text-blue-600 hover:text-blue-800 font-medium"
+          (click)="backInput.click()"
+        >
+          Subir Reverso
+        </button>
+        <input
+          #backInput
+          type="file"
+          (change)="onBackFileSelected($event)"
+          accept="image/*"
+          class="hidden"
+        />
+      </div>
+    </div>
+  
+    <!-- Formulario de datos del documento -->
+    <form [formGroup]="form" class="bg-white p-6 rounded-lg" (ngSubmit)="submit()">
+      <mat-dialog-content class="mat-typography">
+        <div class="md:grid md:grid-cols-1 md:gap-6">
+          <div class="mt-5 md:col-span-2 md:mt-0">
+            <div class="mb-4">
+                <app-identification-type-selector
+                (identificationTypeIdListen)="setIdentificationType($event)"
+                [identificationType]="survey?.identificationTypeId"></app-identification-type-selector>
+            </div>
+  
+            <div class="mb-4">
+              <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                <mat-label>Número de Documento:</mat-label>
+                <input 
+                  type="text" 
+                  matInput 
+                  formControlName="documentNumber"
+                  (keypress)="validateNumber($event)"
+                >
+                <mat-error *ngIf="form.get('documentNumber')?.errors?.['required']">
+                  El número de documento es requerido
+                </mat-error>
+                <mat-error *ngIf="form.get('documentNumber')?.errors?.['pattern']">
+                  Solo se permiten números
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </mat-dialog-content>
+  
+      <mat-dialog-actions align="end">
+        <button 
+          class="bg-primary rounded-2xl" 
+          mat-flat-button 
+          color="primary"
+          [disabled]="form.invalid || !hasFrontFileLoaded || !hasBackFileLoaded" 
+          type="submit"
+        >
+          Actualizar Documento
+        </button>
+      </mat-dialog-actions>
+    </form>
+  </div>

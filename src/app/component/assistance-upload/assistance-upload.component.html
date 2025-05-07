@@ -1,4 +1,5 @@
 <div class="block justify-center bg-gray-50 p-4">
+  <app-button-back [routeBack]="backRoute" class="mb-2"></app-button-back>
     <h2 class="text-3xl">Cargue de Planillas de Asistencia</h2>
     <p>Por favor seleccione un archivo de las planillas de asistencia o cargue una fotografía</p>
     <mat-card class="p-6 w-full shadow-lg rounded-lg mb-4">
@@ -78,40 +79,23 @@
       >
         Subir Planilla
       </button>
-            <!-- Botón para enviar -->
-            <button *ngIf="imageLoaded"
-            mat-flat-button
-            color="primary"
-            class="w-full"
-            (click)="newAssistance()"
-          >
-            Subir Otra Planilla
-          </button>
     </mat-card>
   </div>
 
-  <div class="w-full h-10 flex justify-center items-center my-6" *ngIf="showTableData">
-    <button class="flex items-center gap-2 px-4 py-2 text-white bg-pink-600 hover:bg-pink-700 rounded-md text-sm" (click)="showTables()">
-      <mat-icon>visibility</mat-icon>
-      {{ !showTableFix ? 'Arreglar Asistencia' : 'Ver Asistencias' }}
-    </button>
-  </div>   
+  <h2 class="text-3xl text-center mb-4" *ngIf="showTableData">Asistencias Detectadas</h2>
 
-  <app-assistance-table *ngIf="!showTableFix && showTableData"
-  [records]="dataSource.data"
-     (minusClicked)="handleMinus($event)"
-     (plusClicked)="handlePlus($event)">
-  </app-assistance-table>
-
-  <app-assistance-table-fixed *ngIf="showTableFix && showTableData"
-            [records]="dataSource.data"
-            (minusClicked)="handleMinus($event)"
-            (plusClicked)="handlePlus($event)"
-            >
+  <app-assistance-table-fixed *ngIf="showTableData"
+    [records]="dataSource.data"
+    (minusClicked)="handleMinus($event)"
+    (plusClicked)="handlePlus($event)"
+    (addClicked)="handleAdd($event)"
+    class="mb-4">
   </app-assistance-table-fixed>
 
+
+  <h2 class="text-3xl text-center mb-4 mt-4" *ngIf="showTableData">Beneficiarios Del Grupo</h2>
   <app-assistance-beneficiaries
-    *ngIf="showTableFix"
+    *ngIf="showTableData"
     [records]="assistanceBeneficiariesList"
     (addClicked)="handleAdd($event)">
   </app-assistance-beneficiaries>
@@ -123,5 +107,22 @@
     (closeClicked)="handleClose()"
     (createClicked)="handleCreate($event)">
   </app-assistance-beneficiaries-date-selector>
+
+  <button *ngIf="imageLoaded"
+  mat-flat-button
+  color="primary"
+  class="w-full mt-4"
+  [routerLink]="['/app', 'assistance-edit', assistanceScannerId]">
+    Verificación final de asistencias y subsanaciones
+  </button>
+
+  <button *ngIf="imageLoaded"
+  mat-flat-button
+  color="primary"
+  class="w-full mt-4"
+  (click)="newAssistance()"
+  >
+    Subir Otra Planilla
+  </button>
 
   <app-loading *ngIf="loading"></app-loading>

@@ -9,10 +9,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let record of paginatedRecords" class="bg-white hover:bg-gray-50">
+      <tr *ngFor="let record of records" class="bg-white hover:bg-gray-50">
         <td class="sticky left-0 bg-white z-10 border border-l-0 min-w-[200px]">
           <ng-container *ngIf="record.firstName; else altName">
-            {{ record.firstName }} {{ record.secondName }} {{ record.firstLastName }} {{ record.secondLastName }}
+            {{ record.firstLastName }} {{ record.secondLastName }} {{ record.firstName }} {{ record.secondName }} 
           </ng-container>
           <ng-template #altName>
             {{ record.name }}
@@ -30,26 +30,5 @@
       </tr>
     </tbody>
   </table>
-</div>
-<div class="flex justify-center items-center gap-4 mt-6">
-  <button
-    (click)="currentPage = currentPage - 1"
-    [disabled]="currentPage === 1"
-    class="px-4 py-2 border bg-pink-500 hover:bg-pink-600 text-white rounded-full transition-colors duration-200  shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-  >
-    ← Anterior
-  </button>
-
-  <span class="px-4 py-2 bg-gray-100 text-gray-800 rounded-full shadow text-sm font-medium">
-    Página {{ currentPage }} de {{ totalPages }}
-  </span>
-
-  <button
-    (click)="currentPage = currentPage + 1"
-    [disabled]="currentPage === totalPages"
-    class="px-4 py-2 border bg-pink-500 hover:bg-pink-600 text-white rounded-full transition-colors duration-200  shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-  >
-    Siguiente →
-  </button>
 </div>
 

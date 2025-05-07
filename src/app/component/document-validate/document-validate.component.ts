@@ -37,7 +37,6 @@ export class DocumentValidateComponent implements OnInit, AfterViewInit  {
     secondName: 'Segundo Nombre',
     firstLastName: 'Primer Apellido',
     secondLastName: 'Segundo Apellido',
-
   };
   recordsTableColumns: string[] = [];
   isData: boolean = false;
@@ -76,7 +75,7 @@ export class DocumentValidateComponent implements OnInit, AfterViewInit  {
     this.dataSource.sort = this.recordsTableMatSort;
     this.loading = true;
     this.paginatorService.onPageChange(this.paginator, (pageIndex, pageSize) => {
-      this.surveyService.getAllByAccountCert(pageIndex, pageSize).subscribe({
+      this.surveyService.getAllNoValidatesDocumentsPaginated(pageIndex, pageSize).subscribe({
         next: async (response: any) => {
           this.loading = false;
           this.loadData(response);
@@ -93,9 +92,9 @@ export class DocumentValidateComponent implements OnInit, AfterViewInit  {
 
   async getAll() {
     this.loading = true;
-    await this.surveyService.getAllByAccountCert(0,10).subscribe({
+    await this.surveyService.getAllNoValidatesDocumentsPaginated(0,10).subscribe({
         next: (response: any) => {
-            this.dataSource.data = response.surveys;
+            this.dataSource.data = response.surveys.surveys;
             this.loadData(response)
             this.loading = false;
             if(this.dataSource.data.length > 0) {
@@ -153,7 +152,7 @@ export class DocumentValidateComponent implements OnInit, AfterViewInit  {
   }
 
   async loadData(response: any) {
-    this.dataSource.data = response.surveys;
+    this.dataSource.data = response.surveys.surveys;
     this.totalSize = response?.total;
     await this.timer(100);
     this.dataSource.sort = this.recordsTableMatSort;

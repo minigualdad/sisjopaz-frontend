@@ -33,6 +33,7 @@ columns: any = {
 recordsTableColumns: string[] = [];
 user: any;
 region: any;
+backRoute = "app/region";
 
 constructor(
   private coordinatorService: CoordinatorService,

@@ -13,8 +13,9 @@
                         <h2 class="text-3xl font-semibold tracking-tight leading-8">Grupos</h2>
                         <div class="font-medium tracking-tight text-secondary">A continuación encontrará la información general de grupos</div>
                     </div>
+
                     <div *ngIf="user.role === 'COORDINACION'" class="flex items-center ml-6">
-                        <button  class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                        <button *ngIf="user.role === 'ENLACE_REGIONAL'" class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
                         (click)="create()">
                         <mat-icon class="icon-size-5 text-white">add</mat-icon>
                         <span class="ml-2 text-white font-bold">Crear</span>
@@ -56,6 +57,11 @@
                                             <mat-icon>more_vert</mat-icon>
                                         </button>
                                         <mat-menu class="bg-white" #menu="matMenu">
+                                            <button *ngIf="user.role === 'ENLACE_REGIONAL' || user.role === 'COORDINACION'"
+                                            mat-menu-item [routerLink]="['/app', 'beneficiary-group', transaction.id]">
+                                            <mat-icon>people</mat-icon>
+                                            Administrar Jóvenes
+                                            </button>
                                             <button
                                             mat-menu-item [routerLink]="['/app', 'component-group', transaction.id]">
                                             <mat-icon>assignment</mat-icon>    
@@ -66,6 +72,11 @@
                                             <mat-icon>library_books</mat-icon>
                                             <span >Planillas Cargadas</span>
                                         </button>
+                                        <button
+                                            mat-menu-item [routerLink]="['/app', 'bank-info', transaction.id]">
+                                            <mat-icon>visibility</mat-icon>
+                                            Ver Certificaciónes Bancarias de Jóvenes no Validadas
+                                            </button>
                                             <button
                                             mat-menu-item [routerLink]="['/app', 'assistance-upload']">
                                             <mat-icon>center_focus_strong</mat-icon>    

@@ -5,7 +5,7 @@
 
         <!-- CONTENT GOES HERE -->
         <div class="h-400 min-h-400 max-h-400">
-
+            <app-button-back [routeBack]="backRoute" class="mb-2"></app-button-back>
             <div class="grid grid-cols-1 xl:grid-cols-1 w-full ">
 
                 <div class="flex items-center justify-between w-full">
@@ -16,16 +16,16 @@
                             general de jóvenes</div>
                     </div>
                     <div class="flex items-center ml-6">
-                        <button class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                        <button *ngIf="user.role === 'ADMIN' || user.role === 'DIRECCION'" class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
                             (click)="dowloadYounger()">
                             <mat-icon class="icon-size-5 text-white">download</mat-icon>
                             <span class="ml-2 text-white font-bold">Descargar Jovenes</span>
                         </button>
-                        <button class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                        <!-- <button *ngIf="user.role === 'ADMIN' || user.role === 'DIRECCION'" class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
                             (click)="downloadAssistanceBeneficiaries()">
                             <mat-icon class="icon-size-5 text-white">download</mat-icon>
                             <span class="ml-2 text-white font-bold">Descargar Asistentes por Grupo</span>
-                        </button>
+                        </button> -->
                         <button class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
                             (click)="create()">
                             <mat-icon class="icon-size-5 text-white">add</mat-icon>

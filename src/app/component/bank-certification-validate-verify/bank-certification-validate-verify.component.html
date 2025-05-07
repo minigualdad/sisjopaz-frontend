@@ -25,8 +25,36 @@
           (click)="onImageClick($event, accountCert)"
         />
       </div>
+      
+      <!-- Sección de datos bancarios -->
+      <div *ngIf="dataBank" class="w-full mt-4 bg-pink-50 rounded-lg p-4 shadow-sm border border-pink-100">
+        <h3 class="text-lg font-semibold text-pink-700 mb-3 text-center">Información Bancaria</h3>
+        
+        <div class="grid grid-cols-1 gap-2">
+          <div class="flex justify-between items-center border-b border-pink-200 pb-2">
+            <span class="font-medium text-pink-600">Banco:</span>
+            <span class="text-gray-700">{{dataBank.Bank?.name}}</span>
+          </div>
+          
+          <div class="flex justify-between items-center border-b border-pink-200 pb-2">
+            <span class="font-medium text-pink-600">Tipo de cuenta:</span>
+            <span class="text-gray-700">{{dataBank.accountType}}</span>
+          </div>
+          
+          <div class="flex justify-between items-center border-b border-pink-200 pb-2">
+            <span class="font-medium text-pink-600">Número de cuenta:</span>
+            <span class="text-gray-700">{{dataBank.accountNumber}}</span>
+          </div>
+          
+          <div class="flex justify-between items-center">
+            <span class="font-medium text-pink-600">Email:</span>
+            <span class="text-gray-700">{{dataBank.email}}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+  
 
   <div class="flex justify-center gap-4 mb-4" *ngIf="!showMotivoInput">
     <button mat-raised-button color="warn" class="bg-red-500 hover:bg-red-600 text-white" (click)="onReject()">

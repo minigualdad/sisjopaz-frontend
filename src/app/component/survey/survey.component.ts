@@ -12,6 +12,8 @@ import { environment } from '../../../enviroment/enviroment';
 import { PaginatorService } from '../../service/paginator.service';
 import { MonitoringService } from '../../service/monitoring.service';
 import { CharacterizationService } from '../../service/characterization.service';
+import { UpdateDocumentComponent } from '../update-document/update-document.component';
+import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-survey',
@@ -49,6 +51,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   };
   recordsTableColumns: string[] = [];
   serverUrl = environment.apiUrl;
+  user:any;
 
   totalItems = 0;
   pageSize = 10;
@@ -68,6 +71,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
     private router: Router,
     public dialog: MatDialog,
     private _characterizationService: CharacterizationService,
+    private userService: UserService,
     private _monitoringService: MonitoringService,
   ) {
     this.recordsTableColumns = Object.keys(this.columns);
@@ -78,7 +82,10 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   * On init
   */
   ngOnInit(): void {
-    this.getAll();
+    this.userService.getUser().subscribe((response: any) => {
+      this.user = response.user;
+      this.getAll();
+    });
   }
 
   /**
@@ -161,6 +168,23 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
   timer(ms: number) {
     return new Promise(res => setTimeout(res, ms));
+  }
+
+  openUpdateDocumentModal(surveyId: number): void {
+    const dialogRef = this.dialog.open(UpdateDocumentComponent, {
+      hasBackdrop: true,
+      disableClose: true,
+      maxWidth: 'none',
+      width: 'auto',
+      height: 'auto',
+      data: { id: surveyId }, // pasas el ID como data
+    });
+  
+    dialogRef.afterClosed().subscribe((result:any) => {
+      if(result.success === true){
+        this.getAll();
+      }
+    });
   }
 
   downloadPDF(id: number) {

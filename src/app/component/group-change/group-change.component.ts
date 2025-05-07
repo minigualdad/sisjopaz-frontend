@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { GroupService } from '../../service/group.service';
 import { SurveyService } from '../../service/survey.service';
 
 
@@ -16,8 +15,7 @@ export class GroupChangeComponent {
 survey: any;
   form: FormGroup;
 
-  constructor(private groupService: GroupService,
-    private surveyService: SurveyService,
+  constructor(private surveyService: SurveyService,
     private router: Router,
     private activatedRoute: ActivatedRoute) {
     this.form = new FormGroup({

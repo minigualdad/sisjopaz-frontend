@@ -79,13 +79,15 @@
             <mat-menu class="bg-white" #menu="matMenu">
               <button mat-menu-item (click)="remove(transaction.id)">
                 <mat-icon>delete</mat-icon>
-                Ver Horario
-              </button>
-            </mat-menu>
-            <mat-menu class="bg-white" #menu="matMenu">
-              <button mat-menu-item (click)="remove(transaction.id)">
-                <mat-icon>delete</mat-icon>
                 Eliminar registro
+              </button>
+              <button mat-menu-item (click)="show(transaction, 'original')" *ngIf="transaction?.hasAssitence">
+                <mat-icon>visibility</mat-icon>
+                Ver Planillas Originales
+              </button>
+              <button mat-menu-item (click)="show(transaction, 'process')" *ngIf="transaction?.hasAssitence">
+                <mat-icon>visibility</mat-icon>
+                Ver Planillas Procesadas
               </button>
             </mat-menu>
           </td>
@@ -112,3 +114,33 @@
 
 </app-group-component-date-activity-beneficiary-add>
 
+<div *ngIf="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
+    <!-- Encabezado del modal -->
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold">Imagenes Planillas</h2>
+      <button (click)="isModalOpen = false" class="text-gray-500 hover:text-gray-700">
+        ✕
+      </button>
+    </div>
+
+    <div class="mb-8" *ngIf="typeImage == 'original'">
+      <h3 class="text-lg font-semibold mb-2">Imágenes Originales</h3>
+      <div class="grid grid-cols-1 gap-4">
+        <div *ngFor="let img of originalImages" class="border rounded-lg p-2">
+          <img [src]="img" alt="Original" class="w-full h-auto object-contain max-h-60">
+        </div>
+      </div>
+    </div>
+
+    <!-- Imágenes Procesadas -->
+    <div class="mb-8" *ngIf="typeImage == 'process'">
+      <h3 class="text-lg font-semibold mb-2">Imágenes Procesadas</h3>
+      <div class="grid grid-cols-1 gap-4">
+        <div *ngFor="let img of processedImages" class="border rounded-lg p-2">
+          <img [src]="img" alt="Procesada" class="w-full h-auto object-contain max-h-60">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

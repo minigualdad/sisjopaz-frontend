@@ -27,10 +27,10 @@ export class BeneficiaryGroupComponent implements OnInit, AfterViewInit{
     actions: 'Acciones',
     id: 'Id',
     name: 'Nombre Completo',
+    identificationType: 'Tipo de Documento',
     identification: 'Número de Documento',
     email: 'Correo Electrónico',
     startProgramDate: 'Fecha de ingreso al Programa',
-    group: 'Grupo Asignado',
     state: 'Estado',
   };
   recordsTableColumns: string[] = [];
@@ -44,6 +44,7 @@ export class BeneficiaryGroupComponent implements OnInit, AfterViewInit{
   loading = false;
   totalSize = 0;
   searchValue: string = '';
+  backRoute = "app/group";
 
 
   constructor(
