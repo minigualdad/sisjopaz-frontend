@@ -61,7 +61,12 @@
                                             <mat-icon>more_vert</mat-icon>
                                         </button>
                                         <mat-menu class="bg-white" #menu="matMenu">
-                                            <button *ngIf="user && (user.role === 'ENLACE_REGIONAL' || user.role === 'COORDINACION' || user.role === 'DIRECCION' || user.role === 'ADMIN')"
+                                            <button *ngIf="user && (user.role === 'DIRECCION' || user.role === 'ADMIN')"
+                                            mat-menu-item [routerLink]="['/app', 'date-group-component-edit',transaction.id]">
+                                            <mat-icon>note_add</mat-icon>
+                                                Editar Programación
+                                            </button>
+                                            <button *ngIf="user && (user.role === 'ENLACE_REGIONAL' || user.role === 'COORDINACION' ||  user.role === 'DIRECCION' || user.role === 'ADMIN')"
                                             mat-menu-item [routerLink]="['/app', 'group-professional-team',transaction.id]">
                                             <mat-icon>edit</mat-icon>
                                                 Administrar Profesionales

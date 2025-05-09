@@ -3,51 +3,50 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { GroupComponentService } from '../../service/group-component.service';
-import { GroupService } from '../../service/group.service';
 
 @Component({
-  selector: 'app-component-group-add',
+  selector: 'app-date-group-component-edit',
   standalone: false,
-  templateUrl: './component-group-add.component.html',
-  styleUrl: './component-group-add.component.scss'
+  templateUrl: './date-group-component-edit.component.html',
+  styleUrl: './date-group-component-edit.component.scss'
 })
-export class ComponentGroupAddComponent {
-  group: any;
+export class DateGroupComponentEditComponent {
+  groupComponent: any;
 
   form: FormGroup;
 
   constructor(private groupComponentService: GroupComponentService,
 
     private activatedRoute: ActivatedRoute,
-    private groupService: GroupService,
     private router: Router) {
     this.form = new FormGroup({
-      groupId: new FormControl('', Validators.required),
-      componentId: new FormControl('', Validators.required),
-      dateGroupId: new FormControl(''),
+      groupComponentId: new FormControl('', Validators.required),
+      dateGroupId: new FormControl('', Validators.required),
     });
-    this.group = {};
-    this.group.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    this.form.controls['groupId'].setValue(this.group.id);
+    this.groupComponent = {};
+    this.groupComponent.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    this.form.controls['groupComponentId'].setValue(this.groupComponent.id);
   }
 
   ngOnInit() {
-    this.showGroup();
+    this.showGroupComponent();
   }
 
-  showGroup() {
-    this.groupService.show(this.group.id)
+  showGroupComponent() {
+    this.groupComponentService.show(this.groupComponent.id)
       .subscribe((response: any) => {
-        this.group = response.group;
+        this.groupComponent = response.groupComponent;
+        this.form.patchValue(response.groupComponent);
+
       })
   }
 
   async create() {
-    await this.groupComponentService.create({ ...this.form.value })
+    await this.groupComponentService.editDateGroup(this.groupComponent.id, { ...this.form.value })
       .subscribe({
         next: (response: any) => {
           Swal.fire('Operación correcta', 'Componente creado correctamente', 'success');
-          this.router.navigateByUrl(`/app/component-group/${this.group.id}`)
+          this.router.navigateByUrl(`/app/component-group/${this.groupComponent.groupId}`)
         },
         error: (error) => {
           console.error(error);

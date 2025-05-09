@@ -21,6 +21,12 @@ export class GroupComponentDateActivityService {
     });
   }
 
+  addMassiveAllGroups(periodId: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivity/addMassiveAllGroups`, {
+      periodId,
+    });
+  }
+
   // roleVerify([Roles.ADMIN, Roles.DIRECCION])
   getAllByGroupComponentId(groupComponentId: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/groupComponentDateActivity/getAllByGroupComponentId`, {

@@ -29,6 +29,7 @@ columns: any = {
   actions: 'Acciones',
   id: 'Id',
   component: 'Componente',
+  dateGroup: 'Programación',
   state: 'Estado',
 };
 recordsTableColumns: string[] = [];

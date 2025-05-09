@@ -5,15 +5,15 @@
             <div class="md:grid md:grid-cols-3 md:gap-6">
                 <div class="md:col-span-1">
                     <div class="px-4 sm:px-0">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">Crear Componente al Grupo {{group.name | titlecase}}</h3>
-                        <p class="mt-1 text-sm text-gray-600">Esta será información con la que se creará el componente al grupo.
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">Reasignar Programación al grupo {{groupComponent.Group?.name | titlecase}}</h3>
+                        <p class="mt-1 text-sm text-gray-600">Esta será información con la que se reasignará la información al grupo.
                         </p>
                     </div>
                 </div>
                 <div class="mt-5 md:col-span-2 md:mt-0">    
-                    <app-component-selector (componentIdListen)="onComponentSelect($event)"></app-component-selector>
+
                     <div class="mb-4">
-                        <app-date-group-selector (dateGroupIdListen)="setDays($event)"></app-date-group-selector>
+                        <app-date-group-selector [dateGroup]="groupComponent.dateGroupId" (dateGroupIdListen)="setDays($event)"></app-date-group-selector>
                     </div>
                 </div>
 
@@ -23,7 +23,6 @@
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <button class="bg-primary text-white p-2 rounded-lg" mat-flat-button primary
-            [disabled]="form.invalid" [type]="form.invalid ? 'button' : 'submit'">Crear Componente</button>
+            [disabled]="form.invalid" [type]="form.invalid ? 'button' : 'submit'">Asignar Programación</button>
     </mat-dialog-actions>
 </form>
-<!-- <app-loading *ngIf="loading"></app-loading> -->

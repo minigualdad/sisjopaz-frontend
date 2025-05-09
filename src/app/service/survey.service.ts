@@ -12,7 +12,7 @@ export class SurveyService {
   constructor(private _httpClient: HttpClient,
     private indexedDbService: IndexedDbService) { }
 
-  connectionStatusCheck(){
+  connectionStatusCheck() {
     if (navigator.onLine) {
       this.connectionStatus = true;
     } else {
@@ -20,7 +20,7 @@ export class SurveyService {
     }
   }
 
-  updateSurveyDocumentsAndDocumentType(form:any){
+  updateSurveyDocumentsAndDocumentType(form: any) {
     const fd = new FormData();
     if (form.frontImage) {
       fd.append('fileFront', form.frontImage, form.frontImage?.name || 'image.png');
@@ -30,6 +30,10 @@ export class SurveyService {
       fd.append('fileBack', form.backImage, form.backImage?.name || 'image.png');
       delete (form.backImage);
     }
+    if (form.accountCertification) {
+      fd.append('accountCertification', form.accountCertification, form.accountCertification?.name || 'image.png');
+      delete (form.accountCertification);
+    }
     for (const key in form) {
       fd.append(key, form[key]);
     }
@@ -38,7 +42,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   getAll(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAll`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAll`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -102,100 +106,100 @@ export class SurveyService {
       )
   }
 
-  filterByWord(value:string, typeSearch?: number, groupId?:number){
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/${typeSearch}/getAllByValue`, {value, groupId})
-    .pipe(
-      map((response: any) => {
-        response.surveys = response.surveys.map((survey: any) => {
-          survey.name = `${survey!.firstName} ${survey!.secondName} ${survey!.firstLastName} ${survey!.secondLastName}`;
-          survey.divipola = survey?.Divipola?.name;
-          survey.group = survey?.Group?.name;
-          switch(typeSearch){
-            case 1: 
-              return survey;
-            case 2:
-              survey.ARNCheckDate = survey?.ARNCheckDate ? survey.ARNCheckDate.split('T')[0] : 'Sin Revisar';
-              survey.ARNCheck = (survey?.ARNCheck === 'si' && survey.ARNCheckDate) ? 'Validado' : 'Sin Revisar';
-              return survey;
-            case 3:
-              survey.accountCertificationDate = survey?.accountCertificationDate ? survey.accountCertificationDate.split('T')[0] : 'Sin Verificar';
-              survey.accountCertificationMotive = survey?.accountCertificationMotive ? survey.accountCertificationMotive : 'Sin Verificar';
-              return survey;
-            case 4:
-              survey.startProgramDate = survey?.createdAt.split('T')[0];
-              survey.updatedDate = survey?.updatedAt.split('T')[0];
-              return survey;
-            case 5:
-              return survey;
-            case 6:
-              survey.identificationExpeditionOriginal = survey?.identificationExpeditionOriginal.split('T')[0];
-              survey.bornDateOriginal = survey?.bornDateOriginal.split('T')[0];
-              return survey;
-            case 7:
-              survey.bornDate = survey?.bornDate.split('T')[0];
-              survey.identificationExpedition = survey?.identificationExpedition.split('T')[0];
-              return survey;
-            case 8:
-              return survey;
-            case 9:
-              survey.signDate = survey.signDate.split('T')[0];
-              return survey;
-            case 10:
-              survey.DNPCheck = survey.DNPCheck ? survey.DNPCheck  : 'Sin Revisar';
-              survey.DNPCheckDate = survey.DNPCheckDate ? survey.DNPCheckDate.split('T')[0]  : 'Sin Revisar';
-              return survey;
-            case 11:
-              survey.documentIdentificationCheck = survey.documentIdentificationCheck ? survey.documentIdentificationCheck : 'Sin Cargar';
-              survey.documentIdentificationMotive = survey.documentIdentificationMotive ? survey.documentIdentificationMotive : 'Sin Revisar';
-              survey.documentIdentificationDate = survey.documentIdentificationDate ? survey.documentIdentificationDate.split('T')[0]  : 'Sin Revisar';
-              return survey;
-            case 12:
-              survey.DPSCheck = survey.DPSCheck ? survey.DPSCheck : 'Sin Cargar';
-              survey.DPSCheckDate = survey.DPSCheckDate ? survey.DPSCheckDate.split('T')[0]  : 'Sin Revisar';
-              return survey;
-            case 13:
-              survey.startProgramDate = survey?.createdAt.split('T')[0];
-              return survey;
-            case 14:
-              return survey;
-            case 15: 
-              survey.signDate = survey.signDate.split('T')[0];
-              survey.ARNCheckDate = survey?.ARNCheckDate ? survey.ARNCheckDate.split('T')[0] : 'Sin Revisar';
-              survey.ARNCheck = (survey?.ARNCheck === 'si' && survey.ARNCheckDate) ? 'Validado' : 'Sin Revisar';
-              survey.registraduryValidateCheck = survey.registraduryValidateCheck ? survey.registraduryValidateCheck : 'Sin revisar';
-              survey.registraduryValidateDate = survey.registraduryValidateDate ? survey.registraduryValidateDate.split('T')[0]  : 'Sin Revisar';
-              survey.DNPCheck = survey.DNPCheck ? survey.DNPCheck  : 'Sin Revisar';
-              survey.DNPCheckDate = survey.DNPCheckDate ? survey.DNPCheckDate.split('T')[0]  : 'Sin Revisar';
-              survey.DPSCheck = survey.DPSCheck ? survey.DPSCheck : 'Sin Cargar';
-              survey.DPSCheckDate = survey.DPSCheckDate ? survey.DPSCheckDate.split('T')[0]  : 'Sin Revisar';
-              return survey;
-            case 16: 
-              survey.updatedDate = survey.updatedAt.split('T')[0];
-              return survey;
-            case 17:
-              survey.ARNCheck = survey.ARNCheck ? survey.ARNCheck : 'Sin Revisar';
-              survey.ARNCheckDate = survey.ARNCheckDate ? survey.ARNCheckDate.split('T')[0] : 'Sin Revisar';
-              survey.updatedDate = survey.updatedAt.split('T')[0];
-              survey.createdAt = survey.createdAt.split('T')[0];
-              return survey;
-            case 18:
-              survey.ARNMotive = survey.ARNMotive ? survey.ARNMotive : 'Sin Revisar';
-              survey.updatedDate = survey.updatedAt.split('T')[0];
-              return survey;
-            case 19:
-              survey.DNPCheck = survey.DNPCheck ? survey.DNPCheck : 'Sin Revisar';
-              survey.stateAgreement = survey.state;
-              survey.DNPCheckDate = survey.DNPCheckDate ? survey.DNPCheckDate.split('T')[0] : 'Sin Revisar';
-              survey.bornDate = survey.bornDate ? survey.bornDate.split('T')[0] : 'Sin Revisar';
-              survey.updatedDate = survey.updatedAt.split('T')[0];
-              survey.createdAt = survey.createdAt.split('T')[0];
-              return survey;
-            case 20:
-              survey.DNPMotive = survey.DNPMotive ? survey.DNPMotive : 'Sin Revisar';
-              survey.stateAgreement = survey.state;
-              survey.updatedDate = survey.updatedAt.split('T')[0];
-              return survey;
-            case 21:
+  filterByWord(value: string, typeSearch?: number, groupId?: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/${typeSearch}/getAllByValue`, { value, groupId })
+      .pipe(
+        map((response: any) => {
+          response.surveys = response.surveys.map((survey: any) => {
+            survey.name = `${survey!.firstName} ${survey!.secondName} ${survey!.firstLastName} ${survey!.secondLastName}`;
+            survey.divipola = survey?.Divipola?.name;
+            survey.group = survey?.Group?.name;
+            switch (typeSearch) {
+              case 1:
+                return survey;
+              case 2:
+                survey.ARNCheckDate = survey?.ARNCheckDate ? survey.ARNCheckDate.split('T')[0] : 'Sin Revisar';
+                survey.ARNCheck = (survey?.ARNCheck === 'si' && survey.ARNCheckDate) ? 'Validado' : 'Sin Revisar';
+                return survey;
+              case 3:
+                survey.accountCertificationDate = survey?.accountCertificationDate ? survey.accountCertificationDate.split('T')[0] : 'Sin Verificar';
+                survey.accountCertificationMotive = survey?.accountCertificationMotive ? survey.accountCertificationMotive : 'Sin Verificar';
+                return survey;
+              case 4:
+                survey.startProgramDate = survey?.createdAt.split('T')[0];
+                survey.updatedDate = survey?.updatedAt.split('T')[0];
+                return survey;
+              case 5:
+                return survey;
+              case 6:
+                survey.identificationExpeditionOriginal = survey?.identificationExpeditionOriginal.split('T')[0];
+                survey.bornDateOriginal = survey?.bornDateOriginal.split('T')[0];
+                return survey;
+              case 7:
+                survey.bornDate = survey?.bornDate.split('T')[0];
+                survey.identificationExpedition = survey?.identificationExpedition.split('T')[0];
+                return survey;
+              case 8:
+                return survey;
+              case 9:
+                survey.signDate = survey.signDate.split('T')[0];
+                return survey;
+              case 10:
+                survey.DNPCheck = survey.DNPCheck ? survey.DNPCheck : 'Sin Revisar';
+                survey.DNPCheckDate = survey.DNPCheckDate ? survey.DNPCheckDate.split('T')[0] : 'Sin Revisar';
+                return survey;
+              case 11:
+                survey.documentIdentificationCheck = survey.documentIdentificationCheck ? survey.documentIdentificationCheck : 'Sin Cargar';
+                survey.documentIdentificationMotive = survey.documentIdentificationMotive ? survey.documentIdentificationMotive : 'Sin Revisar';
+                survey.documentIdentificationDate = survey.documentIdentificationDate ? survey.documentIdentificationDate.split('T')[0] : 'Sin Revisar';
+                return survey;
+              case 12:
+                survey.DPSCheck = survey.DPSCheck ? survey.DPSCheck : 'Sin Cargar';
+                survey.DPSCheckDate = survey.DPSCheckDate ? survey.DPSCheckDate.split('T')[0] : 'Sin Revisar';
+                return survey;
+              case 13:
+                survey.startProgramDate = survey?.createdAt.split('T')[0];
+                return survey;
+              case 14:
+                return survey;
+              case 15:
+                survey.signDate = survey.signDate.split('T')[0];
+                survey.ARNCheckDate = survey?.ARNCheckDate ? survey.ARNCheckDate.split('T')[0] : 'Sin Revisar';
+                survey.ARNCheck = (survey?.ARNCheck === 'si' && survey.ARNCheckDate) ? 'Validado' : 'Sin Revisar';
+                survey.registraduryValidateCheck = survey.registraduryValidateCheck ? survey.registraduryValidateCheck : 'Sin revisar';
+                survey.registraduryValidateDate = survey.registraduryValidateDate ? survey.registraduryValidateDate.split('T')[0] : 'Sin Revisar';
+                survey.DNPCheck = survey.DNPCheck ? survey.DNPCheck : 'Sin Revisar';
+                survey.DNPCheckDate = survey.DNPCheckDate ? survey.DNPCheckDate.split('T')[0] : 'Sin Revisar';
+                survey.DPSCheck = survey.DPSCheck ? survey.DPSCheck : 'Sin Cargar';
+                survey.DPSCheckDate = survey.DPSCheckDate ? survey.DPSCheckDate.split('T')[0] : 'Sin Revisar';
+                return survey;
+              case 16:
+                survey.updatedDate = survey.updatedAt.split('T')[0];
+                return survey;
+              case 17:
+                survey.ARNCheck = survey.ARNCheck ? survey.ARNCheck : 'Sin Revisar';
+                survey.ARNCheckDate = survey.ARNCheckDate ? survey.ARNCheckDate.split('T')[0] : 'Sin Revisar';
+                survey.updatedDate = survey.updatedAt.split('T')[0];
+                survey.createdAt = survey.createdAt.split('T')[0];
+                return survey;
+              case 18:
+                survey.ARNMotive = survey.ARNMotive ? survey.ARNMotive : 'Sin Revisar';
+                survey.updatedDate = survey.updatedAt.split('T')[0];
+                return survey;
+              case 19:
+                survey.DNPCheck = survey.DNPCheck ? survey.DNPCheck : 'Sin Revisar';
+                survey.stateAgreement = survey.state;
+                survey.DNPCheckDate = survey.DNPCheckDate ? survey.DNPCheckDate.split('T')[0] : 'Sin Revisar';
+                survey.bornDate = survey.bornDate ? survey.bornDate.split('T')[0] : 'Sin Revisar';
+                survey.updatedDate = survey.updatedAt.split('T')[0];
+                survey.createdAt = survey.createdAt.split('T')[0];
+                return survey;
+              case 20:
+                survey.DNPMotive = survey.DNPMotive ? survey.DNPMotive : 'Sin Revisar';
+                survey.stateAgreement = survey.state;
+                survey.updatedDate = survey.updatedAt.split('T')[0];
+                return survey;
+              case 21:
                 survey.DPSCheck = survey.DPSCheck ? survey.DPSCheck : 'Sin Revisar';
                 survey.stateAgreement = survey.state;
                 survey.DPSCheckDate = survey.DPSCheckDate ? survey.DPSCheckDate.split('T')[0] : 'Sin Revisar';
@@ -203,57 +207,57 @@ export class SurveyService {
                 survey.updatedDate = survey.updatedAt.split('T')[0];
                 survey.createdAt = survey.createdAt.split('T')[0];
                 return survey;
-            case 22:
-              survey.DPSMotive = survey.DPSMotive ? survey.DPSMotive : 'Sin Revisar';
-              survey.updatedDate = survey.updatedAt.split('T')[0];
-              return survey;
-            case 23:
-              survey.bornDate = survey.bornDate ? survey.bornDate.split('T')[0] : 'Sin Revisar';
-              return survey;
-            case 24:
-              survey.group =  survey?.Group?.name ? survey?.Group?.name : 'Sin Grupo';
-              return survey;
-          }
-          if (survey.registraduryValidateCheck === 'si' && survey.registraduryValidateDate) {
-            survey.registraduryValidateDate = survey.registraduryValidateDate.split('T')[0];
-          } else {
-            survey.DPSCheck = 'Sin Revisar'
-          }
-          return survey;
+              case 22:
+                survey.DPSMotive = survey.DPSMotive ? survey.DPSMotive : 'Sin Revisar';
+                survey.updatedDate = survey.updatedAt.split('T')[0];
+                return survey;
+              case 23:
+                survey.bornDate = survey.bornDate ? survey.bornDate.split('T')[0] : 'Sin Revisar';
+                return survey;
+              case 24:
+                survey.group = survey?.Group?.name ? survey?.Group?.name : 'Sin Grupo';
+                return survey;
+            }
+            if (survey.registraduryValidateCheck === 'si' && survey.registraduryValidateDate) {
+              survey.registraduryValidateDate = survey.registraduryValidateDate.split('T')[0];
+            } else {
+              survey.DPSCheck = 'Sin Revisar'
+            }
+            return survey;
+          })
+          return response;
         })
-        return response;
-      })
-    )
+      )
   }
 
-  getAllWithoutGroupByDivipola(currentPage: number, pageSize: number){
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllWithoutGroupByDivipola`, {currentPage, pageSize})
-    .pipe(
-      map((response: any) => {
-        response.surveys = response.surveys.surveys.map((survey: any) => {
-          survey.identificationType = survey.IdentificationType?.alias
-          survey.divipola = survey.Divipola?.name;
-          survey.name = survey.firstName;
-          if (survey.secondName) {
+  getAllWithoutGroupByDivipola(currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllWithoutGroupByDivipola`, { currentPage, pageSize })
+      .pipe(
+        map((response: any) => {
+          response.surveys = response.surveys.surveys.map((survey: any) => {
+            survey.identificationType = survey.IdentificationType?.alias
+            survey.divipola = survey.Divipola?.name;
+            survey.name = survey.firstName;
+            if (survey.secondName) {
+              survey.name += ' ';
+              survey.name += survey.secondName;
+            }
             survey.name += ' ';
-            survey.name += survey.secondName;
-          }
-          survey.name += ' ';
-          survey.name += survey.firstLastName;
-          if (survey.secondLastName) {
-            survey.name += ' ';
-            survey.name += survey.secondLastName;
-          }
-          return survey;
+            survey.name += survey.firstLastName;
+            if (survey.secondLastName) {
+              survey.name += ' ';
+              survey.name += survey.secondLastName;
+            }
+            return survey;
+          })
+          return response;
         })
-        return response;
-      })
-    )
+      )
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.COORDINACION, Roles.ENLACE_REGIONAL])
   getAllWithoutGroup(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllWithoutGroup`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllWithoutGroup`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -281,7 +285,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   getAllByGroup(id: number, currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/getAllByGroup`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/getAllByGroup`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -381,7 +385,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
   getAllByProfessionalTeam(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByProfessionalTeam`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByProfessionalTeam`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -466,7 +470,7 @@ export class SurveyService {
   }
 
   getAllByAccountCert(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByHasBankAccount`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByHasBankAccount`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -490,7 +494,7 @@ export class SurveyService {
   }
 
   getAllNoValidates(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getNoRegistraduryValidate`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getNoRegistraduryValidate`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -527,7 +531,6 @@ export class SurveyService {
             } else {
               survey.secondLastNameOriginal = '';
             }
-            
             return survey;
           })
           return response;
@@ -537,7 +540,7 @@ export class SurveyService {
 
   // roleVerify([Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO])
   getAllNoValidatesByProfessional(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getNoRegistraduryValidateByProfessional`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getNoRegistraduryValidateByProfessional`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -709,7 +712,7 @@ export class SurveyService {
   }
 
   getAllNoValidatesDocumentsPaginated(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByNoValidatesDocumentsPag`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByNoValidatesDocumentsPag`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys.surveys = response.surveys.surveys.map((survey: any) => {
@@ -847,8 +850,8 @@ export class SurveyService {
       )
   }
 
-  getAllNoValidatesBankCertificationByGroupId(groupId:number, currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/${groupId}/getAllByNoValidatesBankCetificationPrioridadSIIF`, {currentPage, pageSize})
+  getAllNoValidatesBankCertificationByGroupId(groupId: number, currentPage: number, pageSize: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/${groupId}/getAllByNoValidatesBankCetificationPrioridadSIIF`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.map((survey: any) => {
@@ -897,7 +900,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   getAllNoValidatesBankCertification(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByNoValidatesBankCetification`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByNoValidatesBankCetification`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -945,7 +948,7 @@ export class SurveyService {
   }
 
   getAllExtemporary(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllExtemporary`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllExtemporary`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -984,10 +987,10 @@ export class SurveyService {
           return response;
         })
       )
-  } 
+  }
 
   getAllRNECValidated(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRNECValidated`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRNECValidated`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -1023,7 +1026,7 @@ export class SurveyService {
           return response;
         })
       )
-  } 
+  }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.APOYO_A_LA_COORDINACION])
   setValidateDocuments(survey: any) {
@@ -1087,7 +1090,6 @@ export class SurveyService {
   getByIdentificationTypeAndIdentification(survey: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/getByIdentificationTypeAndIdentification`, { survey })
   }
-  
   // roleVerify([Roles.PROFESIONAL_PSICOSOCIAL, Roles.APOYO_A_LA_COORDINACION])
   getByIdentificationTypeAndIdentificationAndRegion(survey: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/getByIdentificationTypeAndIdentificationAndRegion`, { survey })
@@ -1096,17 +1098,17 @@ export class SurveyService {
   // roleVerify([Roles.ADMIN, Roles.DIRECCION, Roles.COORDINACION, Roles.ENLACE_REGIONAL, Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_PSICOSOCIAL])
   show(id: number) {
     this.connectionStatusCheck();
-    if(this.connectionStatus){
+    if (this.connectionStatus) {
       return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/getById`, {});
     } else {
       return from(this.indexedDbService.findPendingAgreementById(id)).pipe(
         switchMap((aggrement: any) => {
-          if(aggrement){
-            const objetct = { survey: []};
+          if (aggrement) {
+            const objetct = { survey: [] };
             objetct.survey = aggrement
             return of(objetct);
           } else {
-            const objetct = { survey: []};
+            const objetct = { survey: [] };
             return of(objetct);
           }
         })
@@ -1210,7 +1212,7 @@ export class SurveyService {
     const selectedFile = file;
     const fd = new FormData();
     fd.append('file', selectedFile, selectedFile.name);
-    return this._httpClient.post(environment.apiUrl + '/app/survey/uploadBankAccountPending', fd,  { responseType: 'blob' });
+    return this._httpClient.post(environment.apiUrl + '/app/survey/uploadBankAccountPending', fd, { responseType: 'blob' });
   }
 
   // No existe en Back
@@ -1327,7 +1329,7 @@ export class SurveyService {
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION, Roles.APOYO_A_LA_COORDINACION, Roles.GESTORES_SOCIALES, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.PROFESIONAL_PSICOSOCIAL])
   getAllByAccepted() {
     this.connectionStatusCheck();
-    if(this.connectionStatus){
+    if (this.connectionStatus) {
       return this._httpClient.get(`${environment.apiUrl}/app/survey/getAllByAccepted`)
         .pipe(
           map((response: any) => {
@@ -1350,10 +1352,11 @@ export class SurveyService {
       );
     }
   }
+
   getAllByAcceptedPaginated(currentPage: number, pageSize: number) {
     this.connectionStatusCheck();
-    if(this.connectionStatus){
-      return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByAcceptedPaginated`, {currentPage, pageSize})
+    if (this.connectionStatus) {
+      return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByAcceptedPaginated`, { currentPage, pageSize })
         .pipe(
           map((response: any) => {
             response.surveys = response.surveys.surveys.map((survey: any) => this.transformSurvey(survey));
@@ -1423,7 +1426,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
   getAllByRejectedDNP(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRejectedDNP`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRejectedDNP`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -1432,7 +1435,7 @@ export class SurveyService {
             if (survey.secondName) {
               survey.name += ' ';
               survey.name += survey.secondName;
-            }else {
+            } else {
               survey.secondName = '';
             }
             survey.name += ' ';
@@ -1475,7 +1478,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
   getAllByRejectedARN(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRejectedARN`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRejectedARN`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -1526,7 +1529,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
   getAllByRejectedDPS(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRejectedDPS`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllRejectedDPS`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -1544,7 +1547,7 @@ export class SurveyService {
               survey.name += survey.secondLastName;
             } else {
               survey.secondLastName = '';
-            }            survey.nameOriginal = survey.firstNameOriginal;
+            } survey.nameOriginal = survey.firstNameOriginal;
             if (survey.secondNameOriginal) {
               survey.nameOriginal += ' ';
               survey.nameOriginal += survey.secondNameOriginal;
@@ -1576,7 +1579,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
   getAllByPendingDNP(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllPendingDNP`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllPendingDNP`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -1671,7 +1674,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
   getAllByPendingARN(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllPendingARN`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllPendingARN`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -1771,7 +1774,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
   getAllByPendingDPS(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllPendingDPS`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllPendingDPS`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -2151,7 +2154,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   getAllByPendingDPSGeneral(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllpendingDPSGeneral`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllpendingDPSGeneral`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -2209,7 +2212,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   getAllByPendingDNPGeneral(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllpendingDNPGeneral`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllpendingDNPGeneral`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -2270,7 +2273,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN])
   getAllByPendingARNGeneral(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllpendingARNGeneral`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllpendingARNGeneral`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -2352,7 +2355,7 @@ export class SurveyService {
               survey.name += survey.secondLastName;
             } else {
               survey.secondLastName = '';
-            }            survey.nameOriginal = survey.firstNameOriginal;
+            } survey.nameOriginal = survey.firstNameOriginal;
             if (survey.secondNameOriginal) {
               survey.nameOriginal += ' ';
               survey.nameOriginal += survey.secondNameOriginal;
@@ -2402,7 +2405,7 @@ export class SurveyService {
               survey.name += survey.secondLastName;
             } else {
               survey.secondLastName = '';
-            }            survey.nameOriginal = survey.firstNameOriginal;
+            } survey.nameOriginal = survey.firstNameOriginal;
             if (survey.secondNameOriginal) {
               survey.nameOriginal += ' ';
               survey.nameOriginal += survey.secondNameOriginal;
@@ -2452,7 +2455,7 @@ export class SurveyService {
               survey.name += survey.secondLastName;
             } else {
               survey.secondLastName = '';
-            }            survey.nameOriginal = survey.firstNameOriginal;
+            } survey.nameOriginal = survey.firstNameOriginal;
             if (survey.secondNameOriginal) {
               survey.nameOriginal += ' ';
               survey.nameOriginal += survey.secondNameOriginal;
@@ -2484,7 +2487,7 @@ export class SurveyService {
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
   getAllByProfessionalTeamAndAccountCertRejectedOrPending(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByBankingCertificationRejectedOrPending`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByBankingCertificationRejectedOrPending`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
@@ -2520,7 +2523,6 @@ export class SurveyService {
       responseType: 'blob'
     });
   }
-  
   //Cambiar la ruta
   downloadAssistanceBeneficiaries(id: number) {
     return this._httpClient.get(`${environment.apiUrl}/app/survey/${id}/downloadAssistanceBeneficiariesByGroup`, {

@@ -39,6 +39,7 @@ export class DateGroupSelectorComponent {
   }
 
   ngAfterContentInit() {
+    this.checkValue();
   }
 
   checkValue() {

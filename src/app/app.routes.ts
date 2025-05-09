@@ -213,6 +213,8 @@ import { IdentificationTypeSelectorComponent } from './component/identification-
 import { BankInfoComponent } from './component/bank-info/bank-info.component';
 import { UpdateDocumentComponent } from './component/update-document/update-document.component';
 import { GroupAddMassiveActivityComponent } from './component/group-add-massive-activity/group-add-massive-activity.component';
+import { DateGroupComponentEditComponent } from './component/date-group-component-edit/date-group-component-edit.component';
+import { MassiveDateActivityAllGroupComponentComponent } from './component/massive-date-activity-all-group-component/massive-date-activity-all-group-component.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -858,6 +860,14 @@ export const routes: Routes = [
                 path: 'add-massive-activity', component: GroupAddMassiveActivityComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
             },
+            {
+                path: 'date-group-component-edit/:id', component: DateGroupComponentEditComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
+            },
+            {
+                path: 'massive-date-activity-all-group-component', component: MassiveDateActivityAllGroupComponentComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
+            },
         ]
     },
     { path: '**', component: NotFoundComponent },
@@ -1048,7 +1058,9 @@ export const routes: Routes = [
         IdentificationTypeSelectorComponent,
         BankInfoComponent,
         GroupAddMassiveActivityComponent,
-        UpdateDocumentComponent
+        UpdateDocumentComponent,
+        DateGroupComponentEditComponent,
+        MassiveDateActivityAllGroupComponentComponent,
     ],
     imports: [
         RouterModule.forRoot(routes),

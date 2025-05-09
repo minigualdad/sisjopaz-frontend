@@ -64,6 +64,10 @@ export class GroupComponentService {
     return this._httpClient.post(`${environment.apiUrl}/app/groupComponent/${id}/update`, {groupComponent});
   }
 
+  editDateGroup(id: number, groupComponent: any) {
+    return this._httpClient.post(`${environment.apiUrl}/app/groupComponent/${id}/updateDateGroup`, {groupComponent});
+  }
+
   // roleVerify([Roles.ADMIN, Roles.DIRECCION])
   delete(id: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/groupComponent/${id}/delete`, {});

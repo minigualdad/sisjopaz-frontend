@@ -31,8 +31,8 @@
                         </mat-form-field>
                     </div>
                     <div class="mb-4" *ngIf="this.group">
-                        <app-divipol-selector [divipol]="this.form.get('divipolaId')?.value" 
-                        (divipolIdListen)="onDivipolSelect($event)"></app-divipol-selector>
+                        <app-divipol-selector [divipol]="this.form.get('divipolaId')?.value"
+                            (divipolIdListen)="onDivipolSelect($event)"></app-divipol-selector>
                     </div>
                     <div class="mb-4" *ngIf="this.group">
                         <app-point-selector [point]="group.pointId" [divipolaId]="this.form.get('divipolaId')?.value"
@@ -42,6 +42,15 @@
                         <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                             <mat-label>Observaciones:</mat-label>
                             <input type="text" matInput formControlName="observations">
+                        </mat-form-field>
+                    </div>
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Estado</mat-label>
+                            <mat-select formControlName="state" required>
+                                <mat-option value="ENABLED">ACTIVO</mat-option>
+                                <mat-option value="DISABLED">INACTIVO</mat-option>
+                            </mat-select>
                         </mat-form-field>
                     </div>
                 </div>

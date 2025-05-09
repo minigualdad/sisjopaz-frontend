@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
 import { GroupService } from '../../service/group.service';
 import { FormSelectDateComponent } from '../form-select-date/form-select-date.component';
+import { GroupComponentDateActivityService } from '../../service/group-component-date-activity.service';
 
 @Component({
   selector: 'app-group',
@@ -43,7 +44,8 @@ export class GroupComponent {
     private titleService: Title,
     private router: Router,
     public dialog: MatDialog,
-    private userService: UserService
+    private userService: UserService,
+    private groupComponentDateActivityService: GroupComponentDateActivityService
   ) {
     this.recordsTableColumns = Object.keys(this.columns);
     this.titleService.setTitle('Grupo');
@@ -110,6 +112,10 @@ export class GroupComponent {
 
   dateGroup(id: number) {
     this.router.navigateByUrl(`/app/date-group/${id}`);
+  }
+
+  addMassiveAllGroups(){
+    this.router.navigateByUrl(`/app/massive-date-activity-all-group-component`);
   }
 
   async remove(id: number) {

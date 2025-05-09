@@ -5,10 +5,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GroupService } from '../../service/group.service';
 
 @Component({
-    selector: 'app-group-edit',
-    templateUrl: './group-edit.component.html',
-    styleUrl: './group-edit.component.scss',
-    standalone: false
+  selector: 'app-group-edit',
+  templateUrl: './group-edit.component.html',
+  styleUrl: './group-edit.component.scss',
+  standalone: false
 })
 export class GroupEditComponent {
   group: any;
@@ -26,10 +26,10 @@ export class GroupEditComponent {
       divipolaId: new FormControl('', Validators.required),
       pointId: new FormControl('', Validators.required),
       observations: new FormControl('', Validators.required),
+      state: new FormControl('', Validators.required),
     });
     this.group = {};
     this.group.id = this.activatedRoute.snapshot.paramMap.get('id');
-
   }
 
   async ngOnInit() {

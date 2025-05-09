@@ -20,15 +20,16 @@
                             <span class="ml-2 text-white font-bold">Crear</span>
                         </button>
                         <button *ngIf="user && (user.role === 'DIRECCION' || user.role === 'ADMIN')" class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
-                            [routerLink]="['/app', 'add-massive-activity']">
+                            (click)="addMassiveAllGroups()">
                             <mat-icon class="icon-size-5 text-white">add</mat-icon>
-                            <span class="ml-2 text-white font-bold">Asignar Horario Masivo</span>
+                            <span class="ml-2 text-white font-bold">Crear Programación Masiva</span>
                         </button>
-                        <!-- <button *ngIf="user && (user.role === 'ENLACE_REGIONAL' || user.role === 'DIRECCION' || user.role === 'ADMIN')" class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
-                            (click)="downloadAllAssistance()">
-                            <mat-icon class="icon-size-5 text-white">download</mat-icon>
-                            <span class="ml-2 text-white font-bold">Descargar Asistencias</span>
-                        </button> -->
+                        <button *ngIf="user && (user.role === 'DIRECCION' || user.role === 'ADMIN')" class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                        [routerLink]="['/app', 'add-massive-activity']">
+                        <mat-icon class="icon-size-5 text-white">add</mat-icon>
+                        <span class="ml-2 text-white font-bold">Asignar Horario Masivo</span>
+                    </button>
+
                     </div>
                 </div>
 

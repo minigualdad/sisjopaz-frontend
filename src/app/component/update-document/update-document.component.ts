@@ -22,7 +22,12 @@ export class UpdateDocumentComponent implements OnInit {
   identificationTypeId: any;
   frontImageFile: any;
   backImageFile: any;
+  documentFileUrl: string | null = null;
+  documentFileName: string | null = null;
+  isPdf: boolean = false;
+  hasFileLoaded: boolean = false;
 
+  accountCertificationFile: any;
   documentTypes: any[] = [];
 
   constructor(
@@ -37,6 +42,11 @@ export class UpdateDocumentComponent implements OnInit {
         Validators.required,
         Validators.pattern(/^[0-9]+$/),
       ]),
+      bankId: new FormControl('', Validators.required),
+      accountType: new FormControl('', Validators.required),
+      accountNumber: new FormControl('', Validators.required),
+      expeditionDate: new FormControl('', [Validators.required, this.dateNotInFuture.bind(this)])
+
     });
   }
 
@@ -50,15 +60,17 @@ export class UpdateDocumentComponent implements OnInit {
       next: (response: any) => {
         this.documentTypes = response.identificationTypes;
       },
-      error: (error: any) => {},
+      error: (error: any) => { },
     });
   }
 
   showSurvey() {
     this.surveyService.show(this.data.id).subscribe((response: any) => {
-      this.form
-        .get('documentNumber')
-        ?.setValue(response?.survey?.identification);
+      this.form.get('documentNumber')?.setValue(response?.survey?.identification);
+      this.form.get('documentType')?.setValue(response?.survey?.identificationTypeId);
+      this.form.get('expeditionDate')?.setValue(response?.survey?.identificationExpedition?.split('T')[0]);
+
+      this.form.patchValue(response.survey);
 
       this.survey = response.survey;
       // Formatea el nombre completo
@@ -91,7 +103,6 @@ export class UpdateDocumentComponent implements OnInit {
         maxWidthOrHeight: 1920,
         useWebWorker: true,
       };
-  
       imageCompression(file, options)
         .then((compressedFile) => {
           const reader = new FileReader();
@@ -151,7 +162,6 @@ export class UpdateDocumentComponent implements OnInit {
         maxWidthOrHeight: 1920,
         useWebWorker: true,
       };
-  
       imageCompression(file, options)
         .then((compressedFile) => {
           const reader = new FileReader();
@@ -168,9 +178,42 @@ export class UpdateDocumentComponent implements OnInit {
     }
   }
 
+  onFileSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.documentFileUrl = e.target.result;
+        this.documentFileName = file.name;
+        this.isPdf = file.type === 'application/pdf'
+        this.documentFileName.toLowerCase().endsWith('.pdf');
+        this.hasFileLoaded = true;
+        this.accountCertificationFile = file;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.hasFileLoaded = false;
+    }
+  }
+
   openImageInNewTab(imageUrl: string | null) {
     if (imageUrl) {
       window.open(imageUrl, '_blank');
+    }
+  }
+
+  openInNewTab() {
+    if (this.documentFileUrl) {
+      window.open(this.documentFileUrl, '_blank');
+    }
+  }
+
+  downloadFile() {
+    if (this.documentFileUrl) {
+      const link = document.createElement('a');
+      link.href = this.documentFileUrl;
+      link.download = this.documentFileName || 'archivo';
+      link.click();
     }
   }
 
@@ -183,10 +226,14 @@ export class UpdateDocumentComponent implements OnInit {
       surveyId: Number(this.data.id),
       identificationTypeId: this.form.get('documentType')?.value,
       identification: this.form.get('documentNumber')?.value,
+      bankId: this.form.get('bankId')?.value,
+      accountType: this.form.get('accountType')?.value,
+      accountNumber: this.form.get('accountNumber')?.value,
+      identificationExpedition: this.form.get('expeditionDate')?.value,
       documentFront: this.frontImageFile,
-      documentBack: this.backImageFile, 
+      documentBack: this.backImageFile,
+      accountCertification: this.accountCertificationFile,
     };
-
     this.surveyService
       .updateSurveyDocumentsAndDocumentType(record)
       .subscribe({
@@ -207,5 +254,39 @@ export class UpdateDocumentComponent implements OnInit {
           );
         },
       });
+  }
+
+  onBankSelect(event: any) {
+    this.form.patchValue({ bankId: event });
+  }
+
+  dateNotInFuture(control: FormControl): { [key: string]: boolean } | null {
+    if (!control.value) {
+      return null;
+    }
+
+    const now = new Date();
+    const offsetColombia = -5; // UTC-5 para Colombia
+    const nowColombia = new Date(now.getTime() + offsetColombia * 60 * 60 * 1000);
+
+    const todayColombia = new Date(
+      nowColombia.getFullYear(),
+      nowColombia.getMonth(),
+      nowColombia.getDate()
+    );
+
+    const selectedDate = new Date(control.value);
+
+    const selectedDateColombia = new Date(
+      selectedDate.getUTCFullYear(),
+      selectedDate.getUTCMonth(),
+      selectedDate.getUTCDate()
+    );
+
+    if (selectedDateColombia > todayColombia) {
+      return { 'futureDate': true };
+    }
+
+    return null;
   }
 }

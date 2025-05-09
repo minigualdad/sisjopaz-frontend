@@ -4,9 +4,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-import { CalendarService } from '../../service/calendar.service';
 import { GroupComponentDateActivityService } from '../../service/group-component-date-activity.service';
 import { SelectionModel } from '@angular/cdk/collections';
 
