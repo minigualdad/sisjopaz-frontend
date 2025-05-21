@@ -2,101 +2,56 @@
   <!-- ========== MOBILE ==========  -->
   <div class="md:hidden bg-blueCustom w-full sticky top-0 z-50 flex flex-col">
     <div class="flex items-center justify-between px-4 py-2 h-18">
-      <div
-        class="rounded-full bg-white w-16 h-16 flex justify-center items-center mt-1"
-      >
+      <div class="rounded-full bg-white w-16 h-16 flex justify-center items-center mt-1">
         <img src="img/logoMin.png" class="mb-4" />
       </div>
       <span class="text-2xl font-bold text-white">SISJOPAZ<sup>©</sup></span>
-      <span *ngIf="userRole" class="text-xs text-white"
-        >ROL: {{ userRole }}</span
-      >
+      <span *ngIf="userRole" class="text-xs text-white">ROL: {{ userRole }}</span>
 
-      <button
-        (click)="toggleMobileMenu()"
-        class="text-white focus:outline-none transform transition-transform duration-300"
-      >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16m-7 6h7"
-          ></path>
+      <button (click)="toggleMobileMenu()"
+        class="text-white focus:outline-none transform transition-transform duration-300">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
         </svg>
       </button>
     </div>
   </div>
-  <div
-    id="mobile-menu"
+  <div id="mobile-menu"
     class="md:hidden absolute left-0 right-0 z-50 bg-blueCustom text-white shadow-lg rounded-b-md transition-all duration-500 ease-in-out overflow-hidden max-h-0 top-20"
-    [ngClass]="{ 'max-h-[calc(100vh-5rem)]': isMobileMenuOpen }"
-  >
+    [ngClass]="{ 'max-h-[calc(100vh-5rem)]': isMobileMenuOpen }">
     <div class="p-2 overflow-auto h-full">
       <ng-container *ngFor="let item of navItems">
-        <div
-          *ngIf="!item.children"
-          (click)="redirectTo(item.route, item.name, true); closeMobileMenu()"
+        <div *ngIf="!item.children" (click)="redirectTo(item.route, item.name, true); closeMobileMenu()"
           [ngClass]="{ 'bg-pink-600': activeSection === item.name }"
-          class="flex items-center py-3 px-4 hover:bg-pink-600 hover:text-white transition-transform transform hover:scale-105 cursor-pointer w-full"
-        >
+          class="flex items-center py-3 px-4 hover:bg-pink-600 hover:text-white transition-transform transform hover:scale-105 cursor-pointer w-full">
           <img [src]="item.icon" alt="{{ item.name }}" class="w-6 h-6 mr-3" />
           <span class="font-bold">{{ item.name }}</span>
         </div>
 
         <div *ngIf="item.children">
-          <div
-            (click)="toggleSubMenuMobile(item)"
-            [ngClass]="{ 'bg-pink-600': activeSection === item.name }"
-            class="flex items-center py-3 px-4 hover:bg-pink-600 hover:text-white transition-transform transform hover:scale-105 cursor-pointer w-full"
-          >
+          <div (click)="toggleSubMenuMobile(item)" [ngClass]="{ 'bg-pink-600': activeSection === item.name }"
+            class="flex items-center py-3 px-4 hover:bg-pink-600 hover:text-white transition-transform transform hover:scale-105 cursor-pointer w-full">
             <img [src]="item.icon" alt="{{ item.name }}" class="w-6 h-6 mr-3" />
             <span class="font-bold flex-1">{{ item.name }}</span>
-            <svg
-              class="w-5 h-5 transform transition-transform duration-500 ease-in-out"
-              [ngClass]="{ 'rotate-180': item.isOpenMobile }"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 15l7-7 7 7"
-              />
+            <svg class="w-5 h-5 transform transition-transform duration-500 ease-in-out"
+              [ngClass]="{ 'rotate-180': item.isOpenMobile }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
             </svg>
           </div>
 
-          <div
-            class="transition-all duration-500 ease-in-out overflow-hidden bg-blueCustom/80 ml-4 rounded max-h-0"
+          <div class="transition-all duration-500 ease-in-out overflow-hidden bg-blueCustom/80 ml-4 rounded max-h-0"
             [ngClass]="{
               'max-h-0': !item.isOpenMobile,
               'max-h-64': item.isOpenMobile
-            }"
-          >
+            }">
             <div class="overflow-y-auto max-h-64">
               <div class="flex flex-col space-y-1 py-2 pr-2">
-                <div
-                  *ngFor="let subItem of item.children"
-                  (click)="
+                <div *ngFor="let subItem of item.children" (click)="
                     redirectTo(subItem.route, subItem.name, false);
                     closeMobileMenu()
-                  "
-                  [ngClass]="{ 'bg-pink-600': activeSection === subItem.name }"
-                  class="flex items-center py-2 px-4 hover:bg-pink-600 hover:text-white transition-transform transform hover:scale-105 cursor-pointer"
-                >
-                  <img
-                    [src]="subItem.icon"
-                    alt="{{ subItem.name }}"
-                    class="w-5 h-5 mr-3"
-                  />
+                  " [ngClass]="{ 'bg-pink-600': activeSection === subItem.name }"
+                  class="flex items-center py-2 px-4 hover:bg-pink-600 hover:text-white transition-transform transform hover:scale-105 cursor-pointer">
+                  <img [src]="subItem.icon" alt="{{ subItem.name }}" class="w-5 h-5 mr-3" />
                   <span class="font-bold">{{ subItem.name }}</span>
                 </div>
               </div>
@@ -105,10 +60,8 @@
         </div>
       </ng-container>
 
-      <div
-        (click)="logout(); closeMobileMenu()"
-        class="py-2 px-4 hover:bg-pink-700 cursor-pointer flex items-center w-full mt-2"
-      >
+      <div (click)="logout(); closeMobileMenu()"
+        class="py-2 px-4 hover:bg-pink-700 cursor-pointer flex items-center w-full mt-2">
         <img src="svg/logout.svg" alt="Logout" class="w-6 h-6 mr-3" />
         <span class="font-bold">Cerrar Sesión</span>
       </div>
@@ -118,83 +71,53 @@
 
   <div
     class="fixed top-0 z-50 w-12 h-12 rounded-r-full bg-blueCustom hidden sm:flex items-center justify-center cursor-pointer text-white"
-    [ngClass]="showMenu ? 'left-80' : 'left-20'"
-    (click)="toggleMenu()"
-  >
+    [ngClass]="showMenu ? 'left-80' : 'left-20'" (click)="toggleMenu()">
     <mat-icon>{{ showMenu ? "arrow_back" : "arrow_forward" }}</mat-icon>
   </div>
 
   <!-- ========== ESCRITORIO ========== -->
   <div class="flex flex-1 overflow-hidden">
-    <div
-      *ngIf="showMenu || isAnimating"
-      @slideCollapse
+    <div *ngIf="showMenu || isAnimating" @slideCollapse
       (@slideCollapse.done)="(!showMenu && !isAnimating ? null : null)"
-      class="sm:flex md:flex flex-col h-full bg-blueCustom text-white relative"
-      [style.width]="showMenu ? '20rem' : '5rem'"
-    >
+      class="hidden md:flex flex-col h-full bg-blueCustom text-white relative"
+      [style.width]="showMenu ? '20rem' : '5rem'">
       <div class="flex-shrink-0 flex flex-col items-center pt-6 pb-4">
-        <div
-          class="rounded-full bg-white w-60 h-60 flex justify-center items-center"
-        >
+        <div class="rounded-full bg-white w-60 h-60 flex justify-center items-center">
           <img src="img/logoMin.png" class="mb-4" />
         </div>
         <div class="p-4 text-2xl font-bold">SISJOPAZ<sup>©</sup></div>
-        <span *ngIf="userRole" class="text-xs text-white"
-          >ROL: {{ userRole }}</span
-        >
+        <span *ngIf="userRole" class="text-xs text-white">ROL: {{ userRole }}</span>
         <hr class="w-4/5 mt-4" />
       </div>
 
-      <div
-        class="flex-1 overflow-auto transition-all duration-300 ease-in-out"
-        [ngClass]="{
+      <div class="flex-1 overflow-auto transition-all duration-300 ease-in-out" [ngClass]="{
           'opacity-100 translate-x-0': !subMenuOpen,
           'opacity-0 -translate-x-full pointer-events-none': subMenuOpen
-        }"
-      >
+        }">
         <nav class="w-full flex flex-col p-4 space-y-2">
           <ng-container *ngFor="let item of navItems">
-            <div
-              *ngIf="!item.children"
-              (click)="redirectTo(item.route, item.name, true)"
+            <div *ngIf="!item.children" (click)="redirectTo(item.route, item.name, true)"
               [ngClass]="{ 'bg-pink-600': activeSection === item.name }"
-              class="w-full flex items-center py-2 px-2 rounded transition hover:bg-pink-600 hover:text-white cursor-pointer"
-            >
+              class="w-full flex items-center py-2 px-2 rounded transition hover:bg-pink-600 hover:text-white cursor-pointer">
               <img [src]="item.icon" class="w-6 h-6 mr-3" />
               <span class="font-bold">{{ item.name }}</span>
             </div>
 
             <div *ngIf="item.children">
-              <div
-                (click)="openSubMenu(item)"
-                [ngClass]="{ 'bg-pink-600': activeSection === item.name }"
-                class="w-full flex items-center py-2 px-2 rounded transition hover:bg-pink-600 hover:text-white cursor-pointer"
-              >
+              <div (click)="openSubMenu(item)" [ngClass]="{ 'bg-pink-600': activeSection === item.name }"
+                class="w-full flex items-center py-2 px-2 rounded transition hover:bg-pink-600 hover:text-white cursor-pointer">
                 <img [src]="item.icon" class="w-6 h-6 mr-3" />
                 <span class="font-bold flex-1">{{ item.name }}</span>
-                <svg
-                  class="w-5 h-5 transform transition-transform duration-300"
-                  [ngClass]="{ 'rotate-180': item.isOpen }"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 15l7-7 7 7"
-                  />
+                <svg class="w-5 h-5 transform transition-transform duration-300"
+                  [ngClass]="{ 'rotate-180': item.isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                 </svg>
               </div>
             </div>
           </ng-container>
 
-          <div
-            (click)="logout()"
-            class="w-full flex items-center py-2 px-2 mt-4 rounded hover:bg-pink-600 hover:text-white cursor-pointer"
-          >
+          <div (click)="logout()"
+            class="w-full flex items-center py-2 px-2 mt-4 rounded hover:bg-pink-600 hover:text-white cursor-pointer">
             <img src="svg/logout.svg" class="w-6 h-6 mr-2" />
             <span class="font-bold">Cerrar Sesión</span>
           </div>
@@ -206,24 +129,10 @@
         [ngClass]="{
           'opacity-0 translate-x-full pointer-events-none': !subMenuOpen,
           'opacity-100 translate-x-0': subMenuOpen
-        }"
-      >
-        <div
-          class="flex items-center mb-4 cursor-pointer hover:text-pink-200"
-          (click)="closeSubMenu()"
-        >
-          <svg
-            class="w-6 h-6 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"
-            />
+        }">
+        <div class="flex items-center mb-4 cursor-pointer hover:text-pink-200" (click)="closeSubMenu()">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
           <span class="font-bold">Volver</span>
         </div>
@@ -231,12 +140,9 @@
         <div *ngIf="currentSubMenu">
           <h2 class="text-xl font-bold mb-3">{{ currentSubMenuParent }}</h2>
           <div class="space-y-2">
-            <div
-              *ngFor="let subItem of currentSubMenu"
-              (click)="redirectTo(subItem.route, subItem.name, false)"
+            <div *ngFor="let subItem of currentSubMenu" (click)="redirectTo(subItem.route, subItem.name, false)"
               [ngClass]="{ 'bg-pink-600': activeSection === subItem.name }"
-              class="flex items-center py-2 px-2 rounded transition hover:bg-pink-600 hover:text-white cursor-pointer"
-            >
+              class="flex items-center py-2 px-2 rounded transition hover:bg-pink-600 hover:text-white cursor-pointer">
               <img [src]="subItem.icon" class="w-6 h-6 mr-3" />
               <span class="font-bold">{{ subItem.name }}</span>
             </div>
@@ -245,78 +151,56 @@
       </div>
     </div>
 
-    <div class="fixed inset-0 z-30" 
-     *ngIf="showSubMenuParams || showSubMenuAdmDir"
-     (click)="hiddenMinMenu()">
+    <div class="fixed inset-0 z-30" *ngIf="showSubMenuParams || showSubMenuAdmDir" (click)="hiddenMinMenu()">
     </div>
 
-    <div class="min-w-20 max-w-20 min-h-screen bg-blueCustom flex-col justify-between items-center py-6 hidden sm:flex md:flex" *ngIf="!showMenu">
+    <div class="min-w-20 max-w-20 min-h-screen bg-blueCustom flex-col justify-between items-center py-6 hidden md:flex"
+      *ngIf="!showMenu">
       <div class="h-auto top-0 left-0 flex flex-col items-start z-40 min-w-20 max-w-20">
-        <div 
-          class="relative h-20 hover:bg-pink-500 mb-1 flex justify-center items-center group"
-          *ngFor="let item of navItems"
-          (click)="redirectToMinMenu(item.route, item.name, $event)"
-        >
+        <div class="relative h-20 hover:bg-pink-500 mb-1 flex justify-center items-center group"
+          *ngFor="let item of navItems" (click)="redirectToMinMenu(item.route, item.name, $event)">
           <img [src]="item.icon" class="w-full h-full p-6" />
-          
+
           <!-- Etiqueta emergente -->
           <div
-          class="absolute left-full ml-2 px-3 py-1 bg-white text-blueCustom text-sm font-medium rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-40"
-          [ngClass]="{'animate-fade-out': showTooltip === item.name}"
-          (mouseenter)="showTooltip = item.name"
-          (mouseleave)="hideTooltipAfterDelay(item.name)"
-          (click)="$event.stopPropagation()"
-        >
-          {{ item.name }}
-        </div>
-        
-          
+            class="absolute left-full ml-2 px-3 py-1 bg-white text-blueCustom text-sm font-medium rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-40"
+            [ngClass]="{'animate-fade-out': showTooltip === item.name}" (mouseenter)="showTooltip = item.name"
+            (mouseleave)="hideTooltipAfterDelay(item.name)" (click)="$event.stopPropagation()">
+            {{ item.name }}
+          </div>
+
+
           <!-- Menú contextual (solo para items específicos) -->
-          <div class="absolute left-full top-0 ml-2 z-50" *ngIf="(item.name === 'Parámetros Administrativos' && showSubMenuParams) || (item.name === 'Administración Dirección' && showSubMenuAdmDir)">
-            <div class="bg-blueCustom shadow-2xl w-72 max-h-80 min-h-80 overflow-y-auto flex flex-col border border-blue-200 rounded-lg animate-slide-in">
+          <div class="absolute left-full top-0 ml-2 z-50"
+            *ngIf="(item.name === 'Parámetros Administrativos' && showSubMenuParams) || (item.name === 'Administración Dirección' && showSubMenuAdmDir)">
+            <div
+              class="bg-blueCustom shadow-2xl w-72 max-h-80 min-h-80 overflow-y-auto flex flex-col border border-blue-200 rounded-lg animate-slide-in">
               <!-- Encabezado del menú -->
               <div class="p-4 border-b border-blue-300 flex justify-between items-center bg-blue-600 bg-opacity-20">
                 <h3 class="text-sm font-semibold text-white tracking-wide">
                   {{ sectionMenu }}
                 </h3>
-                <button
-                  (click)="hiddenMinMenu(); $event.stopPropagation()"
-                  class="text-blue-100 hover:text-white focus:outline-none transition-colors duration-150"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fill-rule="evenodd"
+                <button (click)="hiddenMinMenu(); $event.stopPropagation()"
+                  class="text-blue-100 hover:text-white focus:outline-none transition-colors duration-150">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
                       d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414z"
-                      clip-rule="evenodd"
-                    />
+                      clip-rule="evenodd" />
                   </svg>
                 </button>
               </div>
-    
+
               <div class="overflow-y-auto flex-grow p-2">
-                <div
-                  *ngFor="let item of children"
-                  (click)="navigateTo(item.route)"
-                  class="menu-item flex items-center p-3 hover:bg-blue-500 hover:bg-opacity-30 rounded-lg cursor-pointer transition-all duration-200 mb-1 group"
-                >
+                <div *ngFor="let item of children" (click)="navigateTo(item.route)"
+                  class="menu-item flex items-center p-3 hover:bg-blue-500 hover:bg-opacity-30 rounded-lg cursor-pointer transition-all duration-200 mb-1 group">
                   <div class="mr-3 flex items-center justify-center w-5 h-5">
-                    <img
-                      [src]="item.icon"
-                      alt="icon"
-                      class="w-4 h-4 opacity-90 group-hover:opacity-100 transition-opacity"
-                    />
+                    <img [src]="item.icon" alt="icon"
+                      class="w-4 h-4 opacity-90 group-hover:opacity-100 transition-opacity" />
                   </div>
-    
+
                   <div class="truncate">
-                    <span
-                      class="text-sm font-medium text-white group-hover:text-blue-100 transition-colors"
-                      >{{ item.name }}</span
-                    >
+                    <span class="text-sm font-medium text-white group-hover:text-blue-100 transition-colors">{{
+                      item.name }}</span>
                   </div>
                 </div>
               </div>
@@ -324,15 +208,16 @@
           </div>
         </div>
       </div>
-      
-      <div class="relative w-full h-20 hover:bg-pink-500 mb-1 flex justify-center items-center group" (click)="logout()">
+
+      <div class="relative w-full h-20 hover:bg-pink-500 mb-1 flex justify-center items-center group"
+        (click)="logout()">
         <img src="svg/logout.svg" class="w-full h-full p-6" />
-        
+
         <!-- Etiqueta para logout -->
-        <div class="absolute left-full ml-2 px-3 py-1 bg-white text-blueCustom text-sm font-medium rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-40"
-             [ngClass]="{'animate-fade-out': showTooltip === 'logout'}"
-             (mouseenter)="showTooltip = 'logout'"
-             (mouseleave)="hideTooltipAfterDelay('logout')">
+        <div
+          class="absolute left-full ml-2 px-3 py-1 bg-white text-blueCustom text-sm font-medium rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-40"
+          [ngClass]="{'animate-fade-out': showTooltip === 'logout'}" (mouseenter)="showTooltip = 'logout'"
+          (mouseleave)="hideTooltipAfterDelay('logout')">
           Cerrar sesión
         </div>
       </div>
@@ -340,9 +225,7 @@
     <!-- FIN ESCRITORIO -->
 
     <div class="flex-1 p-3 overflow-auto">
-      <div
-        class="bg-white shadow-md rounded-lg p-2 overflow-auto max-h-[calc(100vh-50px)] w-full"
-      >
+      <div class="bg-white shadow-md rounded-lg p-2 overflow-auto max-h-[calc(100vh-50px)] w-full">
         <router-outlet></router-outlet>
       </div>
     </div>

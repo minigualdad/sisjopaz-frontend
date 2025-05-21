@@ -1028,12 +1028,15 @@ export class SurveyService {
       )
   }
 
-  // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.APOYO_A_LA_COORDINACION])
   setValidateDocuments(survey: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/setValidateDocuments`, survey);
   }
 
-  // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.APOYO_A_LA_COORDINACION])
+  verifyDocuments(survey: any) {
+    console.log(survey)
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/verifyDocuments`, survey);
+  }
+
   updateAccountCertification(form: any) {
     const fd = new FormData();
     if (form.frontImage) {
@@ -1128,6 +1131,10 @@ export class SurveyService {
   // No se usa
   edit(id: number, survey: any) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/update`, { survey });
+  }
+
+  udpateState(survey: any) {
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/updateState`, { survey });
   }
 
   editRNECData(id: number, survey: any) {
@@ -2485,19 +2492,32 @@ export class SurveyService {
       )
   }
 
-  // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
   getAllByProfessionalTeamAndAccountCertRejectedOrPending(currentPage: number, pageSize: number) {
     return this._httpClient.post(`${environment.apiUrl}/app/survey/getAllByBankingCertificationRejectedOrPending`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.surveys = response.surveys.surveys.map((survey: any) => {
             survey.updatedDate = survey.updatedAt.split('T')[0];
+            survey.registerDate = survey.createdAt.split('T')[0];
+            if (survey.secondName) {
+              survey.name += ' ';
+              survey.name += survey.secondName;
+            } else {
+              survey.secondName = '';
+            }
+            survey.name += ' ';
+            survey.name += survey.firstLastName;
+            if (survey.secondLastName) {
+              survey.name += ' ';
+              survey.name += survey.secondLastName;
+            } else {
+              survey.secondLastName = '';
+            }
             survey.name = survey?.firstName + ' ' + survey.secondName + ' ' + survey?.firstLastName + ' ' + survey.secondLastName;
             survey.stateAgreement = survey?.state;
             survey.identification = survey?.identification;
-            survey.identificationType = survey?.identificationType;
+            survey.identificationType = survey?.IdentificationType?.alias;
             survey.email = survey?.email;
-            survey.group = survey.Group?.name;
             return survey;
           })
           return response;
@@ -2514,8 +2534,16 @@ export class SurveyService {
     return this._httpClient.post(environment.apiUrl + '/app/groupComponentDateActivityBeneficiary/downloadGroupAssistantByPeriod', { data }, { responseType: 'blob' });
   }
 
-  updateBankData(id: number, survey: any) {
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/updateBankData`, { survey });
+  updateBankData(id: number, form: any) {
+       const fd = new FormData();
+    if (form.accountCertification) {
+      fd.append('accountCertification', form.accountCertification, form.accountCertification?.name || 'file.pdf');
+      delete form.accountCertification;
+    }
+    for (const key in form) {
+      fd.append(key, form[key]);
+    }
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/updateBankData`, fd );
   }
 
   downloadYounger(id: number) {

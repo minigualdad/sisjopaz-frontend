@@ -298,8 +298,9 @@ export class AgreementComponent {
   }
 
   setDate(event: string) {
-    this.form.get('signDate')?.setValue(event);
-  }
+  const [day, month, year] = event.split('/');
+  const formattedDate = `${year}/${month}/${day}`;
+  this.form.get('signDate')?.setValue(formattedDate);  }
 
   reseting() {
     this.form.reset();

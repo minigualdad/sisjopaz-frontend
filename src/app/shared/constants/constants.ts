@@ -195,12 +195,12 @@ export const NAV_ITEMS = [
                 icon: 'svg/circle.svg',
                 role: 'ADMIN'
             },
-            {
-                name: 'Susbanación Asistencias',
-                route: `/app/assistance-error`,
-                icon: 'svg/circle.svg',
-                role: 'ADMIN'
-            },
+            // {
+            //     name: 'Susbanación Asistencias',
+            //     route: `/app/assistance-error`,
+            //     icon: 'svg/circle.svg',
+            //     role: 'ADMIN'
+            // },
             {
                 name: 'Revisar Asistencias',
                 route: `/app/assistance-scanner-all`,
@@ -287,18 +287,18 @@ export const NAV_ITEMS = [
                 icon: 'svg/circle.svg',
                 role: 'DIRECCION'
             },
-            {
-                name: 'Asistencia Educación < 70%',
-                route: `/app/attendance-less-percent`,
-                icon: 'svg/circle.svg',
-                role: 'DIRECCION'
-            },
-            {
-                name: 'Asistencia Corresponsabilidad < 70%',
-                route: `/app/attendance-less-percent-corresponsability`,
-                icon: 'svg/circle.svg',
-                role: 'DIRECCION'
-            },
+            // {
+            //     name: 'Asistencia Educación < 70%',
+            //     route: `/app/attendance-less-percent`,
+            //     icon: 'svg/circle.svg',
+            //     role: 'DIRECCION'
+            // },
+            // {
+            //     name: 'Asistencia Corresponsabilidad < 70%',
+            //     route: `/app/attendance-less-percent-corresponsability`,
+            //     icon: 'svg/circle.svg',
+            //     role: 'DIRECCION'
+            // },
             {
                 name: 'TMC',
                 route: `/app/tmc`,

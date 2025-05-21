@@ -1,0 +1,177 @@
+<div class="relative bg-white p-6 rounded-lg w-full max-h-[90vh] overflow-y-auto">
+    <button class="absolute m-2 top-2 right-2 text-gray-500 hover:text-gray-700" mat-icon-button
+        (click)="closeDialog()">
+        <mat-icon>close</mat-icon>
+    </button>
+
+    <h2 class="text-xl font-semibold text-center mb-4">Documentos de: <strong *ngIf="survey">{{survey.name |
+            titlecase}}</strong></h2>
+
+    <!-- Sección de imágenes -->
+    <div class="flex flex-col md:flex-row md:justify-between gap-4 mb-6">
+        <!-- Imagen frontal -->
+        <div class="flex-1 flex flex-col items-center">
+            <h3 class="text-lg font-medium mb-2">Frente del Documento</h3>
+
+            <div class="w-full h-52 border border-gray-300 flex items-center justify-center overflow-hidden">
+                <ng-container *ngIf="frontImageUrl; else noFrontImageTemplate">
+                    <img [src]="frontImageUrl" alt="Frente del documento" class="object-contain h-full cursor-pointer"
+                        (click)="openImageInNewTab(frontImageUrl)" />
+                </ng-container>
+
+                <ng-template #noFrontImageTemplate>
+                    <p>No hay imagen frontal</p>
+                </ng-template>
+            </div>
+        </div>
+
+        <!-- Imagen posterior -->
+        <div class="flex-1 flex flex-col items-center">
+            <h3 class="text-lg font-medium mb-2">Reverso del Documento</h3>
+
+            <div class="w-full h-52 border border-gray-300 flex items-center justify-center overflow-hidden">
+                <ng-container *ngIf="backImageUrl; else noBackImageTemplate">
+                    <img [src]="backImageUrl" alt="Reverso del documento" class="object-contain h-full cursor-pointer"
+                        (click)="openImageInNewTab(backImageUrl)" />
+                </ng-container>
+
+                <ng-template #noBackImageTemplate>
+                    <p>No hay imagen posterior</p>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col md:flex-row md:justify-between gap-4 mb-6">
+        <div class="flex-1 flex flex-col items-center">
+            <h3 class="text-lg font-medium mb-2">Certficación Bancaria Actualizada</h3>
+
+            <div class="w-full h-52 border border-gray-300 flex items-center justify-center overflow-hidden">
+                <ng-container *ngIf="documentFileUrl; else noFileTemplate">
+                    <ng-container *ngIf="isPdf; else imageTemplate">
+                        <object [data]="documentFileUrl" type="application/pdf" width="100%" height="100%">
+                            <p>Tu navegador no soporta la visualización de PDF.</p>
+                        </object>
+                    </ng-container>
+                    <ng-template #imageTemplate>
+                        <img [src]="documentFileUrl" alt="Tu navegador no permite previsualizar el documento."
+                            class="object-cover h-full" />
+                    </ng-template>
+                </ng-container>
+
+                <ng-template #noFileTemplate>
+                    <p>No hay archivo para mostrar</p>
+                </ng-template>
+            </div>
+
+            <div class="mt-4" *ngIf="documentFileUrl">
+                <button mat-raised-button color="primary" class="mr-2" (click)="openInNewTab()">
+                    Ver Documento
+                </button>
+                <button mat-raised-button color="warn" (click)="downloadFile()">
+                    Descargar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario de datos del documento -->
+    <form [formGroup]="form" class="bg-white p-6 rounded-lg">
+        <mat-dialog-content class="mat-typography">
+            <div class="md:grid md:grid-cols-1 md:gap-6">
+                <div class="mt-5 md:col-span-2 md:mt-0" *ngIf="identificationLog">
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Fecha de expedición del documento:</mat-label>
+                            <input type="date" matInput formControlName="identificationExpedition">
+                            <mat-error *ngIf="form.get('identificationExpedition')?.errors?.['futureDate']">
+                                La fecha no puede ser superior a la actual.
+                            </mat-error>
+                            <mat-error
+                                *ngIf="form.get('identificationExpedition')?.errors?.['required'] && form.get('identificationExpedition')?.touched">
+                                La fecha de expedición es requerida.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="mb-4">
+                        <app-identification-type-selector (identificationTypeIdListen)="setIdentificationType($event)"
+                            [identificationType]="identificationLog?.identificationTypeId"></app-identification-type-selector>
+                    </div>
+
+                    <div class="mb-4">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Número de Documento:</mat-label>
+                            <input type="text" matInput formControlName="identification"
+                                (keypress)="validateNumber($event)">
+                            <mat-error *ngIf="form.get('identification')?.errors?.['required']">
+                                El número de documento es requerido
+                            </mat-error>
+                            <mat-error *ngIf="form.get('identification')?.errors?.['pattern']">
+                                Solo se permiten números
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="accountCertLog">
+                <div class="md:grid md:grid-cols-1 md:gap-6">
+                    <div class="md:col-span-1">
+                        <div class="px-4 sm:px-0">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Agregar Información Bancaria al
+                                Joven</h3>
+                            <p class="mt-1 text-sm text-gray-600">Esta será información bancaria que se agregará al
+                                joven.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-5 md:col-span-2 md:mt-0">
+
+                        <app-bank-selector [bank]="accountCertLog.bankId"
+                            (bankIdListen)="onBankSelect($event)"></app-bank-selector>
+
+                        <div class="mb-4">
+                            <span class="text-blue-600 text-lg font-semibold">*</span>
+                            <label for="options" class="text-sm font-semibold text-gray-700 mb-4">Tipo de Cuenta</label>
+                            <br>
+                            <select formControlName="accountType" class="w-full h-10 p-2">
+                                <option class="w-40 h-10" value="CUENTA DE AHORROS(NEQUI)">Cuenta de Ahorros(Nequi)
+                                </option>
+                                <option class="w-40 h-10" value="CUENTA CORRIENTE">Cuenta Corriente</option>
+                                <option class="w-40 h-10" value="DAVIPLATA">Daviplata</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                                <mat-label>Número de Cuenta:</mat-label>
+                                <input type="number" matInput formControlName="accountNumber">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </mat-dialog-content>
+        <div class="flex justify-center gap-4 mb-4" *ngIf="!showMotiveInput">
+            <button mat-raised-button color="warn" class="bg-red-500 hover:bg-red-600 text-white" (click)="onReject()">
+                Rechazar
+            </button>
+            <button mat-raised-button color="primary" class="bg-blue-500 hover:bg-blue-600 text-white"
+                (click)="onAccept()">
+                Aceptar
+            </button>
+        </div>
+
+        <div class="flex flex-col gap-4" *ngIf="showMotiveInput">
+            <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Ingrese un motivo</mat-label>
+                <input type="text" matInput formControlName="documentsMotive">
+            </mat-form-field>
+            <button mat-raised-button color="accent" class="bg-green-500 hover:bg-green-600 text-white" [disabled]="form.invalid"
+                (click)="confirmValidate()">
+                Aceptar
+            </button>
+        </div>
+
+    </form>
+</div>

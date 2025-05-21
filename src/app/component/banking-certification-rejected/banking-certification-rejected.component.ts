@@ -1,17 +1,16 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { UserService } from '../../service/user.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SurveyService } from '../../service/survey.service';
-import { ProfessionalTeamService } from '../../service/professional-team.service';
 import Swal from 'sweetalert2';
 import { BeneficiaryService } from '../../service/beneficiary.service';
 import { environment } from '../../../enviroment/enviroment';
 import { PaginatorService } from '../../service/paginator.service';
+import { UpdateDocumentComponent } from '../update-document/update-document.component';
 
 @Component({
   selector: 'app-banking-certification-rejected',
@@ -106,6 +105,23 @@ export class BankingCertificationRejectedComponent implements OnInit, AfterViewI
       }
     });
   }
+
+    openUpdateDocumentModal(surveyId: number): void {
+      const dialogRef = this.dialog.open(UpdateDocumentComponent, {
+        hasBackdrop: true,
+        disableClose: true,
+        maxWidth: 'none',
+        width: 'auto',
+        height: 'auto',
+        data: { id: surveyId }, // pasas el ID como data
+      });
+  
+      dialogRef.afterClosed().subscribe((result: any) => {
+        if (result.success === true) {
+          this.getAll();
+        }
+      });
+    }
 
   downloadPDF(id: number) {
     this._beneficiaryService.getPDF(id).subscribe((response: any) => {

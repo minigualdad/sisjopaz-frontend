@@ -14,6 +14,8 @@ import { MonitoringService } from '../../service/monitoring.service';
 import { CharacterizationService } from '../../service/characterization.service';
 import { UpdateDocumentComponent } from '../update-document/update-document.component';
 import { UserService } from '../../service/user.service';
+import { DocumentVerificationComponent } from '../document-verification/document-verification.component';
+import { ChangeSurveyStateComponent } from '../change-survey-state/change-survey-state.component';
 
 @Component({
   selector: 'app-survey',
@@ -51,7 +53,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   };
   recordsTableColumns: string[] = [];
   serverUrl = environment.apiUrl;
-  user:any;
+  user: any;
 
   totalItems = 0;
   pageSize = 10;
@@ -179,11 +181,46 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       height: 'auto',
       data: { id: surveyId }, // pasas el ID como data
     });
-  
-    dialogRef.afterClosed().subscribe((result:any) => {
-      if(result.success === true){
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result.success === true) {
         this.getAll();
       }
+    });
+  }
+
+  openDocumentVerificationModal(surveyId: number): void {
+    const dialogRef = this.dialog.open(DocumentVerificationComponent, {
+      hasBackdrop: true,
+      disableClose: true,
+      maxWidth: 'none',
+      width: 'auto',
+      height: 'auto',
+      data: { id: surveyId },
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result.success === true) {
+        this.getAll();
+      } else {
+        this.getAll();
+
+      }
+    });
+  }
+
+  openChangeStateModal(surveyId: number): void {
+    const dialogRef = this.dialog.open(ChangeSurveyStateComponent, {
+      hasBackdrop: true,
+      disableClose: true,
+      maxWidth: 'none',
+      width: 'auto',
+      height: 'auto',
+      data: { id: surveyId }, // pasas el ID como data
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      this.getAll();
     });
   }
 
@@ -224,21 +261,24 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   }
 
   downloadSurveys() {
+    this.loading = true;
     this.surveyService.downloadSurveys().subscribe({
-        next: (response: Blob) => {
-            const url = window.URL.createObjectURL(response);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'jovenes.xlsx';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        },
-        error: (error) => {
-            console.error('Error descargando el archivo:', error);
-            alert('Error descargando el archivo.');
-        }
+      next: (response: Blob) => {
+        const url = window.URL.createObjectURL(response);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'jovenes.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error descargando el archivo:', error);
+        alert('Error descargando el archivo.');
+        this.loading = false;
+      }
     });
   }
 

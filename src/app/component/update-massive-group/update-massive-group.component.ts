@@ -5,89 +5,93 @@ import { Router } from '@angular/router';
 import { GroupService } from '../../service/group.service';
 
 @Component({
-  selector: 'app-update-massive-group',
-  standalone: false,
-  templateUrl: './update-massive-group.component.html',
-  styleUrl: './update-massive-group.component.scss'
+    selector: 'app-update-massive-group',
+    standalone: false,
+    templateUrl: './update-massive-group.component.html',
+    styleUrl: './update-massive-group.component.scss'
 })
 export class UpdateMassiveGroupComponent {
 
-  form: FormGroup;
-  @ViewChild('fileInput') fileInput!: ElementRef;
-  loading = false;
+    form: FormGroup;
+    @ViewChild('fileInput') fileInput!: ElementRef;
+    loading = false;
 
-  constructor(
-      private surveyService: SurveyService,
-      private groupService: GroupService,
-      private router: Router
-  ) {
-      this.form = new FormGroup({
-          file: new FormControl('', [Validators.required]),
-      });
-  }
+    constructor(
+        private surveyService: SurveyService,
+        private groupService: GroupService,
+        private router: Router
+    ) {
+        this.form = new FormGroup({
+            file: new FormControl('', [Validators.required]),
+        });
+    }
 
-  getGroupInfo(){
-    this.groupService.downloadGroupInfo().subscribe({
-      next: (response: Blob) => {
-          const url = window.URL.createObjectURL(response);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'Directrio_de_grupos.xlsx';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-      },
-      error: (error) => {
-          console.error('Error descargando el archivo:', error);
-          alert('Error descargando el archivo.');
-      }
-  });
-  }
+    getGroupInfo() {
+        this.groupService.downloadGroupInfo().subscribe({
+            next: (response: Blob) => {
+                const url = window.URL.createObjectURL(response);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Directrio_de_grupos.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            },
+            error: (error) => {
+                console.error('Error descargando el archivo:', error);
+                alert('Error descargando el archivo.');
+            }
+        });
+    }
 
-  async create() {
-      this.loading = true;
-      this.surveyService
-          .uploadGroupUpdate(this.form.get('file')?.value)
-          .subscribe((response: any) => {
-              const url = window.URL.createObjectURL(response);
-              const link = document.createElement('a');
-              link.href = url;
-              link.download = 'beneficiarios_cargados_a_grupos.xlsx';
-              link.click();
-              window.URL.revokeObjectURL(url);
-              this.loading = false;
-          });
-          await this.router.navigateByUrl('/app/group')
-  }
+    async create() {
+        this.loading = true;
+        this.surveyService
+            .uploadGroupUpdate(this.form.get('file')?.value)
+            .subscribe((response: any) => {
+                const url = window.URL.createObjectURL(response);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'beneficiarios_cargados_a_grupos.xlsx';
+                link.click();
+                window.URL.revokeObjectURL(url);
+                this.loading = false;
+            });
+        await this.router.navigateByUrl('/app/group')
+    }
 
-  file: any;
-  async fileChange(event: any) {
-      this.file = event.target.files[0];
-      this.form.get('file')?.setValue(this.file);
-  }
+    file: any;
+    async fileChange(event: any) {
+        this.file = event.target.files[0];
+        this.form.get('file')?.setValue(this.file);
+    }
 
 
-  downloadEmptyTemplate() {
-    this.surveyService.downloadTemplateGroup().subscribe({
-        next: (response: Blob) => {
-            const url = window.URL.createObjectURL(response);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'template_beneficiarios_sin_grupo.xlsx';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        },
-        error: (error) => {
-            console.error('Error descargando el archivo:', error);
-            alert('Error descargando el archivo.');
-        }
-    });
-  }
+    downloadEmptyTemplate() {
+        this.loading = true;
+        this.surveyService.downloadTemplateGroup().subscribe({
+            next: (response: Blob) => {
+                const url = window.URL.createObjectURL(response);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'template_beneficiarios_sin_grupo.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                this.loading = false;
+            },
+            error: (error) => {
+                console.error('Error descargando el archivo:', error);
+                alert('Error descargando el archivo.');
+                this.loading = false;
 
-  openInput() {
-      this.fileInput.nativeElement.click();
-  }
+            }
+        });
+    }
+
+    openInput() {
+        this.fileInput.nativeElement.click();
+    }
 }

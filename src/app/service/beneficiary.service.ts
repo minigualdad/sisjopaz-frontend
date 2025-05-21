@@ -27,7 +27,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -35,7 +35,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             if (beneficiary.DNPCheckDate) {
               beneficiary.DNPCheckDate = beneficiary.DNPCheckDate.split('T')[0];
             } else {
@@ -70,7 +70,7 @@ export class BeneficiaryService {
             if (beneficiary.ARNCheck === 'no' && beneficiary.ARNCheckDate) {
               beneficiary.ARNCheck = 'No Validado'
             }
-            if (beneficiary.DPSCheck === 'si' && beneficiary.DPSCheckDate ) {
+            if (beneficiary.DPSCheck === 'si' && beneficiary.DPSCheckDate) {
               beneficiary.DPSCheck = 'Validado'
             } else {
               beneficiary.DPSCheck = 'Sin Revisar'
@@ -90,7 +90,6 @@ export class BeneficiaryService {
         map((response: any) => {
           response.beneficiaries = response.beneficiaries.map((beneficiary: any) => {
 
-            
             beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
             beneficiary.name = beneficiary?.firstName + ' ' + beneficiary.secondName + ' ' + beneficiary?.firstLastName + ' ' + beneficiary.secondLastName;
             beneficiary.stateAgreement = beneficiary?.state;
@@ -108,27 +107,27 @@ export class BeneficiaryService {
   // No se usa
   getExcelARN(professionalTeamId: number) {
     return this._httpClient.get(`${environment.apiUrl}/app/beneficiary/${professionalTeamId}/getAllByrequestValidateARNInExcel`, {
-        responseType: 'blob',
+      responseType: 'blob',
     });
   }
 
   // No se usa
   getExcelRejectedByARN(professionalTeamId: number) {
     return this._httpClient.get(`${environment.apiUrl}/app/beneficiary/${professionalTeamId}/getAllByrejectedARNExcel`, {
-        responseType: 'blob',
+      responseType: 'blob',
     });
   }
 
   // No se usa
   getExcelRejectedByDNP(professionalTeamId: number) {
     return this._httpClient.get(`${environment.apiUrl}/app/beneficiary/${professionalTeamId}/getAllByrejectedDNPExcel`, {
-        responseType: 'blob',
+      responseType: 'blob',
     });
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
-  getPDF(id:number) {
-    return this._httpClient.post(`${ environment.apiUrl }/app/beneficiary/getPDF`, {id});
+  getPDF(id: number) {
+    return this._httpClient.post(`${environment.apiUrl}/app/beneficiary/getPDF`, { id });
   }
 
   // roleVerify([Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION])
@@ -139,21 +138,21 @@ export class BeneficiaryService {
   // No se usa
   getExcelRejectedByDPS(professionalTeamId: number) {
     return this._httpClient.get(`${environment.apiUrl}/app/beneficiary/${professionalTeamId}/getAllByrejectedDPSExcel`, {
-        responseType: 'blob',
+      responseType: 'blob',
     });
   }
 
   // No se usa
   getExcelDPS(professionalTeamId: number) {
-      return this._httpClient.get(`${environment.apiUrl}/app/beneficiary/${professionalTeamId}/getAllByrequestValidateDPSInExcel`, {
-          responseType: 'blob',
-      });
+    return this._httpClient.get(`${environment.apiUrl}/app/beneficiary/${professionalTeamId}/getAllByrequestValidateDPSInExcel`, {
+      responseType: 'blob',
+    });
   }
 
   // No se usa
   getExcelDNP(professionalTeamId: number) {
     return this._httpClient.get(`${environment.apiUrl}/app/beneficiary/${professionalTeamId}/getAllByrequestValidateDNPInExcel`, {
-        responseType: 'blob',
+      responseType: 'blob',
     });
   }
 
@@ -170,19 +169,19 @@ export class BeneficiaryService {
   // No se usa
   getAllByProfessionalTeamAndAccountCertRejectedOrPending(professionalTeamId: number) {
     return this._httpClient.get(`${environment.apiUrl}/app/beneficiary/${professionalTeamId}/getAllByBankingCertificationRejectedOrPending`)
-    .pipe(
-      map((response: any) => {
-        response.beneficiaries = response.beneficiaries.map((beneficiary: any) => {
+      .pipe(
+        map((response: any) => {
+          response.beneficiaries = response.beneficiaries.map((beneficiary: any) => {
 
-          
-          beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
-          beneficiary.name = beneficiary.firstName;
+
+            beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
+            beneficiary.name = beneficiary.firstName;
             if (beneficiary.secondName) {
               beneficiary.name += ' ';
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -190,21 +189,21 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
-          beneficiary.stateAgreement = beneficiary?.state;
-          beneficiary.identification = beneficiary?.identification;
-          beneficiary.identificationType = beneficiary?.identificationType;
-          beneficiary.email = beneficiary?.email;
-          beneficiary.group = beneficiary.Group?.name;
-          beneficiary.updatedDate = beneficiary?.updatetAt?.split('T')[0];
-          beneficiary.registerDate = beneficiary?.createdAt?.split('T')[0];
-          beneficiary.group = beneficiary.Group?.name;
+            }
+            beneficiary.stateAgreement = beneficiary?.state;
+            beneficiary.identification = beneficiary?.identification;
+            beneficiary.identificationType = beneficiary?.identificationType;
+            beneficiary.email = beneficiary?.email;
+            beneficiary.group = beneficiary.Group?.name;
+            beneficiary.updatedDate = beneficiary?.updatetAt?.split('T')[0];
+            beneficiary.registerDate = beneficiary?.createdAt?.split('T')[0];
+            beneficiary.group = beneficiary.Group?.name;
 
-          return beneficiary;
+            return beneficiary;
+          })
+          return response;
         })
-        return response;
-      })
-    )
+      )
   }
 
   //No se usa
@@ -222,7 +221,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -230,7 +229,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             beneficiary.stateAgreement = beneficiary?.state;
             beneficiary.identification = beneficiary?.identification;
             beneficiary.identificationType = beneficiary?.identificationType;
@@ -251,7 +250,6 @@ export class BeneficiaryService {
           response.beneficiaries = response.beneficiaries.map((beneficiary: any) => {
             beneficiary.updatedDate = beneficiary.updatedAt.split('T')[0];
 
-           
             beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
             beneficiary.name = beneficiary.firstName;
             if (beneficiary.secondName) {
@@ -259,7 +257,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -267,7 +265,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             beneficiary.stateAgreement = beneficiary?.state;
             beneficiary.identification = beneficiary?.identification;
             beneficiary.identificationType = beneficiary?.identificationType;
@@ -288,7 +286,6 @@ export class BeneficiaryService {
           response.beneficiaries = response.beneficiaries.map((beneficiary: any) => {
             beneficiary.updatedDate = beneficiary.updatedAt.split('T')[0];
 
-            
             beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
             beneficiary.name = beneficiary.firstName;
             if (beneficiary.secondName) {
@@ -296,7 +293,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -304,7 +301,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             beneficiary.stateAgreement = beneficiary?.state;
             beneficiary.identification = beneficiary?.identification;
             beneficiary.identificationType = beneficiary?.identificationType;
@@ -325,7 +322,6 @@ export class BeneficiaryService {
           response.beneficiaries = response.beneficiaries.map((beneficiary: any) => {
             beneficiary.updatedDate = beneficiary.updatedAt.split('T')[0];
 
-            
             beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
             beneficiary.name = beneficiary.firstName;
             if (beneficiary.secondName) {
@@ -333,7 +329,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -341,7 +337,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             beneficiary.stateAgreement = beneficiary?.state;
             beneficiary.identification = beneficiary?.identification;
             beneficiary.identificationType = beneficiary?.identificationType;
@@ -362,7 +358,6 @@ export class BeneficiaryService {
           response.beneficiaries = response.beneficiaries.map((beneficiary: any) => {
             beneficiary.updatedDate = beneficiary.updatedAt.split('T')[0];
 
-            
             beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
             beneficiary.name = beneficiary.firstName;
             if (beneficiary.secondName) {
@@ -370,7 +365,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -378,7 +373,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             beneficiary.stateAgreement = beneficiary?.state;
             beneficiary.identification = beneficiary?.identification;
             beneficiary.identificationType = beneficiary?.identificationType;
@@ -399,7 +394,6 @@ export class BeneficiaryService {
           response.beneficiaries = response.beneficiaries.map((beneficiary: any) => {
             beneficiary.updatedDate = beneficiary.updatedAt.split('T')[0];
 
-            
             beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
             beneficiary.name = beneficiary.firstName;
             if (beneficiary.secondName) {
@@ -407,7 +401,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -415,7 +409,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             beneficiary.stateAgreement = beneficiary?.state;
             beneficiary.identification = beneficiary?.identification;
             beneficiary.identificationType = beneficiary?.identificationType;
@@ -436,7 +430,6 @@ export class BeneficiaryService {
           response.beneficiaries = response.beneficiaries.map((beneficiary: any) => {
             beneficiary.updatedDate = beneficiary.updatedAt.split('T')[0];
 
-            
             beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
             beneficiary.name = beneficiary.firstName;
             if (beneficiary.secondName) {
@@ -444,7 +437,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -452,7 +445,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             beneficiary.stateAgreement = beneficiary?.state;
             beneficiary.identification = beneficiary?.identification;
             beneficiary.identificationType = beneficiary?.identificationType;
@@ -507,12 +500,11 @@ export class BeneficiaryService {
             if (beneficiary.ARNCheck === 'no' && beneficiary.ARNCheckDate) {
               beneficiary.ARNCheck = 'No Validado'
             }
-            if (beneficiary.DPSCheck === 'si' && beneficiary.DPSCheckDate ) {
+            if (beneficiary.DPSCheck === 'si' && beneficiary.DPSCheckDate) {
               beneficiary.DPSCheck = 'Validado'
             } else {
               beneficiary.DPSCheck = 'Sin Revisar'
             }
-            
             beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
             beneficiary.name = beneficiary.firstName;
             if (beneficiary.secondName) {
@@ -520,7 +512,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -528,7 +520,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             beneficiary.stateAgreement = beneficiary?.state;
             beneficiary.identification = beneficiary?.identification;
             beneficiary.identificationType = beneficiary?.identificationType;
@@ -547,7 +539,7 @@ export class BeneficiaryService {
       .pipe(
         map((response: any) => {
           response.beneficiaries = response.beneficiaries.map((beneficiary: any) => {
-            beneficiary.updatedDate = beneficiary.updatedAt.split('T')[0];            
+            beneficiary.updatedDate = beneficiary.updatedAt.split('T')[0];
             beneficiary.professionalTeam = beneficiary.ProfessionalTeam?.name;
             beneficiary.name = beneficiary.firstName;
             if (beneficiary.secondName) {
@@ -555,7 +547,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -563,7 +555,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             beneficiary.stateAgreement = beneficiary?.state;
             beneficiary.identification = beneficiary?.identification;
             beneficiary.identificationType = beneficiary?.identificationType;
@@ -578,7 +570,7 @@ export class BeneficiaryService {
 
   // roleVerify([Roles.ADMIN, Roles.DIRECCION])
   getAllSignedAgreement(currentPage: number, pageSize: number) {
-    return this._httpClient.post(`${environment.apiUrl}/app/beneficiary/getAllSignedAgreement`, {currentPage, pageSize})
+    return this._httpClient.post(`${environment.apiUrl}/app/beneficiary/getAllSignedAgreement`, { currentPage, pageSize })
       .pipe(
         map((response: any) => {
           response.beneficiaries = response.beneficiaries.beneficiaries.map((beneficiary: any) => {
@@ -588,7 +580,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -596,9 +588,12 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             beneficiary.stateAgreement = beneficiary?.state;
             beneficiary.identificationType = beneficiary?.IdentificationType?.alias;
+            if(beneficiary?.signDate){
+            beneficiary.signDate = beneficiary?.signDate.split('T')[0];
+            }
             return beneficiary;
           })
           return response;
@@ -620,7 +615,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondName;
             } else {
               beneficiary.secondName = '';
-            } 
+            }
             beneficiary.name += ' ';
             beneficiary.name += beneficiary.firstLastName;
             if (beneficiary.secondLastName) {
@@ -628,7 +623,7 @@ export class BeneficiaryService {
               beneficiary.name += beneficiary.secondLastName;
             } else {
               beneficiary.secondLastName = '';
-            }    
+            }
             beneficiary.group = beneficiary.Group?.name;
             return beneficiary;
           })

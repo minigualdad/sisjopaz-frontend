@@ -16,120 +16,123 @@ import { PaginatorService } from '../../service/paginator.service';
 })
 export class CoresponsabilityAgreementComponent {
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
-  new MatSort();
-@ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
+    new MatSort();
+  @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
 
-dataSource: MatTableDataSource<any> = new MatTableDataSource();
-columns: any = {
-  id: 'Id',
-  state: 'Estado',
-  signDate: 'Fecha Firma del Acuerdo',
-  name: 'Nombre',
-  identificationType: 'Tipo de Identificación',
-  identification: 'Identificación',
-};
-recordsTableColumns: string[] = [];
-totalItems = 0;  
-pageSize = 10;   
-pageIndex = 0;   
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  columns: any = {
+    id: 'Id',
+    state: 'Estado',
+    signDate: 'Fecha Firma del Acuerdo',
+    name: 'Nombre',
+    identificationType: 'Tipo de Identificación',
+    identification: 'Identificación',
+  };
+  recordsTableColumns: string[] = [];
+  totalItems = 0;
+  pageSize = 10;
+  pageIndex = 0;
 
-loading = false;
-totalSize = 0;
+  loading = false;
+  totalSize = 0;
 
-searchValue: string = ''; 
+  searchValue: string = '';
 
-constructor(
-  private beneficiaryService: BeneficiaryService,
-  private surveyService: SurveyService,
-  private paginatorService: PaginatorService,
-  private titleService: Title,
-  private router: Router,
-  public dialog: MatDialog
-) {
-  this.recordsTableColumns = Object.keys(this.columns);
-  this.titleService.setTitle('Beneficiarios');
-}
+  constructor(
+    private beneficiaryService: BeneficiaryService,
+    private surveyService: SurveyService,
+    private paginatorService: PaginatorService,
+    private titleService: Title,
+    private router: Router,
+    public dialog: MatDialog
+  ) {
+    this.recordsTableColumns = Object.keys(this.columns);
+    this.titleService.setTitle('Beneficiarios');
+  }
 
-/**
-* On init
-*/
-ngOnInit(): void {
-      this.getAll();
-}
+  /**
+  * On init
+  */
+  ngOnInit(): void {
+    this.getAll();
+  }
 
-/**
-* After view init
-*/
-ngAfterViewInit(): void {
-  // Make the data source sortable
-  this.dataSource.sort = this.recordsTableMatSort;
+  /**
+  * After view init
+  */
+  ngAfterViewInit(): void {
+    // Make the data source sortable
+    this.dataSource.sort = this.recordsTableMatSort;
 
-  this.paginatorService.onPageChange(this.paginator, (pageIndex, pageSize) => {
-    this.beneficiaryService.getAllSignedAgreement(pageIndex, pageSize).subscribe({
-      next: async (response: any) => {
+    this.paginatorService.onPageChange(this.paginator, (pageIndex, pageSize) => {
+      this.beneficiaryService.getAllSignedAgreement(pageIndex, pageSize).subscribe({
+        next: async (response: any) => {
+          this.loadData(response);
+        },
+        error: (err) => {
+          console.error("Error en la solicitud: ", err);
+        }
+      });
+    });
+  }
+
+  ngOnDestroy(): void { }
+
+  searchByFilter() {
+    this.surveyService.filterByWord(this.searchValue, 9).subscribe({
+      next: (response: any) => {
         this.loadData(response);
       },
-      error: (err) => {
-        console.error("Error en la solicitud: ", err);
-      }
-    });
-  });
-}
+    })
+  }
 
-ngOnDestroy(): void { }
-
-searchByFilter() {
-  this.surveyService.filterByWord(this.searchValue, 9).subscribe({
-    next: (response: any) => {
-      this.loadData(response);
-      },
-  })
-}
-
-async getAll() {
-  await this.beneficiaryService.getAllSignedAgreement(0,10).subscribe({
+  async getAll() {
+    await this.beneficiaryService.getAllSignedAgreement(0, 10).subscribe({
       next: (response: any) => {
-          this.dataSource.data = response.beneficiaries;
-          this.loadData(response)
+        this.dataSource.data = response.beneficiaries;
+        this.loadData(response)
       },
-  });
-}
+    });
+  }
 
-massiveAgr() {
-  this.router.navigateByUrl(`/app/coresponsability-agreement-masive`);
-}
+  massiveAgr() {
+    this.router.navigateByUrl(`/app/coresponsability-agreement-masive`);
+  }
 
-async loadData(response: any) {
-  this.dataSource.data = response.beneficiaries || response?.surveys;
-  this.totalSize = response?.total;
-  await this.timer(100);
-  this.dataSource.sort = this.recordsTableMatSort;
-  this.paginator.length = this.totalSize;
-  this.loading = false;
-}
+  async loadData(response: any) {
+    this.dataSource.data = response.beneficiaries || response?.surveys;
+    this.totalSize = response?.total;
+    await this.timer(100);
+    this.dataSource.sort = this.recordsTableMatSort;
+    this.paginator.length = this.totalSize;
+    this.loading = false;
+  }
 
-timer(ms: number) {
-  return new Promise(res => setTimeout(res, ms));
-}
+  timer(ms: number) {
+    return new Promise(res => setTimeout(res, ms));
+  }
 
-download() {
-  this.surveyService.downloadCoresponsabilityAgreement().subscribe({
+  download() {
+    this.loading = true;
+    this.surveyService.downloadCoresponsabilityAgreement().subscribe({
       next: (response: Blob) => {
-          const url = window.URL.createObjectURL(response);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'jovenes_con_acuerdo_de_corresponsabilida.xlsx';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
+        const url = window.URL.createObjectURL(response);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'jovenes_con_acuerdo_de_corresponsabilida.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.loading = false;
       },
       error: (error) => {
-          console.error('Error descargando el archivo:', error);
-          alert('Error descargando el archivo.');
+        console.error('Error descargando el archivo:', error);
+        alert('Error descargando el archivo.');
+        this.loading = false;
       }
-  });
-}
+    });
+  }
 
 
   /**

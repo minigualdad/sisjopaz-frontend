@@ -130,7 +130,7 @@ export class MonitoringComponent {
                     .subscribe({
                         next: (response: any) => {
                             Swal.fire('Operación correcta', 'Monitoreo creado correctamente', 'success');
-                            this.router.navigateByUrl(`/app/professional-team-beneficiary`)
+                            this.router.navigateByUrl(`/app/home`)
                         },
                         error: (error: any) => {
                             console.error(error);

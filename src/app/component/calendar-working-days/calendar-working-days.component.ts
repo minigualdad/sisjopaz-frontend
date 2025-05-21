@@ -27,7 +27,6 @@ columns: any = {
   id: 'Id',
   date: 'Fecha',
   isLaboral: ' ¿Día Laboral?',
-  isHoliday: ' ¿Día Festivo?',
   state: 'Estado',
 
 };

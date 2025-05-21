@@ -120,6 +120,7 @@ export class RnecValidatedComponent implements OnInit, AfterViewInit {
   }
 
     downloadData() {
+      this.loading = true;
       this.surveyService.downloadRNECValidated().subscribe({
         next: (response: Blob) => {
           const url = window.URL.createObjectURL(response);
@@ -136,6 +137,7 @@ export class RnecValidatedComponent implements OnInit, AfterViewInit {
               text: 'El archivo se ha descargado con éxito.',
               confirmButtonText: 'Aceptar'
           });
+          this.loading = false;
       },
       error: (error) => {
           console.error('Error descargando el archivo:', error);
@@ -145,6 +147,7 @@ export class RnecValidatedComponent implements OnInit, AfterViewInit {
               text: 'Hubo un problema al descargar el archivo. Por favor, inténtelo de nuevo.',
               confirmButtonText: 'Aceptar'
           });
+          this.loading = false;
       }
       });
     }

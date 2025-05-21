@@ -38,7 +38,7 @@ export class AccountCertificationComponent implements OnInit, AfterViewInit {
 
   loading = false;
   totalSize = 0;
-  searchValue: string = ''; 
+  searchValue: string = '';
 
 
   constructor(
@@ -105,7 +105,7 @@ export class AccountCertificationComponent implements OnInit, AfterViewInit {
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
-        },
+      },
     })
   }
 
@@ -153,6 +153,7 @@ export class AccountCertificationComponent implements OnInit, AfterViewInit {
   }
 
   downloadSIIF() {
+    this.loading = true;
     this.surveyService.downloadSiifReport().subscribe({
       next: (response: Blob) => {
         const url = window.URL.createObjectURL(response);
@@ -169,6 +170,7 @@ export class AccountCertificationComponent implements OnInit, AfterViewInit {
           text: 'El archivo se ha descargado correctamente.',
           confirmButtonText: 'Ok'
         });
+        this.loading = false;
       },
       error: (error) => {
         console.error('Error descargando el archivo:', error);
@@ -178,11 +180,13 @@ export class AccountCertificationComponent implements OnInit, AfterViewInit {
           text: 'Verifique que haya información cargada.',
           confirmButtonText: 'Ok'
         });
+        this.loading = false;
       }
     });
   }
 
   downloadPendingAccountData() {
+    this.loading = true;
     this.surveyService.downloadAccountCertificationLoaded().subscribe({
       next: (response: Blob) => {
         const url = window.URL.createObjectURL(response);
@@ -199,6 +203,7 @@ export class AccountCertificationComponent implements OnInit, AfterViewInit {
           text: 'El archivo se ha descargado correctamente.',
           confirmButtonText: 'Ok'
         });
+        this.loading = false;
       },
       error: (error) => {
         console.error('Error descargando el archivo:', error);
@@ -208,6 +213,7 @@ export class AccountCertificationComponent implements OnInit, AfterViewInit {
           text: 'Verifique que haya información cargada.',
           confirmButtonText: 'Ok'
         });
+        this.loading = false;
       }
     });
   }

@@ -215,6 +215,8 @@ import { UpdateDocumentComponent } from './component/update-document/update-docu
 import { GroupAddMassiveActivityComponent } from './component/group-add-massive-activity/group-add-massive-activity.component';
 import { DateGroupComponentEditComponent } from './component/date-group-component-edit/date-group-component-edit.component';
 import { MassiveDateActivityAllGroupComponentComponent } from './component/massive-date-activity-all-group-component/massive-date-activity-all-group-component.component';
+import { DocumentVerificationComponent } from './component/document-verification/document-verification.component';
+import { ChangeSurveyStateComponent } from './component/change-survey-state/change-survey-state.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -1061,6 +1063,8 @@ export const routes: Routes = [
         UpdateDocumentComponent,
         DateGroupComponentEditComponent,
         MassiveDateActivityAllGroupComponentComponent,
+        DocumentVerificationComponent,
+        ChangeSurveyStateComponent,
     ],
     imports: [
         RouterModule.forRoot(routes),

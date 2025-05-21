@@ -16,7 +16,7 @@ import { PaginatorService } from '../../service/paginator.service';
   templateUrl: './beneficiary-without-group.component.html',
   styleUrl: './beneficiary-without-group.component.scss'
 })
-export class BeneficiaryWithoutGroupComponent implements OnInit, AfterViewInit{
+export class BeneficiaryWithoutGroupComponent implements OnInit, AfterViewInit {
   @ViewChild('recordsTable', { read: MatSort }) recordsTableMatSort: MatSort =
     new MatSort();
   @ViewChild(MatPaginator) paginator!: MatPaginator; // agregar la referencia del paginador
@@ -36,9 +36,9 @@ export class BeneficiaryWithoutGroupComponent implements OnInit, AfterViewInit{
   user: any;
   professionalTeam: any;
 
-  totalItems = 0;  
-  pageSize = 10;   
-  pageIndex = 0;   
+  totalItems = 0;
+  pageSize = 10;
+  pageIndex = 0;
 
   loading = false;
   totalSize = 0;
@@ -78,17 +78,17 @@ export class BeneficiaryWithoutGroupComponent implements OnInit, AfterViewInit{
     this.dataSource.sort = this.recordsTableMatSort;
     // this.dataSource.paginator = this.paginator;
 
-  this.loading = true;
-  this.paginatorService.onPageChange(this.paginator, (pageIndex, pageSize) => {
+    this.loading = true;
+    this.paginatorService.onPageChange(this.paginator, (pageIndex, pageSize) => {
       this.surveyService.getAllWithoutGroup(pageIndex, pageSize).subscribe({
         next: async (response: any) => {
           this.loadData(response);
-        this.loading = false;
-      },
+          this.loading = false;
+        },
         error: (err) => {
           console.error("Error en la solicitud: ", err);
-        this.loading = false;
-      }
+          this.loading = false;
+        }
       });
     });
   }
@@ -96,8 +96,8 @@ export class BeneficiaryWithoutGroupComponent implements OnInit, AfterViewInit{
   ngOnDestroy(): void { }
 
   async getAll() {
-  this.loading = true;
-  await this.surveyService.getAllWithoutGroup(0,10).subscribe({
+    this.loading = true;
+    await this.surveyService.getAllWithoutGroup(0, 10).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.surveys;
         this.loadData(response);
@@ -119,21 +119,24 @@ export class BeneficiaryWithoutGroupComponent implements OnInit, AfterViewInit{
   }
 
   download() {
+    this.loading = true;
     this.surveyService.downloadWithoutGroup().subscribe({
-        next: (response: Blob) => {
-            const url = window.URL.createObjectURL(response);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'beneficairios_sin_grupo.xlsx';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        },
-        error: (error) => {
-            console.error('Error descargando el archivo:', error);
-            alert('Error descargando el archivo.');
-        }
+      next: (response: Blob) => {
+        const url = window.URL.createObjectURL(response);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'beneficairios_sin_grupo.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error descargando el archivo:', error);
+        alert('Error descargando el archivo.');
+        this.loading = false;
+      }
     });
   }
 
@@ -179,7 +182,6 @@ export class BeneficiaryWithoutGroupComponent implements OnInit, AfterViewInit{
     this.paginator.length = this.totalSize;
     this.loading = false;
   }
-  
   timer(ms: number) {
     return new Promise(res => setTimeout(res, ms));
   }

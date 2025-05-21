@@ -1,0 +1,46 @@
+<div class="relative bg-white p-6 rounded-lg w-full max-h-[90vh] overflow-y-auto">
+    <button class="absolute m-2 top-2 right-2 text-gray-500 hover:text-gray-700" mat-icon-button
+        (click)="closeDialog()">
+        <mat-icon>close</mat-icon>
+    </button>
+
+    <h2 class="text-xl font-semibold text-center mb-4">Nombre: <strong *ngIf="survey"> {{survey.name |
+            titlecase}}</strong></h2>
+    <h3 class="text-xl font-semibold text-center mb-4">Identificación: <strong *ngIf="survey">
+            {{survey.IdentificationType?.abbreviation}} - {{survey.identification}}</strong></h3>
+
+    <!-- Formulario de datos del documento -->
+    <form [formGroup]="form" class="bg-white p-6 rounded-lg">
+        <div class="mb-4">
+            <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Motivo de la Actualización</mat-label>
+                <input type="text" matInput formControlName="stateMotive">
+            </mat-form-field>
+        </div>
+        <mat-dialog-content class="mat-typography">
+            <div class="md:grid md:grid-cols-1 md:gap-6">
+                <div class="mt-5 md:col-span-2 md:mt-0">
+                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                        <mat-label>Estado</mat-label>
+                        <mat-select formControlName="stateChanged" required>
+                            <mat-option value="DESVINCULADO">Desvinculado</mat-option>
+                            <mat-option value="DISABLED">Inactivo</mat-option>
+                            <mat-option value="ENABLED">Activo</mat-option>
+                            <mat-option value="FALLECIDO">Fallecido</mat-option>
+                            <mat-option value="FINALIZADO">Finalizado</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </mat-dialog-content>
+
+        <div class="flex flex-col gap-4">
+            <button mat-raised-button color="accent" class="bg-green-500 hover:bg-green-600 text-white" [disabled]="form.invalid"
+                (click)="updateState()">
+                Aceptar
+            </button>
+        </div>
+
+    </form>
+</div>

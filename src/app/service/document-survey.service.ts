@@ -11,17 +11,22 @@ export class DocumentSurveyService {
   constructor(private _httpClient: HttpClient) { }
 
   // roleVerify([Roles.ADMIN, Roles.DIRECCION])
-  getAllDocumentBySurveyId(id:number) {
+  getAllDocumentBySurveyId(id: number) {
     return this._httpClient.get(`${environment.apiUrl}/app/surveyDocuments/${id}/getAllBySurveyId`)
-    .pipe(
-          map((response: any) => {
-            response.surveyDocuments = response.surveyDocuments.map((document: any) => {
-              document.documentType = document.documentType?.name;
-                return document
-            });
-            return response;
-          })
-        );
+      .pipe(
+        map((response: any) => {
+          response.surveyDocuments = response.surveyDocuments.map((document: any) => {
+            document.documentType = document.documentType?.name;
+            if (document.state === 'DISABLED') {
+              document.state = 'VIGENTE'
+            } else {
+              document.state = 'NO VIGENTE'
+            }
+            return document
+          });
+          return response;
+        })
+      );
   }
 
 }

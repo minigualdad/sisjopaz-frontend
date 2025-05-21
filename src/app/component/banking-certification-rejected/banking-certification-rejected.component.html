@@ -48,6 +48,12 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu class="bg-white" #menu="matMenu">
+                  <button
+                    *ngIf="transaction.documentIdentificationCheck !== 'Pendiente' || transaction.documentIdentificationCheck !== 'No Validado'"
+                    mat-menu-item color="primary" (click)="openUpdateDocumentModal(transaction.id)">
+                    <mat-icon>drive_file_rename_outline</mat-icon>
+                    Actualizar Documentos
+                  </button>
                   <button mat-menu-item (click)="downloadPDF(transaction.id)">
                     <mat-icon>download</mat-icon>
                     Generar PDF

@@ -24,7 +24,7 @@
                             <mat-icon class="icon-size-5 text-white">add</mat-icon>
                             <span class="ml-2 text-white font-bold">Crear Programación Masiva</span>
                         </button>
-                        <button *ngIf="user && (user.role === 'DIRECCION' || user.role === 'ADMIN')" class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
+                        <button *ngIf="user && (user.role === 'DIRECCION' || user.role === 'ADMIN' || user.role === 'ENLACE_REGIONAL')" class="hidden sm:inline-flex ml-3 bg-primary rounded-2xl" mat-flat-button primary
                         [routerLink]="['/app', 'add-massive-activity']">
                         <mat-icon class="icon-size-5 text-white">add</mat-icon>
                         <span class="ml-2 text-white font-bold">Asignar Horario Masivo</span>

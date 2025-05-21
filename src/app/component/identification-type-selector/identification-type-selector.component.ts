@@ -37,6 +37,8 @@ export class IdentificationTypeSelectorComponent {
   }
 
   ngAfterContentInit() {
+    this.checkValue();
+
   }
 
   checkValue() {
