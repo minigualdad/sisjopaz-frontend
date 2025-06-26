@@ -121,7 +121,6 @@ export class UpdateDocumentComponent implements OnInit {
 
   setIdentificationType(event: number) {
     this.form.get('documentType')?.setValue(event);
-    console.log('Valor: ', this.form.get('documentType')?.value);
   }
 
   validateNumber(event: KeyboardEvent): boolean {

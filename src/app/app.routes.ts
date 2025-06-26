@@ -217,6 +217,8 @@ import { DateGroupComponentEditComponent } from './component/date-group-componen
 import { MassiveDateActivityAllGroupComponentComponent } from './component/massive-date-activity-all-group-component/massive-date-activity-all-group-component.component';
 import { DocumentVerificationComponent } from './component/document-verification/document-verification.component';
 import { ChangeSurveyStateComponent } from './component/change-survey-state/change-survey-state.component';
+import { ImageGroupComponentComponent } from './component/image-group-component/image-group-component.component';
+import { ReportsComponent } from './component/reports/reports.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -400,12 +402,13 @@ export const routes: Routes = [
             },
             {
                 path: 'dashboard', component: DashboardComponent,
-                canActivate: [RoleGuard], data: { 
-                    role: [Roles.ENLACE_REGIONAL, Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_SOCIOJURIDICO, 
-                        Roles.PROFESIONAL_PSICOSOCIAL, Roles.DIRECCION, Roles.ADMIN, 
-                        Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.COORDINACION, 
-                        Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_PREREGISTRO,
-                        Roles.GESTORES_SOCIALES] }
+                canActivate: [RoleGuard], data: {
+                    role: [Roles.ENLACE_REGIONAL, Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_SOCIOJURIDICO,
+                    Roles.PROFESIONAL_PSICOSOCIAL, Roles.DIRECCION, Roles.ADMIN,
+                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.COORDINACION,
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_PREREGISTRO,
+                    Roles.GESTORES_SOCIALES]
+                }
             },
             {
                 path: 'preregister', component: PreRegisterComponent,
@@ -413,10 +416,12 @@ export const routes: Routes = [
             },
             {
                 path: 'agreement/:id', component: AgreementComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION, Roles.COORDINACION, Roles.ENLACE_REGIONAL,
-                    Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, 
+                canActivate: [RoleGuard], data: {
+                    role: [Roles.ADMIN, Roles.DIRECCION, Roles.COORDINACION, Roles.ENLACE_REGIONAL,
+                    Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD,
                     Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.GESTORES_SOCIALES
-                ] }
+                    ]
+                }
             },
             {
                 path: 'characterization/:id', component: CharacterizationComponent,
@@ -586,12 +591,14 @@ export const routes: Routes = [
             },
             {
                 path: 'component-group/:id', component: ComponentGroupComponent,
-                canActivate: [RoleGuard], 
-                data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, 
-                        Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION, 
-                        Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
-                        Roles.PROFESIONAL_SOCIOJURIDICO, Roles.PROFESIONAL_PREREGISTRO, 
-                        Roles.GESTORES_SOCIALES] }
+                canActivate: [RoleGuard],
+                data: {
+                    role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL,
+                    Roles.COORDINACION, Roles.PROFESIONAL_EDUCACION,
+                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL,
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.PROFESIONAL_PREREGISTRO,
+                    Roles.GESTORES_SOCIALES]
+                }
             },
             {
                 path: 'component-group-add/:id', component: ComponentGroupAddComponent,
@@ -761,9 +768,11 @@ export const routes: Routes = [
             },
             {
                 path: 'agreement-signature', component: AgreementSignaureComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_EDUCACION, 
-                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION, 
-                    Roles.GESTORES_SOCIALES] }
+                canActivate: [RoleGuard], data: {
+                    role: [Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_EDUCACION,
+                    Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION,
+                    Roles.GESTORES_SOCIALES]
+                }
             },
             {
                 path: 'group-change/:id', component: GroupChangeComponent,
@@ -812,33 +821,43 @@ export const routes: Routes = [
             },
             {
                 path: 'attendance-by-month/:id', component: AttendancesByMonthComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION, 
-                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
-                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
+                canActivate: [RoleGuard], data: {
+                    role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL,
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION]
+                }
             },
             {
                 path: 'attendance-by-month-assistance/:id', component: AssistanceByMonthComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION, 
-                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
-                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
+                canActivate: [RoleGuard], data: {
+                    role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL,
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION]
+                }
             },
             {
                 path: 'assitance-component-by-month/:id', component: AssitanceComponentByMonthComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION, 
-                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
-                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
+                canActivate: [RoleGuard], data: {
+                    role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL,
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION]
+                }
             },
             {
                 path: 'find-serial', component: SearchBySerialAssistanceComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, , Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,  
-                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
-                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
+                canActivate: [RoleGuard], data: {
+                    role: [Roles.ADMIN, , Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL,
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION]
+                }
             },
             {
                 path: 'assistance-scanner-by-group/:id', component: AssistanceScannerByUserComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, , Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,  
-                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
-                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
+                canActivate: [RoleGuard], data: {
+                    role: [Roles.ADMIN, , Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL,
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION]
+                }
             },
             {
                 path: 'assistance-scanner-detail/:id', component: AssistanceScannerDetailComponent,
@@ -854,9 +873,11 @@ export const routes: Routes = [
             },
             {
                 path: 'bank-info/:id', component: BankInfoComponent,
-                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION,  
-                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
-                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION] }
+                canActivate: [RoleGuard], data: {
+                    role: [Roles.DIRECCION, Roles.ADMIN, Roles.ENLACE_REGIONAL, Roles.COORDINACION,
+                    Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL,
+                    Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION]
+                }
             },
             {
                 path: 'add-massive-activity', component: GroupAddMassiveActivityComponent,
@@ -868,6 +889,10 @@ export const routes: Routes = [
             },
             {
                 path: 'massive-date-activity-all-group-component', component: MassiveDateActivityAllGroupComponentComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
+            },
+            {
+                path: 'reports', component: ReportsComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
             },
         ]
@@ -1065,29 +1090,31 @@ export const routes: Routes = [
         MassiveDateActivityAllGroupComponentComponent,
         DocumentVerificationComponent,
         ChangeSurveyStateComponent,
+        ImageGroupComponentComponent,
+        ReportsComponent,
     ],
     imports: [
         RouterModule.forRoot(routes),
-    SharedModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatInputModule,
-    MatFormFieldModule,
-    BrowserAnimationsModule,
-    MatMenu,
-    BaseChartDirective,
-    CommonModule,
-    LoadingComponent,
-    ButtonBackComponent,
-    MatCheckboxModule,
-    BrowserAnimationsModule
-    
-],
+        SharedModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatInputModule,
+        MatFormFieldModule,
+        BrowserAnimationsModule,
+        MatMenu,
+        BaseChartDirective,
+        CommonModule,
+        LoadingComponent,
+        ButtonBackComponent,
+        MatCheckboxModule,
+        BrowserAnimationsModule
+
+    ],
     exports: [RouterModule, SharedModule, MatTableModule,
         MatPaginatorModule,
         MatSortModule,

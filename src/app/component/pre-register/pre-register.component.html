@@ -1,206 +1,201 @@
-<div 
-  class="bg-white h-full w-full max-w-3xl mx-auto rounded-2xl shadow-xl flex flex-col items-center justify-center text-left px-4 py-2 overflow-y-auto"
->
-  <label for="" class="font-bold text-3xl text-blue my-8 text-center">RIE - JOVENES EN PAZ</label>
-  
-  <h2 class="text-blue font-bold text-2xl mb-4 text-center">INTRODUCCIÓN</h2>
-  
-  <p class="text-base text-justify mb-4">
-    En este instrumento se hace un registro de la información de personas/colectivos pertenecientes a las
-    Poblaciones Misionales, según articulo 05 Ámbito de Competencias de la Ley 2281 del 2023, con las cuales el
-    Ministerio de Igualdad y Equidad desarrolla su objeto, en todo el país con énfasis en los territorios
-    excluidos y marginados, en el marco del programa Jóvenes en Paz.
-  </p>
+<div
+    class="bg-white h-full w-full max-w-3xl mx-auto rounded-2xl shadow-xl flex flex-col items-center justify-center text-left px-4 py-2 overflow-y-auto">
+    <label for="" class="font-bold text-3xl text-blue my-8 text-center">RIE - JOVENES EN PAZ</label>
 
-  <img src="img/logoMin.png" alt="Logo Colombia" class="mb-10 w-9/12 max-w-md mx-auto">
+    <h2 class="text-blue font-bold text-2xl mb-4 text-center">INTRODUCCIÓN</h2>
 
-  <button
-    (click)="syncWithServer()" type="button" *ngIf="qty > 0"
-    class="bg-blue-500 border-solid border-2 border-gray-500 text-white text-sm rounded w-60 px-2 py-1 mb-4
-           disabled:bg-gray-400 disabled:border-gray-300 disabled:text-gray-700"
-  >
-    Sincronización manual <br>{{ qty }} registro(s)
-  </button>
+    <p class="text-base text-justify mb-4">
+        En este instrumento se hace un registro de la información de personas/colectivos pertenecientes a las
+        Poblaciones Misionales, según articulo 05 Ámbito de Competencias de la Ley 2281 del 2023, con las cuales el
+        Ministerio de Igualdad y Equidad desarrolla su objeto, en todo el país con énfasis en los territorios
+        excluidos y marginados, en el marco del programa Jóvenes en Paz.
+    </p>
 
-  <span class="text-sm text-pink mb-4">{{ syncStatus }}</span>
+    <img src="img/logoMin.png" alt="Logo Colombia" class="mb-10 w-9/12 max-w-md mx-auto">
 
-        <form (ngSubmit)="onSubmit()" [formGroup]="form"
-            class="w-full max-w-2xl flex flex-col items-center justify-center px-4 bg-gray-50 rounded-md">
-            <div class="w-full flex flex-col items-center gap-6">
-                <app-unique-option [reset]="reset" class="w-full" (submit)="setMinisteryVinculation($event)"
-                    [title]="' El vínculo con el Ministerio de Igualdad y Equidad para el registro corresponde a'"
-                    [options]="[{key: 'ministerio', value: 'El Ministerio proporciona bienes o servicios al sujeto o colectivo'}]">
-                </app-unique-option>
-                <app-unique-option [reset]="reset" class="w-full" (submit)="setRegistryFrom($event)"
-                    [title]="'El registro se hará a:'" [options]="[{key: 'persona', value: 'Una persona'}]">
-                </app-unique-option>
-                <h2 class="font-bold text-2xl text-blue my-8 text-center">AUTORIZACIÓN DE DATOS DE LA PERSONA ENTREVISTADA</h2>
-                <app-unique-option [reset]="reset" class="w-full" (submit)="setAutorizationMinistery($event)"
-                    [title]="'La persona entrevistada autoriza al Ministerio de Igualdad y Equidad para que recolecte y utilice información sobre su ubicación, datos personales, de contacto y características personales.'"
-                    [options]="[{key:'ok', value:'OK'}]">
-                </app-unique-option>
-                <app-unique-option [reset]="reset" (submit)="setAutorizationData($event)"
-                    [title]="'La persona entrevistada autoriza el tratamiento de datos personales conforme la Ley 1581 de 2012'"
-                    [options]="[{key:'ok', value:'OK'}]">
-                </app-unique-option>
+    <button (click)="syncWithServer()" type="button" *ngIf="qty > 0" class="bg-blue-500 border-solid border-2 border-gray-500 text-white text-sm rounded w-60 px-2 py-1 mb-4
+           disabled:bg-gray-400 disabled:border-gray-300 disabled:text-gray-700">
+        Sincronización manual <br>{{ qty }} registro(s)
+    </button>
+
+    <span class="text-sm text-pink mb-4">{{ syncStatus }}</span>
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="form"
+        class="w-full max-w-2xl flex flex-col items-center justify-center px-4 bg-gray-50 rounded-md">
+        <div class="w-full flex flex-col items-center gap-6">
+            <app-unique-option [reset]="reset" class="w-full" (submit)="setMinisteryVinculation($event)"
+                [title]="' El vínculo con el Ministerio de Igualdad y Equidad para el registro corresponde a'"
+                [options]="[{key: 'ministerio', value: 'El Ministerio proporciona bienes o servicios al sujeto o colectivo'}]">
+            </app-unique-option>
+            <app-unique-option [reset]="reset" class="w-full" (submit)="setRegistryFrom($event)"
+                [title]="'El registro se hará a:'" [options]="[{key: 'persona', value: 'Una persona'}]">
+            </app-unique-option>
+            <h2 class="font-bold text-2xl text-blue my-8 text-center">AUTORIZACIÓN DE DATOS DE LA PERSONA ENTREVISTADA
+            </h2>
+            <app-unique-option [reset]="reset" class="w-full" (submit)="setAutorizationMinistery($event)"
+                [title]="'La persona entrevistada autoriza al Ministerio de Igualdad y Equidad para que recolecte y utilice información sobre su ubicación, datos personales, de contacto y características personales.'"
+                [options]="[{key:'ok', value:'OK'}]">
+            </app-unique-option>
+            <app-unique-option [reset]="reset" (submit)="setAutorizationData($event)"
+                [title]="'La persona entrevistada autoriza el tratamiento de datos personales conforme la Ley 1581 de 2012'"
+                [options]="[{key:'ok', value:'OK'}]">
+            </app-unique-option>
 
 
 
-                    <h2 *ngIf="conditionsAccepted" class="font-bold text-2xl text-[#3e75a6] my-8 text-center">IDENTIFICACIÓN, UBICACIÓN Y CONTACTO DE LA
-                    PERSONA</h2>
-                <p *ngIf="conditionsAccepted" class="text-base text-justify p-4">De acuerdo al Manual Operativo del Programa Nacional de Jóvenes en
-                    Paz
-                    (Resolución 89 del 29 de diciembre de 2023) solo se podrán vincular al Programa las y los jóvenes
-                    entre 14 y
-                    28 años, que cuenten con documento de identidad expedido por autoridad colombiana competente. Este
-                    ítem es
-                    obligatorio</p>
-  
+            <h2 *ngIf="conditionsAccepted" class="font-bold text-2xl text-[#3e75a6] my-8 text-center">IDENTIFICACIÓN,
+                UBICACIÓN Y CONTACTO DE LA
+                PERSONA</h2>
+            <p *ngIf="conditionsAccepted" class="text-base text-justify p-4">De acuerdo al Manual Operativo del Programa
+                Nacional de Jóvenes en
+                Paz
+                (Resolución 89 del 29 de diciembre de 2023) solo se podrán vincular al Programa las y los jóvenes
+                entre 14 y
+                28 años, que cuenten con documento de identidad expedido por autoridad colombiana competente. Este
+                ítem es
+                obligatorio</p>
 
-                <p *ngIf="conditionsAccepted" class="text-base text-justify p-4">La foto del documento de identidad es requisito para participar en
-                    los
-                    programas del Ministerio de Igualdad y Equidad, sin embargo pueden existir situaciones de fuerza
-                    mayor
-                    que no permitan cargar la foto al momento del registro</p>
 
-                    <div class="w-full space-y-4">
-                        <!-- Selector de tipo de documento -->
-                         <app-identification-type-selector *ngIf="conditionsAccepted" (identificationTypeIdListen)="onDocumentTypeChange($event)">
-                         </app-identification-type-selector>
-                        <!-- Campo de número de documento -->
-                        <div *ngIf="conditionsAccepted" class="w-full flex flex-col space-y-2">
-                          <app-input
-                            [reset]="reset"
-                            (submit)="setIdentification($event)"
-                            class="w-full"
-                            type="number"
-                            [title]="'Número de Documento'"
-                            subtitle="El estándar de longitud de caracteres del número de identificación acorde al tipo de identificación, se define en el 'Diccionario de elemento de datos el estándar' lenguaje común de intercambio de información (MinTIC), de la siguiente manera: RC: entre 8 ó 10 ú 11 dígitos TI: 10 y 11 dígitos CC: entre 8 y 17 dígitos CE: menor a 11 dígitos PA: menor a 19 dígitos MS: para este último ingrese el documento de la madre con el consecutivo respectivo al número de nacimiento. AS: para mayores de 18 años utilice el código del Departamento + código de Municipio y el consecutivo definido por el Entidad Territorial o UPGD. Tenga en cuenta que en el módulo de captura en línea el sistema asignará un número cuando seleccione este tipo de documento. PE: menor a 18 dígitos CN: menor de 20 dígitos CD: 14 digitos SC: 12 digitos DE: 19 digitos PT: 10 digitos En adopción de la Circular Externa 000029 del 16 de agosto de 2017 expedida por el Ministerio de Salud y Protección Social, se incluye validación para la identificación de extranjeros de acuerdo al estándar internacional ISO 3166-1 para los siguientes tipo de documento: en CE, PA, AS, MS, CD, SC, DE y PT de esta manera se aumenta la longitud de captura en 3 dígitos más para cada uno."
-                            placeholder="Ingrese el número de documento"
-                          ></app-input>
-                      
-                          <!-- Mensaje de error -->
-                          <div *ngIf="errorMessage" class="text-red-500 text-sm mt-1">
-                            {{ errorMessage }}
-                          </div>
-                        </div>
-                      </div>
-                <div *ngIf="conditionsAccepted" class="w-full flex">
-                    <app-input [reset]="reset" (submit)="setIdentificationExpedition($event)" class="w-full"
-                        [type]="'date'" [title]="'¿Cuál es la fecha de expedición de su documento de identificación?'"
-                        [subtitle]="'Si no lo recuerda o no lo tiene a la mano, dejar en blanco.'"
-                        [placeholder]="'dd/mm/aaaa'"></app-input>
+            <p *ngIf="conditionsAccepted" class="text-base text-justify p-4">La foto del documento de identidad es
+                requisito para participar en
+                los
+                programas del Ministerio de Igualdad y Equidad, sin embargo pueden existir situaciones de fuerza
+                mayor
+                que no permitan cargar la foto al momento del registro</p>
+
+            <div class="w-full space-y-4">
+                <!-- Selector de tipo de documento -->
+                <app-identification-type-selector *ngIf="conditionsAccepted"
+                    (identificationTypeIdListen)="onDocumentTypeChange($event)">
+                </app-identification-type-selector>
+                <!-- Campo de número de documento -->
+                <div *ngIf="conditionsAccepted" class="w-full flex flex-col space-y-2">
+                    <app-input [reset]="reset" (submit)="setIdentification($event)" class="w-full" type="number"
+                        [title]="'Número de Documento'"
+                        subtitle="El estándar de longitud de caracteres del número de identificación acorde al tipo de identificación, se define en el 'Diccionario de elemento de datos el estándar' lenguaje común de intercambio de información (MinTIC), de la siguiente manera: RC: entre 8 ó 10 ú 11 dígitos TI: 10 y 11 dígitos CC: entre 8 y 17 dígitos CE: menor a 11 dígitos PA: menor a 19 dígitos MS: para este último ingrese el documento de la madre con el consecutivo respectivo al número de nacimiento. AS: para mayores de 18 años utilice el código del Departamento + código de Municipio y el consecutivo definido por el Entidad Territorial o UPGD. Tenga en cuenta que en el módulo de captura en línea el sistema asignará un número cuando seleccione este tipo de documento. PE: menor a 18 dígitos CN: menor de 20 dígitos CD: 14 digitos SC: 12 digitos DE: 19 digitos PT: 10 digitos En adopción de la Circular Externa 000029 del 16 de agosto de 2017 expedida por el Ministerio de Salud y Protección Social, se incluye validación para la identificación de extranjeros de acuerdo al estándar internacional ISO 3166-1 para los siguientes tipo de documento: en CE, PA, AS, MS, CD, SC, DE y PT de esta manera se aumenta la longitud de captura en 3 dígitos más para cada uno."
+                        placeholder="Ingrese el número de documento"></app-input>
+
+                    <!-- Mensaje de error -->
+                    <div *ngIf="errorMessage" class="text-red-500 text-sm mt-1">
+                        {{ errorMessage }}
+                    </div>
                 </div>
+            </div>
+            <div *ngIf="conditionsAccepted" class="w-full flex">
+                <app-input [reset]="reset" (submit)="setIdentificationExpedition($event)" class="w-full" [type]="'date'"
+                    [title]="'¿Cuál es la fecha de expedición de su documento de identificación?'"
+                    [subtitle]="'Si no lo recuerda o no lo tiene a la mano, dejar en blanco.'"
+                    [placeholder]="'dd/mm/aaaa'"></app-input>
+            </div>
 
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-input [reset]="reset" (input)="onInputChange($event)" (submit)="setFirstName($event)" class="w-full" [title]="'Primer Nombre'"
-                        [subtitle]="'Escribir en Mayúscula, sin tildes'" placeholder=""></app-input>
-                </div>
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-input [reset]="reset" (input)="onInputChange($event)" (submit)="setSecondName($event)" class="w-full"
-                        [title]="'Segundo Nombre'" [required]="false" [subtitle]="'Escribir en Mayúscula, sin tildes'"
-                        placeholder=""></app-input>
-                </div>
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-input [reset]="reset" (input)="onInputChange($event)" (submit)="setFirstLastName($event)" class="w-full"
-                        [title]="'Primer Apellido'" [subtitle]="'Escribir en Mayúscula, sin tildes'"
-                        placeholder=""></app-input>
-                </div>
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-input [reset]="reset" (input)="onInputChange($event)" (submit)="setSecondLastName($event)" class="w-full"
-                        [title]="'Segundo Apellido'" [required]="false" [subtitle]="'Escribir en Mayúscula, sin tildes'"
-                        placeholder=""></app-input>
-                </div>
+            <div *ngIf="conditionsAccepted" class="w-full flex ">
+                <app-input [reset]="reset" (input)="onInputChange($event)" (submit)="setFirstName($event)"
+                    class="w-full" [title]="'Primer Nombre'" [subtitle]="'Escribir en Mayúscula, sin tildes'"
+                    placeholder=""></app-input>
+            </div>
+            <div *ngIf="conditionsAccepted" class="w-full flex ">
+                <app-input [reset]="reset" (input)="onInputChange($event)" (submit)="setSecondName($event)"
+                    class="w-full" [title]="'Segundo Nombre'" [required]="false"
+                    [subtitle]="'Escribir en Mayúscula, sin tildes'" placeholder=""></app-input>
+            </div>
+            <div *ngIf="conditionsAccepted" class="w-full flex ">
+                <app-input [reset]="reset" (input)="onInputChange($event)" (submit)="setFirstLastName($event)"
+                    class="w-full" [title]="'Primer Apellido'" [subtitle]="'Escribir en Mayúscula, sin tildes'"
+                    placeholder=""></app-input>
+            </div>
+            <div *ngIf="conditionsAccepted" class="w-full flex ">
+                <app-input [reset]="reset" (input)="onInputChange($event)" (submit)="setSecondLastName($event)"
+                    class="w-full" [title]="'Segundo Apellido'" [required]="false"
+                    [subtitle]="'Escribir en Mayúscula, sin tildes'" placeholder=""></app-input>
+            </div>
 
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-input [reset]="reset" (submit)="setBornDate($event)" class="w-full" [type]="'date'"
-                        [title]="'¿Cuál es su fecha de nacimiento?'" [subtitle]="''"
-                        [placeholder]="'dd/mm/aaaa'"></app-input>
-                </div>
-                <div *ngIf="form.get('calculatedAge')!.value > 0" class="w-full flex">
-                    <span *ngIf="form.get('calculatedAge')!.value > 0">Su edad según su fecha de nacimiento es {{
-                        form.get('calculatedAge')!.value}} años</span>
-                </div>
+            <div *ngIf="conditionsAccepted" class="w-full flex ">
+                <app-input [reset]="reset" (submit)="setBornDate($event)" class="w-full" [type]="'date'"
+                    [title]="'¿Cuál es su fecha de nacimiento?'" [subtitle]="''"
+                    [placeholder]="'dd/mm/aaaa'"></app-input>
+            </div>
+            <div *ngIf="form.get('calculatedAge')!.value > 0" class="w-full flex">
+                <span *ngIf="form.get('calculatedAge')!.value > 0">Su edad según su fecha de nacimiento es {{
+                    form.get('calculatedAge')!.value}} años</span>
+            </div>
 
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-input [reset]="reset" (submit)="setEmail($event)" type="email" class="w-full"
-                        [title]="'Si tiene correo electrónico ¿Cuál es?'"
-                        [subtitle]="'Si no tiene continuar a la siguiente pregunta'" [placeholder]="''"></app-input>
-                </div>
+            <div *ngIf="conditionsAccepted" class="w-full flex ">
+                <app-input [reset]="reset" (submit)="setEmail($event)" type="email" class="w-full"
+                    [title]="'Si tiene correo electrónico ¿Cuál es?'"
+                    [subtitle]="'Si no tiene continuar a la siguiente pregunta'" [placeholder]="''"></app-input>
+            </div>
 
-                <div *ngIf="conditionsAccepted && role !== 'ADMIN' && role !== 'DIRECCION'" class="w-full flex ">
-                    <label>Departamento: {{departmentName}}</label>
-                </div>
-                <app-selected *ngIf="conditionsAccepted && role === 'ADMIN' || role === 'DIRECCION'" [reset]="reset" (submit)="setDepartment($event)" class="w-full "
-                    [title]="'¿En qué departamento vive?'" [array]="departments">
+            <div *ngIf="conditionsAccepted && role !== 'ADMIN' && role !== 'DIRECCION'" class="w-full flex ">
+                <label>Departamento: {{departmentName}}</label>
+            </div>
+            <div *ngIf="conditionsAccepted && role !== 'ADMIN' && role !== 'DIRECCION'" class="w-full flex ">
+
+                <app-selected [reset]="reset"
+                    (submit)="setDepartment($event)" class="w-full " [title]="'¿En qué departamento vive?'"
+                    [array]="departments">
                 </app-selected>
+            </div>
 
 
-                <app-selected *ngIf="conditionsAccepted" [reset]="reset" (submit)="setMunicipality($event)" class="w-full "
-                    [title]="'¿En qué municipio vive?'" [array]="municipalities">
-                </app-selected>
-                <div *ngIf="conditionsAccepted" class="w-full flex">
+            <app-selected *ngIf="conditionsAccepted" [reset]="reset" (submit)="setMunicipality($event)" class="w-full "
+                [title]="'¿En qué municipio vive?'" [array]="municipalities">
+            </app-selected>
+            <div *ngIf="conditionsAccepted" class="w-full flex">
                 <div *ngFor="let subgroup of subgroups" class="w-full">
-                    <h2 class="text-2xl mt-8">{{ subgroup.name }}</h2>
                     <div class="w-full" *ngFor="let question of questions">
                         <div class="w-full" *ngIf="question.questionSubgroupId == subgroup.id">
                             <app-unique-option class="w-full" *ngIf="question.typeAnswer == 'select_one'"
-                                        (submit)="addUserResponse($event, question.id)"
-                                        [title]="question.question" 
-                                        [required]="question.isMandatory == 'si'"
-                                        [options]="question.answerObj">
+                                (submit)="addUserResponse($event, question.id)" [title]="question.question"
+                                [required]="question.isMandatory == 'si'" [options]="question.answerObj">
                             </app-unique-option>
                             <app-input class="w-full" [title]="question.question" *ngIf="question.typeAnswer == 'text'"
                                 (submit)="addUserResponse($event, question.id)"
-                                [required]="question.isMandatory == 'si'"
-                                [subtitle]="question.questionObservations"
+                                [required]="question.isMandatory == 'si'" [subtitle]="question.questionObservations"
                                 placeholder=""></app-input>
-                            <app-input class="w-full" [title]="question.question" 
-                                (submit)="addUserResponse($event, question.id)"
-                                *ngIf="question.typeAnswer == 'integer'"
-                                type="number" 
-                                [required]="question.isMandatory == 'si'"
+                            <app-input class="w-full" [title]="question.question"
+                                (submit)="addUserResponse($event, question.id)" *ngIf="question.typeAnswer == 'integer'"
+                                type="number" [required]="question.isMandatory == 'si'"
                                 [subtitle]="question.questionObservations" placeholder=""></app-input>
-                
+
                         </div>
                     </div>
                 </div>
 
-                </div>
+            </div>
 
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-input [reset]="reset" (submit)="setPhone($event)" class="w-full" [type]="'tel'"
-                        [title]="'¿Cuál es su número de celular?'"
-                        [subtitle]="'En caso de que no tenga registrar algún otro celular o teléfono fijo donde pueda ser contactado. Y si definitivamente no tiene algún número diligencie el del líder o contacto en el territorio'"
-                        [placeholder]="''"></app-input>
+            <div *ngIf="conditionsAccepted" class="w-full flex ">
+                <app-input [reset]="reset" (submit)="setPhone($event)" class="w-full" [type]="'tel'"
+                    [title]="'¿Cuál es su número de celular?'"
+                    [subtitle]="'En caso de que no tenga registrar algún otro celular o teléfono fijo donde pueda ser contactado. Y si definitivamente no tiene algún número diligencie el del líder o contacto en el territorio'"
+                    [placeholder]="''"></app-input>
 
-                </div>
+            </div>
 
-                <div *ngIf="conditionsAccepted" class="w-full flex ">
-                    <app-unique-option [reset]="reset" (submit)="setHasWhatsapp($event)" class="w-full"
-                        [title]="'¿Utiliza WhatsApp u otra app de mensajería instantánea?'" [options]="[
+            <div *ngIf="conditionsAccepted" class="w-full flex ">
+                <app-unique-option [reset]="reset" (submit)="setHasWhatsapp($event)" class="w-full"
+                    [title]="'¿Utiliza WhatsApp u otra app de mensajería instantánea?'" [options]="[
                                     {key: 'si', value: 'Sí'},
                                     {key: 'no', value: 'No'},
                             ]">
-                    </app-unique-option>
-                </div>
+                </app-unique-option>
+            </div>
 
-                <div *ngIf="conditionsAccepted && hasWhatsapp" class="w-full flex ">
-                    <app-input [reset]="reset" (submit)="setWhatsappNumber($event)" class="w-full" [type]="'tel'"
-                        [title]="'Número de WhatsApp'" [required]="false" [placeholder]="''">
-                    </app-input>
-                </div>
+            <div *ngIf="conditionsAccepted && hasWhatsapp" class="w-full flex ">
+                <app-input [reset]="reset" (submit)="setWhatsappNumber($event)" class="w-full" [type]="'tel'"
+                    [title]="'Número de WhatsApp'" [required]="false" [placeholder]="''">
+                </app-input>
+            </div>
 
-                <label *ngIf="conditionsAccepted" class="font-bold text-2xl text-blue my-8">CIERRE</label>
-                <p class="text-base text-justify">¡Es todo muchas gracias!</p>
+            <label *ngIf="conditionsAccepted" class="font-bold text-2xl text-blue my-8">CIERRE</label>
+            <p class="text-base text-justify">¡Es todo muchas gracias!</p>
 
 
-                    <button type="submit" [disabled]="!form.valid" class="bg-blue-500 border-solid border-2 border-gray-500 text-white text-lg rounded w-60 p-4
+            <button type="submit" [disabled]="!form.valid" class="bg-blue-500 border-solid border-2 border-gray-500 text-white text-lg rounded w-60 p-4
                             disabled:bg-gray-400 disabled:border-gray-300 disabled:text-gray-700">
-                        Enviar
-                    </button>
-                    </div>
-                <div class="w-full">&nbsp;</div>
-        </form>
+                Enviar
+            </button>
+        </div>
+        <div class="w-full">&nbsp;</div>
+    </form>
 
-    </div>
+</div>

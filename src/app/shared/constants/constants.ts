@@ -123,7 +123,7 @@ export const NAV_ITEMS = [
                 route: `/app/group`,
                 icon: 'svg/circle.svg',
                 role: 'ADMIN'
-            },{
+            }, {
                 name: 'Asistencias Generadas',
                 route: `/app/assistance-generates`,
                 icon: 'svg/circle.svg',
@@ -221,6 +221,12 @@ export const NAV_ITEMS = [
         name: 'Administración Dirección', route: null, icon: 'svg/register.svg',
         role: [Roles.ADMIN, Roles.DIRECCION],
         children: [
+            {
+                name: 'Informes',
+                route: `/app/reports`,
+                icon: 'svg/circle.svg',
+                role: 'DIRECCION'
+            },
             {
                 name: 'RNEC',
                 route: `/app/beneficiary-no-validate`,
@@ -423,14 +429,14 @@ export const NAV_ITEMS = [
     },
     {
         name: 'Buscar Planilla', route: '/app/find-serial', icon: 'svg/search-by.svg',
-        role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION, 
-            Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL, 
-            Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION]
+        role: [Roles.ADMIN, Roles.DIRECCION, Roles.ENLACE_REGIONAL, Roles.COORDINACION,
+        Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, Roles.PROFESIONAL_PSICOSOCIAL,
+        Roles.PROFESIONAL_SOCIOJURIDICO, Roles.APOYO_A_LA_COORDINACION]
     },
     {
         name: 'Firmar Acuerdos', route: '/app/agreement-signature', icon: 'svg/signature.svg',
-        role: [Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD, 
-            Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.GESTORES_SOCIALES]
+        role: [Roles.APOYO_A_LA_COORDINACION, Roles.PROFESIONAL_EDUCACION, Roles.PROFESIONAL_CORRESPONSABILIDAD,
+        Roles.PROFESIONAL_PSICOSOCIAL, Roles.PROFESIONAL_SOCIOJURIDICO, Roles.GESTORES_SOCIALES]
     },
 
 ];

@@ -15,14 +15,6 @@
       </div>
 
       <div class="flex flex-col gap-4 mt-4">
-        <!-- Botón de toggle -->
-        <div class="flex w-full justify-end">
-          <button class="flex items-center gap-2 px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-full transition-colors duration-200 shadow-md" 
-                  (click)="showImage()">
-            <mat-icon class="">{{ showImg ? 'visibility' : 'visibility_off' }}</mat-icon>
-            <span>{{ showImg ? 'Ocultar imágenes' : 'Mostrar imágenes' }}</span>
-          </button>
-        </div>
         
         <!-- Contenedor de imágenes -->
         <div *ngIf="!showImg" class="flex flex-col justify-center items-center">
@@ -53,12 +45,6 @@
       </div>
     </div>
 
-    <div class="w-full h-10 flex justify-center items-center my-6" *ngIf="!showImg">
-      <button class="flex items-center gap-2 px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-md text-sm" (click)="report()">
-        <mat-icon>warning</mat-icon>
-        Reportar error
-      </button>
-    </div>
     <app-assistance-table [records]="dataSource.data"></app-assistance-table>
 
 

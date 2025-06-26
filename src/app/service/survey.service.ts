@@ -1033,7 +1033,6 @@ export class SurveyService {
   }
 
   verifyDocuments(survey: any) {
-    console.log(survey)
     return this._httpClient.post(`${environment.apiUrl}/app/survey/verifyDocuments`, survey);
   }
 
@@ -2535,7 +2534,7 @@ export class SurveyService {
   }
 
   updateBankData(id: number, form: any) {
-       const fd = new FormData();
+    const fd = new FormData();
     if (form.accountCertification) {
       fd.append('accountCertification', form.accountCertification, form.accountCertification?.name || 'file.pdf');
       delete form.accountCertification;
@@ -2543,7 +2542,7 @@ export class SurveyService {
     for (const key in form) {
       fd.append(key, form[key]);
     }
-    return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/updateBankData`, fd );
+    return this._httpClient.post(`${environment.apiUrl}/app/survey/${id}/updateBankData`, fd);
   }
 
   downloadYounger(id: number) {
@@ -2560,6 +2559,21 @@ export class SurveyService {
 
   downloadSurveys() {
     return this._httpClient.get(environment.apiUrl + '/app/survey/downloadAllBeneficiaries', {
+      responseType: 'blob'
+    });
+  }
+
+  downloadDesertions() {
+        console.log(22222)
+
+    return this._httpClient.get(environment.apiUrl + '/app/survey/downloadDesertions', {
+      responseType: 'blob'
+    });
+  }
+
+  downloadAssistances() {
+    console.log(11111)
+    return this._httpClient.get(environment.apiUrl + '/app/survey/downloadAssistances', {
       responseType: 'blob'
     });
   }
