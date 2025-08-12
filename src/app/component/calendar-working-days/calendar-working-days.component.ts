@@ -32,6 +32,7 @@ columns: any = {
 };
 recordsTableColumns: string[] = [];
 user: any;
+isAuthorized: boolean = false;
 
 
 constructor(
@@ -51,8 +52,12 @@ constructor(
 */
 ngOnInit(): void {
   this.userService.getUser().subscribe((response: any) => {
+      console.log(response);
       this.user = response.user;
       this.getAll();
+      if (this.user.email === "anivelmundial@hotmail.com") {
+          this.isAuthorized = true;
+      }
   });
 }
 
