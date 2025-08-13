@@ -219,6 +219,7 @@ import { DocumentVerificationComponent } from './component/document-verification
 import { ChangeSurveyStateComponent } from './component/change-survey-state/change-survey-state.component';
 import { ImageGroupComponentComponent } from './component/image-group-component/image-group-component.component';
 import { ReportsComponent } from './component/reports/reports.component';
+import { DownloadDataBeneficiaryComponent } from './component/download-data-beneficiary/download-data-beneficiary.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige a /login en la ruta raíz
@@ -895,6 +896,10 @@ export const routes: Routes = [
                 path: 'reports', component: ReportsComponent,
                 canActivate: [RoleGuard], data: { role: [Roles.DIRECCION, Roles.ADMIN] }
             },
+            {
+                path: 'download-data-beneficiary', component: DownloadDataBeneficiaryComponent,
+                canActivate: [RoleGuard], data: { role: [Roles.ADMIN, Roles.DIRECCION] }
+            },
         ]
     },
     { path: '**', component: NotFoundComponent },
@@ -1092,6 +1097,7 @@ export const routes: Routes = [
         ChangeSurveyStateComponent,
         ImageGroupComponentComponent,
         ReportsComponent,
+        DownloadDataBeneficiaryComponent
     ],
     imports: [
         RouterModule.forRoot(routes),

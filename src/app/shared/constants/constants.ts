@@ -338,6 +338,10 @@ export const NAV_ITEMS = [
         ]
     },
     {
+        name: 'Descargar informes Beneficiarios Demo', route: '/app/download-data-beneficiary', icon: 'svg/document.svg',
+        role: [Roles.DIRECCION, Roles.ADMIN]
+    },
+    {
         name: 'Jovenes', route: null, icon: 'svg/beneficiary.svg',
         role: [Roles.ENLACE_REGIONAL, Roles.COORDINACION],
         children: [

@@ -2588,4 +2588,16 @@ export class SurveyService {
     fd.append('file', selectedFile, selectedFile.name);
     return this._httpClient.post(environment.apiUrl + '/app/survey/runProcess', fd);
   }
+
+  downloadBeneficiariesApi() {
+    return this._httpClient.get(environment.apiUrl + '/app/survey/downloadBeneficiariesApi', {
+      responseType: 'blob'
+    });
+  }
+
+  downloadBeneficiariesActivitiesApi() {
+    return this._httpClient.get(environment.apiUrl + '/app/survey/downloadActivityApi', {
+      responseType: 'blob'
+    });
+  }
 }
